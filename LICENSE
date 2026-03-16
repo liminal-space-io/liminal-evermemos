@@ -19,3 +19,20 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+---
+
+## Proprietary Components Notice
+
+The following modules contain stubbed implementations. The full production
+logic is proprietary to Liminal Space and is not included in this repository:
+
+- `src/lib/semiotic/compiler.ts` — Semiotic compiler (experience → artifact)
+- `src/lib/council/pattern-detection.ts` — Archetype pattern analysis
+- `src/lib/archetypes/shadow-dialogue.ts` — Shadow-archetype routing
+
+The EverMemOS integration layer (`src/lib/evermemos/`) and all other code
+in this repository is covered by the MIT License above.
+
+Type definitions (`src/lib/semiotic/types.ts`, `src/types/`) are included
+under MIT to demonstrate the domain model architecture.
