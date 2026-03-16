@@ -136,4 +136,4 @@ Coming soon.
 
 ---
 
-Built by [Shruti Rajagopal](https://theliminalspace.io) — UC Berkeley (Cognitive Science + Computer Science). Solo founder of Liminal Space.
+Built by [Shruti Rajagopal](https://theliminalspace.io) and [Shayaun Nejad](https://github.com/allsmog).
