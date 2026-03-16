@@ -97,6 +97,54 @@ async function handleCompletion(body: DialogueRequestBody, userId: string) {
         "Shadow dialogue myth_event created",
       );
     }
+
+    // Memory Genesis: Store completed shadow dialogue as episodic trace in EverMemOS
+    // so future shadow dialogues can reference past encounters (LIM-960)
+    if (process.env.EVERMEMOS_ENABLED === 'true') {
+      try {
+        const { storeMemory } = await import('@/lib/evermemos/client');
+        const userMessages = dialogueMessages
+          .filter((m: DialogueMessage) => m.role === "user")
+          .map((m: DialogueMessage) => m.content)
+          .join(" ")
+          .slice(0, 300);
+
+        const memoryContent = [
+          `Shadow dialogue completed: pattern "${session.pattern_name ?? session.pattern_type}" (${session.pattern_type}).`,
+          `Archetype guide: ${session.dialogue_archetype}.`,
+          summary ? `Key insights: ${summary.slice(0, 200)}.` : null,
+          userMessages ? `User reflections: ${userMessages}.` : null,
+          session.integration_suggestion ? `Integration suggestion: ${session.integration_suggestion.slice(0, 150)}.` : null,
+          body.userRating ? `User rated: ${body.userRating}.` : null,
+        ].filter(Boolean).join(' ');
+
+        await storeMemory([{
+          message_id: `shadow-dialogue-${body.sessionId}`,
+          create_time: new Date().toISOString(),
+          sender: userId,
+          content: memoryContent,
+          metadata: {
+            group_id: `user-${userId}`,
+            tags: [
+              'shadow-dialogue',
+              `pattern:${session.pattern_type}`,
+              `archetype:${session.dialogue_archetype}`,
+            ],
+            scene: 'shadow-work',
+          },
+        }]);
+
+        log.info(
+          { sessionId: body.sessionId, userId },
+          'EverMemOS: shadow dialogue episodic trace stored',
+        );
+      } catch (err) {
+        log.warn(
+          { err, sessionId: body.sessionId },
+          'EverMemOS: failed to store shadow dialogue trace (non-blocking)',
+        );
+      }
+    }
   }
 
   return new Response(JSON.stringify({ success: true }), {

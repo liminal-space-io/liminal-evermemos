@@ -7,7 +7,7 @@
 
 import 'dotenv/config';
 
-const API_URL = process.env.EVERMIND_API_URL ?? 'http://localhost:1995/api/v1';
+const API_URL = process.env.EVERMIND_API_URL ?? 'https://api.evermind.ai/api/v0';
 const API_KEY = process.env.EVERMIND_API_KEY ?? '';
 
 function headers(): Record<string, string> {
@@ -22,7 +22,7 @@ async function smokeTest() {
   // 1. Health check
   console.log('1. Health check...');
   try {
-    const healthUrl = API_URL.replace('/api/v1', '') + '/health';
+    const healthUrl = API_URL.replace(/\/api\/v\d+$/, '') + '/health';
     const res = await fetch(healthUrl);
     const data = await res.json();
     console.log(`   ✓ Health: ${JSON.stringify(data)}\n`);
@@ -61,24 +61,42 @@ async function smokeTest() {
     console.error(`   ✗ Store failed: ${(err as Error).message}\n`);
   }
 
-  // 3. Search it back
+  // 3. Search it back (use POST — GET-with-body is silently ignored by fetch)
   console.log('3. Searching for test memory...');
   try {
-    const res = await fetch(`${API_URL}/memories/search`, {
-      method: 'GET',
+    const searchParams = {
+      query: 'smoke test verification',
+      group_id: 'user-smoke_test_user',
+      retrieve_method: 'hybrid',
+      limit: 5,
+    };
+
+    // Try POST first (Evermind Cloud API may prefer POST for search)
+    let res = await fetch(`${API_URL}/memories/search`, {
+      method: 'POST',
       headers: headers(),
-      body: JSON.stringify({
-        query: 'smoke test verification',
-        user_id: 'smoke_test_user',
-        retrieve_method: 'hybrid',
-      }),
+      body: JSON.stringify(searchParams),
     });
+
+    // Fallback to GET with query params if POST returns 405
+    if (res.status === 405) {
+      const qs = new URLSearchParams({
+        query: searchParams.query,
+        group_id: searchParams.group_id,
+        retrieve_method: searchParams.retrieve_method,
+        limit: String(searchParams.limit),
+      });
+      res = await fetch(`${API_URL}/memories/search?${qs}`, {
+        method: 'GET',
+        headers: headers(),
+      });
+    }
+
     const data = await res.json();
     if (res.ok) {
       console.log(`   ✓ Search returned: ${JSON.stringify(data).slice(0, 200)}...\n`);
     } else {
-      console.error(`   ✗ Search failed: ${JSON.stringify(data)}`);
-      console.error('   Note: GET-with-body may not work — try POST if this fails.\n');
+      console.error(`   ✗ Search failed (${res.status}): ${JSON.stringify(data)}\n`);
     }
   } catch (err) {
     console.error(`   ✗ Search failed: ${(err as Error).message}\n`);
@@ -87,18 +105,37 @@ async function smokeTest() {
   // 4. Search for demo data (if seeded)
   console.log('4. Checking for seeded demo data...');
   try {
-    const res = await fetch(`${API_URL}/memories/search`, {
-      method: 'GET',
+    const demoParams = {
+      query: 'transformation arc sovereignty coherence',
+      group_id: 'user-demo_user',
+      retrieve_method: 'hybrid',
+      limit: 5,
+    };
+
+    let res = await fetch(`${API_URL}/memories/search`, {
+      method: 'POST',
       headers: headers(),
-      body: JSON.stringify({
-        query: 'transformation arc sovereignty coherence',
-        user_id: 'demo_user',
-        retrieve_method: 'hybrid',
-      }),
+      body: JSON.stringify(demoParams),
     });
+
+    // Fallback to GET with query params if POST returns 405
+    if (res.status === 405) {
+      const qs = new URLSearchParams({
+        query: demoParams.query,
+        group_id: demoParams.group_id,
+        retrieve_method: demoParams.retrieve_method,
+        limit: String(demoParams.limit),
+      });
+      res = await fetch(`${API_URL}/memories/search?${qs}`, {
+        method: 'GET',
+        headers: headers(),
+      });
+    }
+
     const data = await res.json();
-    if (res.ok && data.result) {
-      console.log(`   ✓ Demo data found\n`);
+    const results = data.memories ?? data.results ?? data ?? [];
+    if (res.ok && Array.isArray(results) && results.length > 0) {
+      console.log(`   ✓ Demo data found (${results.length} results)\n`);
     } else {
       console.log(`   ○ No demo data yet — run 'npm run seed' first\n`);
     }

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServiceSupabase } from '@/lib/supabase/server'
 import { generateCouncilDeliberation } from '@/lib/agent/council-deliberation'
 import { saveDeliberationMemory } from '@/lib/council/memory-store'
+import { detectUserPatterns, createPatternContext } from '@/lib/council/pattern-detection'
 import { logger } from '@/lib/logger'
 import type { CoherenceDimension } from '@/lib/agent/types'
 import { withErrorHandling, ValidationError, AppError, ERROR_CODES } from '@/lib/api/route-helpers'
@@ -216,8 +217,26 @@ async function handlePost(request: NextRequest) {
       }
     }
 
+    // LIM-950: Memory-aware Council — detect user patterns from EverMemOS
+    // Pattern detection enriches the topic with archetype preferences, recurring themes,
+    // and engagement trends so the council can personalize its deliberation.
+    let patternContext = ''
+    try {
+      const userPatterns = await detectUserPatterns(userId)
+      patternContext = createPatternContext(userPatterns)
+      if (patternContext) {
+        memoryEnrichedTopic = memoryEnrichedTopic + patternContext
+        log.debug(
+          { userId, primaryArchetype: userPatterns.primaryArchetype, insightCount: userPatterns.insights.length },
+          'EverMemOS: user pattern context injected into council topic'
+        )
+      }
+    } catch (patternErr) {
+      log.warn({ err: patternErr, userId }, 'Pattern detection failed — continuing without pattern context')
+    }
+
     // Generate council deliberation
-    log.info({ userId, question, tier, hasIdentityState: !!identityState }, 'Generating council deliberation')
+    log.info({ userId, question, tier, hasIdentityState: !!identityState, hasPatterns: !!patternContext }, 'Generating council deliberation')
 
     const deliberation = await generateCouncilDeliberation({
       userId,

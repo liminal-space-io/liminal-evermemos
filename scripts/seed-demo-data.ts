@@ -12,7 +12,7 @@
 
 import 'dotenv/config';
 
-const API_URL = process.env.EVERMIND_API_URL ?? 'http://localhost:1995/api/v1';
+const API_URL = process.env.EVERMIND_API_URL ?? 'https://api.evermind.ai/api/v0';
 const API_KEY = process.env.EVERMIND_API_KEY ?? '';
 const USER_ID = 'demo_user';
 

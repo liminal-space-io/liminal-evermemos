@@ -10,8 +10,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { requireAuthentication } from '@/lib/api/auth-guard'
 import { withErrorHandling } from '@/lib/api/route-helpers'
-import { chatComplete, CHAT_MODEL_FAST } from '@/lib/anthropic/client'
 import { searchMemories, withEverMemOSFallback } from '@/lib/evermemos'
+import { generateTransformationNarrative } from '@/lib/evermemos/narrative'
 import { createModuleLogger } from '@/lib/logger'
 
 const log = createModuleLogger('api/agent/arc')
@@ -73,33 +73,6 @@ const DEMO_ARC_RESPONSE = {
 }
 
 // ============================================
-// Arc Reconstruction Prompt
-// ============================================
-
-const ARC_RECONSTRUCTION_PROMPT = `You are reconstructing a user's transformation arc from their episodic memories.
-
-Analyze the memories below and produce a JSON object with this exact structure:
-{
-  "narrative": "A 2-4 sentence poetic narrative of their transformation arc",
-  "phases": [
-    { "name": "PHASE_NAME", "month": "Month", "coherence": 0-100, "description": "1 sentence" }
-  ],
-  "motifs": [
-    { "name": "motif_name", "evolution": "How this motif changed across the arc" }
-  ],
-  "timeline": [
-    { "date": "YYYY-MM-DD", "event": "Brief description" }
-  ]
-}
-
-Rules:
-- Phases should be 2-4 entries showing the transformation trajectory
-- Motifs should highlight recurring symbolic patterns and how they evolved
-- Timeline should include 4-8 key moments
-- Narrative should be poetic but grounded in the actual data
-- Return ONLY valid JSON, no markdown`
-
-// ============================================
 // GET Handler
 // ============================================
 
@@ -144,29 +117,14 @@ export const GET = withErrorHandling(async (request: NextRequest) => {
     'Arc Memory: reconstructing from EverMemOS memories'
   )
 
-  // Feed memories into Claude for narrative reconstruction
+  // Feed memories into narrative reconstruction via Claude
   const memoryContext = memories.map(r => r.content).join('\n---\n').slice(0, 2000)
 
-  const result = await chatComplete(
-    CHAT_MODEL_FAST,
-    [
-      {
-        role: 'system',
-        content: ARC_RECONSTRUCTION_PROMPT,
-      },
-      {
-        role: 'user',
-        content: `Here are the user's episodic memories:\n\n${memoryContext}`,
-      },
-    ],
-    { temperature: 0.7, max_tokens: 1000 }
-  )
-
   try {
-    const arc = JSON.parse(result)
-    return NextResponse.json({ arc })
-  } catch {
-    log.warn({ result }, 'Arc Memory: failed to parse Claude response as JSON')
+    const narrative = await generateTransformationNarrative(memoryContext)
+    return NextResponse.json({ arc: { narrative } })
+  } catch (err) {
+    log.warn({ err }, 'Arc Memory: narrative generation failed')
     return NextResponse.json(
       { arc: null, message: 'Failed to reconstruct arc — try again' },
       { status: 500 }
