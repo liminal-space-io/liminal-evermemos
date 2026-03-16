@@ -8,7 +8,26 @@ Liminal Space is a production app for inner life — daily coherence tracking, m
 
 ---
 
-## Architecture
+## 1. Features
+
+### Arc Memory
+An agent that performs **reconstructive recollection** across months of accumulated **MemCells** — generating a transformation narrative that reflects the user's psychological arc back to them.
+
+*"Over six weeks, you moved from dissolution to emergence. Your recurring motif is sovereignty. The Sage archetype correlates with your highest coherence."*
+
+### Shadow Memory
+Shadow dialogue that queries EverMemOS for past shadow encounters before each session. Instead of starting fresh, the inquiry deepens across sessions.
+
+*"Your shadow remembers what you worked through last month."*
+
+### Imprint Continuity
+Each Imprint (a visual artifact rendered as an impressionist oil painting) draws on prior motifs via **semantic consolidation**. The semiotic compiler weaves continuity into new generations.
+
+*"This Imprint echoes your recurring theme of sovereignty."*
+
+---
+
+## 2. How We Use Memory
 
 Three data channels flow into EverMemOS as **MemCells**. Three query types flow back out.
 
@@ -57,11 +76,9 @@ Three data channels flow into EverMemOS as **MemCells**. Three query types flow 
     └──────────────┘     └──────────────┘     └──────────────────┘
 ```
 
----
+### EverMemOS Lifecycle
 
-## EverMemOS Lifecycle Mapping
-
-### Phase 1: Episodic Trace
+#### Phase 1: Episodic Trace
 
 Every user interaction creates a **MemCell** — the atomic unit of memory in EverMemOS:
 
@@ -73,7 +90,7 @@ Every user interaction creates a **MemCell** — the atomic unit of memory in Ev
 
 MemCells are grouped into a **MemScene** per user — `group_id: "user-{userId}"` — representing the totality of one person's inner journey.
 
-### Phase 2: Semantic Consolidation
+#### Phase 2: Semantic Consolidation
 
 EverMemOS consolidates raw episodic traces into structured patterns:
 
@@ -82,7 +99,7 @@ EverMemOS consolidates raw episodic traces into structured patterns:
 - Phase transition patterns across weeks and months
 - Shadow themes that surface repeatedly across sessions
 
-### Phase 3: Reconstructive Recollection
+#### Phase 3: Reconstructive Recollection
 
 The Arc Memory agent uses `retrieve_method: 'agentic'` — LLM-guided multi-round retrieval — to reconstruct a transformation narrative from accumulated MemCells:
 
@@ -96,11 +113,7 @@ Result: ENDING phase (Jan) → stuck 3 weeks → LIMINAL (Feb) →
         Archetype evolution: Warrior dismissed → now most-consulted.
 ```
 
----
-
-## The Memory → Reasoning → Action Loop
-
-This is the core enhancement loop that EverMemOS enables:
+### The Memory → Reasoning → Action Loop
 
 1. **Memory** — Episodic traces accumulate from coherence checks, council sessions, and threshold moments. Each becomes a MemCell in the user's MemScene.
 
@@ -110,16 +123,29 @@ This is the core enhancement loop that EverMemOS enables:
 
 ---
 
-## Features
+## 3. How Memory Helps Users
 
-### Arc Memory
-An agent that performs **reconstructive recollection** across months of accumulated MemCells — generating a transformation narrative that reflects the user's psychological arc back to them.
+Without EverMemOS, Liminal Space has concrete gaps in its production codebase — hardcoded placeholders and `// TODO` stubs where cross-session memory should exist:
 
-### Shadow Memory
-Shadow dialogue that queries EverMemOS for past shadow encounters before each session. Instead of starting fresh, the inquiry deepens: *"Your shadow remembers what you worked through last month."*
+| Gap | Before EverMemOS | After EverMemOS |
+|-----|-----------------|-----------------|
+| No transformation proof | Can't show "you changed over 3 months" | **Reconstructive recollection** generates transformation narrative from accumulated MemCells |
+| Shadow dialogue has no memory | Starts fresh every session | Retrieves past shadow encounters via **semantic consolidation** — deepens inquiry across sessions |
+| Imprints generate in isolation | Can't see previous motifs | Queries recurring motifs from **MemScene** — weaves continuity into new generation |
+| Council can't detect patterns | `recurringTopics: []` hardcoded | **Semantic consolidation** reveals topic patterns across sessions |
+| Coherence forecast limited | Only 14 days of data | Long-term **episodic traces** enable months of pattern data for forecasting |
 
-### Imprint Continuity
-Each Imprint (a visual artifact rendered as an impressionist oil painting) draws on prior motifs via **semantic consolidation**. The semiotic compiler weaves continuity: *"This Imprint echoes your recurring theme of sovereignty."*
+EverMemOS transforms Liminal from an app that *facilitates* inner work into one that *perceives* inner transformation — remembering who you were, understanding who you're becoming, and reflecting your arc back to you.
+
+---
+
+## Architecture Details
+
+See [docs/INTEGRATION_REFERENCE.md](docs/INTEGRATION_REFERENCE.md) for code snippets, API templates, and the full list of 10 integration points.
+
+See [docs/BUILD_PLAN.md](docs/BUILD_PLAN.md) for the phased execution plan.
+
+See [docs/NARRATIVE_FRAME.md](docs/NARRATIVE_FRAME.md) for the competition narrative and demo script.
 
 ---
 
