@@ -6,6 +6,20 @@ Liminal Space is a production app for inner life — daily coherence tracking, m
 
 **Deployed URL:** [theliminalspace.io](https://theliminalspace.io)
 
+### Production Context
+
+This isn't a hackathon prototype — EverMemOS integrates into a **shipped production codebase**:
+
+- **125+ database migrations** (Supabase/Postgres) — coherence scores, archetype memory, identity signals, myth events, semiotic mappings
+- **15-handler EventBus** processing every coherence check in parallel via `Promise.allSettled()` — EverMemOS becomes the 16th handler
+- **12 Jungian archetype agents** with distinct voices, memory, and personality — powered by GPT-4o-mini with per-archetype system prompts
+- **7-factor coherence scoring model** (stability, vitality, agency, connection, expression, clarity, wholeness) — the quantitative backbone of the ontology
+- **Semiotic compiler** that transforms threshold moments into Imprints — impressionist oil painting artifacts driven by phase, coherence, motifs, and polarity tensions
+- **5 transition phases** (initiation → dissolution → liminal → integration → emergence) tracking psychological development over months
+- **Custom design system** (`frontier.ts`) with chakra-aligned color tokens, glass morphism, and ritual-grade animation
+
+The code in this repo mirrors the production architecture — 66 source files across the same domain boundaries. Proprietary algorithms (semiotic compiler, pattern detection, shadow dialogue routing) are stubbed to protect IP while preserving the full type system and integration surface.
+
 ---
 
 ## 1. Features
