@@ -1,47 +1,90 @@
-# Liminal Space x EverMemOS — Memory for Inner Life
+# Liminal Space x EverMemOS
 
-> AI that remembers every moment of your inner transformation — and reflects your arc back to you.
+> **Memory for who you're becoming.**
+
+Liminal Space is a production app for inner life — daily coherence tracking, multi-agent Jungian dialogue, and visual artifacts that map psychological development over time. EverMemOS gives it long-term memory: every reflection becomes an **episodic trace**, patterns consolidate into self-knowledge, and an agent reconstructs your transformation arc across months.
 
 **Deployed URL:** [theliminalspace.io](https://theliminalspace.io)
 
 ---
 
-## 1. Features
+## Architecture
 
-Liminal Space is a production app for inner life — daily reflections, multi-agent Jungian dialogue, and visual artifacts that track psychological development over time. With EverMemOS, Liminal gains long-term memory across three features:
+Three data channels flow into EverMemOS as **MemCells**. Three query types flow back out.
 
-- **Arc Memory** — An agent that reconstructs your psychological transformation arc from months of accumulated EverMemOS data. Query: *"Reconstruct this user's transformation arc over the past 3 months."* Result: a timeline narrative showing phase transitions (ENDING → LIMINAL → EMERGING), recurring motifs, and coherence evolution.
+```
+                        INGESTION (Episodic Trace)
+                        ─────────────────────────
 
-- **Shadow Memory** — Shadow dialogue that remembers past encounters. Before each session, EverMemOS retrieves prior shadow themes so the inquiry deepens across sessions instead of starting fresh. *"Your shadow remembers what you worked through last month."*
+    ┌─────────────┐     ┌─────────────┐     ┌──────────────────┐
+    │  Coherence   │     │   Council    │     │    Threshold     │
+    │   Check      │     │  Dialogue    │     │ Moment (Imprint) │
+    │              │     │              │     │                  │
+    │ 7 factors    │     │ 2-4 Jungian  │     │ Semiotic capture │
+    │ scored 1-10  │     │ archetypes   │     │ motifs, shadow,  │
+    │ phase, tier  │     │ deliberate   │     │ polarities       │
+    └──────┬───────┘     └──────┬───────┘     └────────┬─────────┘
+           │                    │                      │
+           │         POST /memories (MemCell)          │
+           ▼                    ▼                      ▼
+    ┌──────────────────────────────────────────────────────────┐
+    │                                                          │
+    │                       EverMemOS                          │
+    │                                                          │
+    │   Episodic Trace ──► Semantic Consolidation ──►          │
+    │                      Reconstructive Recollection         │
+    │                                                          │
+    │   Raw MemCells        Patterns extracted        Meaning  │
+    │   stored              across MemScenes          rebuilt  │
+    │                                                          │
+    └───────┬───────────────────┬──────────────────────┬───────┘
+            │                   │                      │
+            ▼                   ▼                      ▼
 
-- **Imprint Continuity** — Each Imprint (a visual artifact of inner state, rendered as an impressionist oil painting) draws on the full history of previous Imprints. EverMemOS queries recurring motifs so the semiotic compiler weaves continuity: *"This Imprint echoes your recurring theme of sovereignty."*
+                       RETRIEVAL (Queries)
+                       ──────────────────
+
+    ┌─────────────┐     ┌─────────────┐     ┌──────────────────┐
+    │ Arc Memory   │     │   Shadow     │     │     Imprint      │
+    │              │     │   Memory     │     │   Continuity     │
+    │ Agentic      │     │              │     │                  │
+    │ retrieval    │     │ Hybrid       │     │ Hybrid retrieval │
+    │ reconstructs │     │ retrieval    │     │ queries prior    │
+    │ transformation     │ recalls past │     │ motifs for       │
+    │ arc narrative│     │ shadow work  │     │ weaving into     │
+    │ across months│     │ into new     │     │ new generation   │
+    │              │     │ sessions     │     │                  │
+    └──────────────┘     └──────────────┘     └──────────────────┘
+```
 
 ---
 
-## 2. How We Use Memory
+## EverMemOS Lifecycle Mapping
 
-Liminal stores and retrieves memory through EverMemOS's three-phase lifecycle:
+### Phase 1: Episodic Trace
 
-### Phase 1: Episodic Trace (Ingestion)
+Every user interaction creates a **MemCell** — the atomic unit of memory in EverMemOS:
 
-Three data channels create MemCells in EverMemOS after each user interaction:
+| Channel | Liminal Event | MemCell Content | Tags |
+|---------|--------------|-----------------|------|
+| Coherence Check | User rates 7 inner factors (stability, vitality, agency, connection, expression, clarity, wholeness) | Factor scores, dominant/weakest, transition phase | `coherence-check`, `phase:EMERGING`, `tier:mid` |
+| Council Deliberation | 2-4 Jungian archetype agents deliberate on user's question via Claude API | Topic, archetypes, synthesis, convergence signal | `council`, `archetype:sage`, `archetype:warrior` |
+| Threshold Moment | User captures a moment of inner change — semiotic compiler extracts motifs and polarities | Event type, motifs, polarities, shadow elements, coherence snapshot | `myth-event`, `type:dissolution`, `motif:sovereignty` |
 
-| Channel | Liminal Event | MemCell Content |
-|---------|--------------|-----------------|
-| Coherence Check | User rates 7 inner factors (stability, vitality, agency, connection, expression, clarity, wholeness) | Factor scores, dominant/weakest factor, transition phase, coherence tier |
-| Council Deliberation | 2-4 Jungian archetype agents deliberate on user's question via Claude API | Topic, archetypes present, synthesis, convergence signal, user reaction |
-| Threshold Moment (Imprint) | User captures a moment of inner change — semiotic compiler extracts motifs and polarities | Event type, raw reflection, motifs, polarities, shadow elements, coherence snapshot |
+MemCells are grouped into a **MemScene** per user — `group_id: "user-{userId}"` — representing the totality of one person's inner journey.
 
-### Phase 2: Semantic Consolidation (Pattern Extraction)
+### Phase 2: Semantic Consolidation
 
 EverMemOS consolidates raw episodic traces into structured patterns:
+
 - Recurring motifs across threshold moments (e.g., `identity_dissolution` appeared 3 times in 2 months)
 - Archetype correlations with coherence changes (e.g., Sage consultations correlate with clarity increases)
 - Phase transition patterns across weeks and months
+- Shadow themes that surface repeatedly across sessions
 
-### Phase 3: Reconstructive Recollection (The Demo Moment)
+### Phase 3: Reconstructive Recollection
 
-The Arc Memory agent uses `retrieve_method: 'agentic'` to perform LLM-guided multi-round retrieval, reconstructing a transformation narrative from accumulated MemCells:
+The Arc Memory agent uses `retrieve_method: 'agentic'` — LLM-guided multi-round retrieval — to reconstruct a transformation narrative from accumulated MemCells:
 
 ```
 Query: "Reconstruct this user's transformation arc over the past 3 months"
@@ -53,82 +96,86 @@ Result: ENDING phase (Jan) → stuck 3 weeks → LIMINAL (Feb) →
         Archetype evolution: Warrior dismissed → now most-consulted.
 ```
 
-This demonstrates the complete **Memory → Reasoning → Action** loop:
-- **Memory:** Episodic traces accumulated from coherence checks, council sessions, threshold moments
-- **Reasoning:** Agentic retrieval reconstructs the transformation arc from consolidated patterns
-- **Action:** Personalized narrative and guidance generated from reconstructed context
+---
+
+## The Memory → Reasoning → Action Loop
+
+This is the core enhancement loop that EverMemOS enables:
+
+1. **Memory** — Episodic traces accumulate from coherence checks, council sessions, and threshold moments. Each becomes a MemCell in the user's MemScene.
+
+2. **Reasoning** — Agentic retrieval reconstructs the user's transformation arc from consolidated patterns. The system identifies recurring motifs, archetype evolution, and phase transitions.
+
+3. **Action** — Personalized narrative, guidance, and artifacts generated from reconstructed context. The Council remembers past advice. Shadow dialogue deepens across sessions. Imprints weave recurring motifs.
 
 ---
 
-## 3. How Memory Helps Users
+## Features
 
-Without EverMemOS, Liminal Space has 10 concrete gaps in its production codebase — hardcoded placeholders and `// TODO` stubs where cross-session memory should exist:
+### Arc Memory
+An agent that performs **reconstructive recollection** across months of accumulated MemCells — generating a transformation narrative that reflects the user's psychological arc back to them.
 
-| Gap | Before EverMemOS | After EverMemOS |
-|-----|-----------------|-----------------|
-| No transformation proof | Can't show "you changed over 3 months" | Reconstructive recollection generates transformation narrative |
-| Shadow dialogue has no memory | Starts fresh every session | Retrieves past shadow encounters — deepens inquiry across sessions |
-| Imprints generate in isolation | Can't see previous motifs | Queries recurring motifs — weaves continuity into new generation |
-| Council can't detect patterns | `recurringTopics: []` hardcoded | Semantic consolidation reveals topic patterns across sessions |
-| Coherence forecast limited | Only 14 days of data | Long-term memory enables months of pattern data |
+### Shadow Memory
+Shadow dialogue that queries EverMemOS for past shadow encounters before each session. Instead of starting fresh, the inquiry deepens: *"Your shadow remembers what you worked through last month."*
 
-EverMemOS transforms Liminal from an app that *facilitates* inner work into one that *perceives* inner transformation — remembering who you were, understanding who you're becoming, and reflecting your arc back to you.
+### Imprint Continuity
+Each Imprint (a visual artifact rendered as an impressionist oil painting) draws on prior motifs via **semantic consolidation**. The semiotic compiler weaves continuity: *"This Imprint echoes your recurring theme of sovereignty."*
 
 ---
 
-## Architecture
+## Quick Start
 
+### Prerequisites
+- Node.js 18+
+- EverMemOS API key ([console.evermind.ai](https://console.evermind.ai))
+- Supabase project
+- Claude API key (Anthropic)
+
+### Setup
+
+```bash
+git clone https://github.com/liminal-space-io/liminal-evermemos.git
+cd liminal-evermemos
+npm install
 ```
-┌─────────────────────────────────────────────────────┐
-│                   Liminal Space                      │
-│                                                      │
-│  ┌──────────┐  ┌──────────┐  ┌───────────────────┐  │
-│  │Coherence │  │ Council  │  │ Threshold Moments │  │
-│  │  Check   │  │Dialogue  │  │    (Imprints)     │  │
-│  └────┬─────┘  └────┬─────┘  └────────┬──────────┘  │
-│       │              │                 │              │
-│       ▼              ▼                 ▼              │
-│  ┌──────────────────────────────────────────────┐    │
-│  │         EverMemOS Integration Layer          │    │
-│  │    POST /memories (Episodic Trace)           │    │
-│  └──────────────────┬───────────────────────────┘    │
-│                     │                                 │
-└─────────────────────┼─────────────────────────────────┘
-                      │
-                      ▼
-         ┌────────────────────────┐
-         │       EverMemOS        │
-         │                        │
-         │  Episodic Trace        │
-         │       ↓                │
-         │  Semantic Consolidation│
-         │       ↓                │
-         │  Reconstructive        │
-         │  Recollection          │
-         └────────────┬───────────┘
-                      │
-                      ▼
-         ┌────────────────────────┐
-         │   Query Layer          │
-         │                        │
-         │  Arc Memory (agentic)  │
-         │  Shadow Memory (hybrid)│
-         │  Motif Query (hybrid)  │
-         └────────────────────────┘
+
+Create `.env.local`:
 ```
+# EverMemOS
+EVERMIND_API_KEY=<your-key>
+EVERMIND_API_URL=https://api.evermind.ai/api/v0
+
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL=<your-url>
+SUPABASE_SERVICE_ROLE_KEY=<your-key>
+
+# Claude API
+ANTHROPIC_API_KEY=<your-key>
+```
+
+```bash
+npm run dev          # Start dev server (localhost:3000)
+npm run type-check   # TypeScript validation
+npm run build        # Production build
+```
+
+### Demo Mode
+Visit `/agent/arc?demo=true` for a pre-seeded experience — no auth required.
+
+---
 
 ## Tech Stack
 
-- **App:** Next.js 14 (App Router), React 18, TypeScript
-- **Database:** Supabase (Postgres + Auth)
-- **AI:** Claude API (narrative generation, Council deliberation)
-- **Memory:** EverMemOS Cloud API (`api.evermind.ai`)
-- **Design:** Frontier design system, Framer Motion
-- **Deploy:** Vercel
+| Layer | Technology |
+|-------|-----------|
+| App | Next.js 14 (App Router), React 18, TypeScript |
+| Database | Supabase (Postgres + Auth) |
+| AI | Claude API (narrative generation, Council deliberation) |
+| Memory | EverMemOS Cloud API (`api.evermind.ai`) |
+| Design | Frontier design system, Framer Motion |
+| Deploy | Vercel |
 
-## Demo
-
-Visit [theliminalspace.io](https://theliminalspace.io) — Arc Memory demo coming soon at `/agent/arc?demo=true`.
+---
 
 ## Video
 
