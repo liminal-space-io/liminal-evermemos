@@ -24,7 +24,7 @@ export async function storeCoherenceCheck(params: {
 }) {
   const { checkId, userId, timestamp, score, factors, dominant, weakest, mode, currentPhase, coherenceTier } = params;
 
-  return storeMemory({
+  return storeMemory([{
     message_id: `coherence-${checkId}`,
     create_time: timestamp,
     sender: userId,
@@ -34,7 +34,7 @@ export async function storeCoherenceCheck(params: {
       tags: ['coherence-check', `phase:${currentPhase}`, `tier:${coherenceTier}`],
       scene: 'daily-practice',
     },
-  });
+  }]);
 }
 
 /** Channel 2: Council deliberation → EverMemOS */
@@ -50,7 +50,7 @@ export async function storeCouncilDeliberation(params: {
 }) {
   const { conversationId, userId, timestamp, topic, archetypes, synthesisSnippet, convergenceSignal, reaction } = params;
 
-  return storeMemory({
+  return storeMemory([{
     message_id: `council-${conversationId}`,
     create_time: timestamp,
     sender: userId,
@@ -60,7 +60,7 @@ export async function storeCouncilDeliberation(params: {
       tags: ['council', ...archetypes.map(a => `archetype:${a}`)],
       scene: 'council-session',
     },
-  });
+  }]);
 }
 
 /** Channel 3: Threshold moment (myth event) → EverMemOS */
@@ -78,7 +78,7 @@ export async function storeThresholdMoment(params: {
 }) {
   const { eventId, userId, timestamp, eventType, rawContent, motifs, polarities, shadowContacted, coherenceSnapshot, phase } = params;
 
-  return storeMemory({
+  return storeMemory([{
     message_id: `myth-${eventId}`,
     create_time: timestamp,
     sender: userId,
@@ -88,5 +88,5 @@ export async function storeThresholdMoment(params: {
       tags: ['myth-event', `type:${eventType}`, `phase:${phase}`, ...motifs],
       scene: 'interior-threshold',
     },
-  });
+  }]);
 }
