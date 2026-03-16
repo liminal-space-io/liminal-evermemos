@@ -141,7 +141,11 @@ EverMemOS transforms Liminal from an app that *facilitates* inner work into one 
 
 ## Architecture Details
 
-See [docs/INTEGRATION_REFERENCE.md](docs/INTEGRATION_REFERENCE.md) for code snippets, API templates, and the full list of 10 integration points.
+Liminal's coherence system uses a **15-handler EventBus** — every coherence check triggers analytics, phase updates, archetype routing, XP, and more in parallel via `Promise.allSettled()`. EverMemOS becomes the 16th handler: one file, three lines of registration, zero impact on response time.
+
+See [docs/EVENTBUS_INTEGRATION.md](docs/EVENTBUS_INTEGRATION.md) for how all 3 channels wire into the existing architecture.
+
+See [docs/INTEGRATION_REFERENCE.md](docs/INTEGRATION_REFERENCE.md) for API templates and the full list of 10 integration points.
 
 See [docs/BUILD_PLAN.md](docs/BUILD_PLAN.md) for the phased execution plan.
 
