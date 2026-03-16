@@ -141,15 +141,53 @@ EverMemOS transforms Liminal from an app that *facilitates* inner work into one 
 
 ## Architecture Details
 
+This repo mirrors Liminal's production architecture — **66 source files** across API routes, services, libraries, and domain logic — wired to EverMemOS for long-term memory.
+
+### Codebase Structure
+
+```
+src/
+├── app/api/              # 6 API routes
+│   ├── agent/arc/        # Arc Memory — agentic retrieval + narrative
+│   ├── coherence/        # Coherence checks (EventBus, 15+ handlers)
+│   ├── council/          # Council deliberation (multi-archetype dialogue)
+│   ├── myths/            # Threshold moments + semiotic extraction
+│   └── archetypes/       # Shadow pattern dialogue
+├── lib/
+│   ├── evermemos/        # EverMemOS client, channels, formatters, types
+│   ├── semiotic/         # Semiotic compiler (glyphs, mapping, calibration)
+│   ├── council/          # Archetype memory, pattern detection
+│   ├── identity/         # Identity signal computation
+│   ├── archetypes/       # Shadow dialogue, voices, patterns
+│   ├── agent/            # Council deliberation logic
+│   └── api/              # Auth guard, validation, idempotency
+├── services/
+│   ├── coherence/        # Coherence scoring service
+│   └── events/           # EventBus + handlers (inc. EverMemOSHandler)
+├── types/                # Domain types (database, identity)
+└── styles/               # Frontier design system tokens
+```
+
+### EventBus Integration
+
 Liminal's coherence system uses a **15-handler EventBus** — every coherence check triggers analytics, phase updates, archetype routing, XP, and more in parallel via `Promise.allSettled()`. EverMemOS becomes the 16th handler: one file, three lines of registration, zero impact on response time.
 
-See [docs/EVENTBUS_INTEGRATION.md](docs/EVENTBUS_INTEGRATION.md) for how all 3 channels wire into the existing architecture.
+### Three Channels, Two Patterns
 
-See [docs/INTEGRATION_REFERENCE.md](docs/INTEGRATION_REFERENCE.md) for API templates and the full list of 10 integration points.
+- **Channel 1 (Coherence):** EventBus handler — follows existing 15-handler pattern
+- **Channel 2 (Council):** Per-route fire-and-forget — `void storeCouncilDeliberation().catch(() => {})`
+- **Channel 3 (Threshold):** Per-route fire-and-forget — `void storeThresholdMoment().catch(() => {})`
 
-See [docs/BUILD_PLAN.md](docs/BUILD_PLAN.md) for the phased execution plan.
+### Graceful Degradation
 
-See [docs/NARRATIVE_FRAME.md](docs/NARRATIVE_FRAME.md) for the competition narrative and demo script.
+All channels are fire-and-forget. The EverMemOS client adds: `isEnabled()` gate (env-controlled), `safeFetch()` with 10s timeout, GET→POST auto-fallback for search, and `withEverMemOSFallback()` wrapper. **The app works identically with or without EverMemOS.**
+
+### Further Reading
+
+- [docs/EVENTBUS_INTEGRATION.md](docs/EVENTBUS_INTEGRATION.md) — How all 3 channels wire into the existing architecture
+- [docs/INTEGRATION_REFERENCE.md](docs/INTEGRATION_REFERENCE.md) — API templates and the full list of 10 integration points
+- [docs/BUILD_PLAN.md](docs/BUILD_PLAN.md) — Phased execution plan
+- [docs/NARRATIVE_FRAME.md](docs/NARRATIVE_FRAME.md) — Competition narrative and demo script
 
 ---
 
@@ -173,7 +211,8 @@ Create `.env.local`:
 ```
 # EverMemOS
 EVERMIND_API_KEY=<your-key>
-EVERMIND_API_URL=https://api.evermind.ai/api/v0
+EVERMIND_API_URL=https://api.evermind.ai/api/v1
+EVERMEMOS_ENABLED=true
 
 # Supabase
 NEXT_PUBLIC_SUPABASE_URL=<your-url>
@@ -187,6 +226,10 @@ ANTHROPIC_API_KEY=<your-key>
 npm run dev          # Start dev server (localhost:3000)
 npm run type-check   # TypeScript validation
 npm run build        # Production build
+
+# EverMemOS tools
+npx ts-node scripts/seed-demo-data.ts    # Seed 7 synthetic MemCells across phases
+npx ts-node scripts/smoke-test.ts        # Health check + store/search round-trip
 ```
 
 ### Demo Mode
@@ -198,11 +241,12 @@ Visit `/agent/arc?demo=true` for a pre-seeded experience — no auth required.
 
 | Layer | Technology |
 |-------|-----------|
-| App | Next.js 14 (App Router), React 18, TypeScript |
+| App | Next.js 15 (App Router), React 19, TypeScript 5.7 |
 | Database | Supabase (Postgres + Auth) |
-| AI | Claude API (narrative generation, Council deliberation) |
-| Memory | EverMemOS Cloud API (`api.evermind.ai`) |
-| Design | Frontier design system, Framer Motion |
+| AI | Claude API via `@anthropic-ai/sdk` (narrative generation, Council deliberation) |
+| Memory | EverMemOS Cloud API (`api.evermind.ai/api/v1`) |
+| Logging | pino (structured JSON logging) |
+| Design | Frontier design system |
 | Deploy | Vercel |
 
 ---
