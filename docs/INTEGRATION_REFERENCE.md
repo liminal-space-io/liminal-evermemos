@@ -8,16 +8,21 @@
 ## Setup
 
 ```
-Base URL: https://api.evermind.ai/api/v0
-Auth: Authorization: Bearer <EVERMIND_API_KEY>
+Cloud URL: https://api.evermind.ai/api/v1    (closed beta — whitelist via competition registration)
+Local URL: http://localhost:1995/api/v1       (Docker: docker compose up -d)
+Auth: Authorization: Bearer <EVERMIND_API_KEY>   (Cloud only — local has no auth)
 Console: https://console.evermind.ai/
 ```
+
+> **Cloud access:** Registered competition email (`shruti@theliminalspace.io`) whitelisted within 1 business day. Until then, use local Docker.
 
 Add to `.env.local`:
 ```
 EVERMIND_API_KEY=<your-key>
-EVERMIND_API_URL=https://api.evermind.ai/api/v0
+EVERMIND_API_URL=https://api.evermind.ai/api/v1   # or http://localhost:1995/api/v1 for local
 ```
+
+> **API version note (2026-03-15):** Starter kit uses `/api/v1/` endpoints, not `/api/v0/`. The `sender` field takes a user ID string (e.g., `"user_001"`), not `"user"/"assistant"`. Search uses `user_id` param, not `group_id`. Verify Cloud API matches local API before shipping.
 
 ---
 
@@ -44,6 +49,8 @@ These are real hardcoded placeholders and `// TODO` stubs in production code. Ev
 
 ## Layer 1: Episodic Ingestion (POST /memories)
 
+> **API v1 note:** `sender` takes a user ID string (not `"user"`/`"assistant"`). The `metadata` field structure should be verified against Cloud API docs — the starter kit shows a flat structure without `group_id`/`tags`/`scene`. The snippets below use what we *expect* works based on the GitHub docs. **Verify with real API before shipping.**
+
 ### Coherence Check → Memory
 
 After `CoherenceService.submitCheck()` completes:
@@ -58,7 +65,7 @@ await fetch(`${process.env.EVERMIND_API_URL}/memories`, {
   body: JSON.stringify({
     message_id: `coherence-${checkId}`,
     create_time: timestamp,
-    sender: 'user',
+    sender: userId,  // user ID string, not "user"
     content: `Coherence check: overall ${score}. Factors: stability=${factors.stability}, vitality=${factors.vitality}, agency=${factors.agency}, connection=${factors.connection}, expression=${factors.expression}, clarity=${factors.clarity}, wholeness=${factors.wholeness}. Dominant: ${dominant}. Weakest: ${weakest}. Mode: ${mode}.`,
     metadata: {
       group_id: `user-${userId}`,
@@ -95,7 +102,7 @@ await fetch(`${process.env.EVERMIND_API_URL}/memories`, {
   body: JSON.stringify({
     message_id: `myth-${eventId}`,
     create_time: timestamp,
-    sender: 'user',
+    sender: userId,  // user ID string
     content: `Threshold moment (${event_type}): ${raw_content}. Motifs: ${motifs.join(', ')}. Polarities: ${polarities.map(p => `${p.pole_a}↔${p.pole_b}`).join(', ')}. Shadow contacted: ${shadow_elements.contacted}. Coherence at moment: ${coherence_snapshot.overall}.`,
     metadata: {
       group_id: `user-${userId}`,
@@ -133,7 +140,7 @@ await fetch(`${process.env.EVERMIND_API_URL}/memories`, {
   body: JSON.stringify({
     message_id: `council-${conversationId}`,
     create_time: timestamp,
-    sender: 'assistant',
+    sender: userId,  // user ID string — council output stored under the user's memory
     content: `Council deliberation on "${topic}". Archetypes present: ${archetypes.join(', ')}. Synthesis: ${synthesisSnippet}. Convergence signal: ${convergenceSignal}. User reaction: ${reaction}.`,
     metadata: {
       group_id: `user-${userId}`,
@@ -158,17 +165,22 @@ isn't whether to leave—it's who you become by staying.' User reaction: resonan
 
 ## Layer 2: Semantic Queries (GET /memories/search)
 
-> **API NOTE:** The snippets below show `body` on GET requests — this is non-standard HTTP. Check EverMemOS docs to confirm whether `/memories/search` accepts query params, POST body, or both. The Cloud API may differ from local Docker. Verify before building.
+> **API v1 note:** Starter kit shows search as GET with JSON body (non-standard HTTP). Uses `user_id` param, not `group_id`. Retrieval methods: `keyword`, `vector`, `hybrid`, `rrf`, `agentic`. Memory types: `episodic_memory`, `profile`, `foresight`, `event_log`. **Verify exact request format with Cloud API before shipping.**
 
 ### Before Council Response — Retrieve Relevant Memory
 
 ```typescript
-const response = await fetch(`${process.env.EVERMIND_API_URL}/memories/search?` + new URLSearchParams({
-  query: `What patterns has this user shown around ${topic}? What archetypes have been most helpful? What phase transitions have they experienced?`,
-  retrieve_method: 'agentic',
-  group_id: `user-${userId}`,
-}), {
-  headers: { 'Authorization': `Bearer ${process.env.EVERMIND_API_KEY}` },
+const response = await fetch(`${process.env.EVERMIND_API_URL}/memories/search`, {
+  method: 'GET',
+  headers: {
+    'Authorization': `Bearer ${process.env.EVERMIND_API_KEY}`,
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    query: `What patterns has this user shown around ${topic}? What archetypes have been most helpful?`,
+    user_id: userId,
+    retrieve_method: 'agentic',
+  }),
 })
 const memories = await response.json()
 // Inject retrieved context into Council archetype prompts
@@ -177,13 +189,17 @@ const memories = await response.json()
 ### Before Imprint Generation — Reconstruct Journey
 
 ```typescript
-const response = await fetch(`${process.env.EVERMIND_API_URL}/memories/search?` + new URLSearchParams({
-  query: `What threshold moments, recurring motifs, and shadow patterns define this user's inner journey?`,
-  retrieve_method: 'agentic',
-  group_id: `user-${userId}`,
-  tags: 'myth-event',
-}), {
-  headers: { 'Authorization': `Bearer ${process.env.EVERMIND_API_KEY}` },
+const response = await fetch(`${process.env.EVERMIND_API_URL}/memories/search`, {
+  method: 'GET',
+  headers: {
+    'Authorization': `Bearer ${process.env.EVERMIND_API_KEY}`,
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    query: `What threshold moments, recurring motifs, and shadow patterns define this user's inner journey?`,
+    user_id: userId,
+    retrieve_method: 'agentic',
+  }),
 })
 const memories = await response.json()
 // Feed into Imprint artifact generation as accumulated context
@@ -225,18 +241,34 @@ These demonstrate Phase 3 — reconstructive recollection. Most competitors won'
 
 ---
 
-## API Reference
+## API Reference (v1 — from Starter Kit)
 
 | Endpoint | Method | Purpose | When we use it |
 |---|---|---|---|
-| `/memories` | POST | Store episodic trace | After check, council, myth event |
-| `/memories` | GET | Retrieve with filters | Debugging, data verification |
-| `/memories/search` | GET | Hybrid/agentic retrieval | Before Council prompt, before Imprint gen |
-| `/conversation/metadata` | POST/PATCH | Tag conversations | Tag with phase, archetype, coherence tier |
-| `/request-status` | GET | Check indexing status | Verify memory indexed before retrieval |
+| `/api/v1/memories` | POST | Store a message (episodic trace) | After check, council, myth event |
+| `/api/v1/memories` | GET | Fetch memories by type | Debugging, data verification |
+| `/api/v1/memories/search` | GET | Search memories (hybrid/agentic) | Before Council prompt, before Imprint gen |
+| `/api/v1/memories` | DELETE | Delete memories | Cleanup, testing |
 | `/health` | GET | System health | Smoke test on setup |
 
-**Retrieval strategies:**
-- `hybrid` — BM25 + vector (default, good for most queries)
-- `lightweight` — keyword only (fast, use for simple lookups)
+**Retrieval strategies (`retrieve_method`):**
+- `keyword` — BM25 keyword matching (fast)
+- `vector` — vector similarity only
+- `hybrid` — keyword + vector (recommended for most queries)
+- `rrf` — reciprocal rank fusion
 - `agentic` — LLM-guided multi-round (most powerful — use for demo moments and reconstructive queries)
+
+**Memory types (`memory_types`):**
+- `episodic_memory` — raw experiences (our primary use)
+- `profile` — user preferences and patterns
+- `foresight` — forward-looking predictions
+- `event_log` — system events
+
+**Response shape:**
+```json
+{
+  "status": "ok",
+  "message": "Success description",
+  "result": { /* response data */ }
+}
+```
