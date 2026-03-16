@@ -10,8 +10,8 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { searchMemories } from '@/lib/evermemos/client';
+import { generateTransformationNarrative } from '@/lib/evermemos/narrative';
 
-// TODO(LIM-957): Wire Claude API for narrative generation
 // TODO(LIM-958): Build Arc Memory UI
 
 export async function GET(request: NextRequest) {
@@ -22,18 +22,27 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  // Step 1: Agentic retrieval — reconstruct transformation arc
+  // Step 1: Agentic retrieval — reconstruct transformation arc from MemCells
   const memories = await searchMemories({
     query: `Reconstruct this user's transformation arc. What recurring motifs, phase transitions, archetype evolution, and shadow patterns define their inner journey?`,
     user_id: userId,
     retrieve_method: 'agentic',
   });
 
-  // Step 2: Generate narrative (TODO — Claude API integration)
-  // For now, return raw memories
+  // Step 2: Generate narrative via Claude API
+  let narrative: string | null = null;
+  if (memories.status !== 'error' && memories.result) {
+    try {
+      const memoriesContext = JSON.stringify(memories.result, null, 2);
+      narrative = await generateTransformationNarrative(memoriesContext);
+    } catch {
+      // Graceful degradation — return memories without narrative
+    }
+  }
+
   return NextResponse.json({
     status: 'ok',
     memories: memories.result,
-    narrative: null, // TODO: Claude API narrative generation
+    narrative,
   });
 }
