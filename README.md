@@ -11,7 +11,7 @@ Liminal Space is a production app that tracks psychological development over tim
 This isn't a hackathon prototype — EverMemOS integrates into a **shipped production codebase** built on a structured psychological ontology:
 
 - **7-factor psychological state model** (stability, vitality, agency, connection, expression, clarity, wholeness) — multi-dimensional assessment scored 1-10, mapping to established psychological state dimensions
-- **12 Jungian archetype agents** with distinct voices, memory, and personality — each grounded in personality psychology, powered by GPT-4o-mini with per-archetype system prompts
+- **12 Jungian archetype agents** with distinct voices, memory, and personality — each grounded in personality psychology, powered by Claude with per-archetype system prompts
 - **5 developmental phases** (initiation → dissolution → liminal → integration → emergence) — mapping to developmental stage theory, tracking psychological change over months
 - **Experience → symbol transformation engine** ("semiotic compiler") that converts psychologically significant moments into visual artifacts (Imprints) — impressionist oil paintings driven by state data, recurring motifs, and polarity tensions
 - **15-handler EventBus** processing every state assessment in parallel via `Promise.allSettled()` — EverMemOS becomes the 16th handler
