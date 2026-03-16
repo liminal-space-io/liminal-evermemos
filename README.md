@@ -136,4 +136,4 @@ Coming soon.
 
 ---
 
-Built by [Shruti Rajagopal](https://theliminalspace.io) and [Shayaun Nejad](https://github.com/allsmog).
+Built by [Shruti Rajagopal](https://www.linkedin.com/in/shrutirajagopal/) and [Shayaun Nejad](https://www.linkedin.com/in/shayaun/).
