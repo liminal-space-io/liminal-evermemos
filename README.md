@@ -2,40 +2,41 @@
 
 > **Memory for who you're becoming.**
 
-Liminal Space is a production app for inner life — daily coherence tracking, multi-agent Jungian dialogue, and visual artifacts that map psychological development over time. EverMemOS gives it long-term memory: every reflection becomes an **episodic trace**, patterns consolidate into self-knowledge, and an agent reconstructs your transformation arc across months.
+Liminal Space is a production app that tracks psychological development over time — through multi-dimensional state assessments, multi-agent dialogue grounded in personality psychology, and visual artifacts that encode inner change. EverMemOS gives it long-term memory: every interaction becomes an **episodic trace**, patterns consolidate into self-knowledge, and an agent performs **reconstructive recollection** to generate a transformation narrative across months.
 
 **Deployed URL:** [theliminalspace.io](https://theliminalspace.io)
 
 ### Production Context
 
-This isn't a hackathon prototype — EverMemOS integrates into a **shipped production codebase**:
+This isn't a hackathon prototype — EverMemOS integrates into a **shipped production codebase** built on a structured psychological ontology:
 
-- **125+ database migrations** (Supabase/Postgres) — coherence scores, archetype memory, identity signals, myth events, semiotic mappings
-- **15-handler EventBus** processing every coherence check in parallel via `Promise.allSettled()` — EverMemOS becomes the 16th handler
-- **12 Jungian archetype agents** with distinct voices, memory, and personality — powered by GPT-4o-mini with per-archetype system prompts
-- **7-factor coherence scoring model** (stability, vitality, agency, connection, expression, clarity, wholeness) — the quantitative backbone of the ontology
-- **Semiotic compiler** that transforms threshold moments into Imprints — impressionist oil painting artifacts driven by phase, coherence, motifs, and polarity tensions
-- **5 transition phases** (initiation → dissolution → liminal → integration → emergence) tracking psychological development over months
-- **Custom design system** (`frontier.ts`) with chakra-aligned color tokens, glass morphism, and ritual-grade animation
+- **7-factor psychological state model** (stability, vitality, agency, connection, expression, clarity, wholeness) — multi-dimensional assessment scored 1-10, mapping to established psychological state dimensions
+- **12 Jungian archetype agents** with distinct voices, memory, and personality — each grounded in personality psychology, powered by GPT-4o-mini with per-archetype system prompts
+- **5 developmental phases** (initiation → dissolution → liminal → integration → emergence) — mapping to developmental stage theory, tracking psychological change over months
+- **Experience → symbol transformation engine** ("semiotic compiler") that converts psychologically significant moments into visual artifacts (Imprints) — impressionist oil paintings driven by state data, recurring motifs, and polarity tensions
+- **15-handler EventBus** processing every state assessment in parallel via `Promise.allSettled()` — EverMemOS becomes the 16th handler
+- **125+ database migrations** (Supabase/Postgres) — state assessments, archetype interaction memory, identity signals, threshold events, semiotic calibration data
 
-The code in this repo mirrors the production architecture — 66 source files across the same domain boundaries. Proprietary algorithms (semiotic compiler, pattern detection, shadow dialogue routing) are stubbed to protect IP while preserving the full type system and integration surface.
+EverMemOS's lifecycle — **episodic trace → semantic consolidation → reconstructive recollection** — mirrors how human autobiographical memory actually works: capture experiences, consolidate patterns, reconstruct meaning. Liminal's ontology provides the structured psychological data that makes this lifecycle meaningful.
+
+The code in this repo mirrors the production architecture — 66 source files across the same domain boundaries. Proprietary algorithms are stubbed to protect IP while preserving the full type system and integration surface.
 
 ---
 
 ## 1. Features
 
 ### Arc Memory
-An agent that performs **reconstructive recollection** across months of accumulated **MemCells** — generating a transformation narrative that reflects the user's psychological arc back to them.
+An agent that performs **reconstructive recollection** — LLM-guided multi-round retrieval across months of accumulated episodic traces — to generate a transformation narrative. The user sees their psychological arc reflected back: phase transitions, recurring symbolic patterns, and how their relationship with different personality archetypes evolved over time.
 
 *"Over six weeks, you moved from dissolution to emergence. Your recurring motif is sovereignty. The Sage archetype correlates with your highest coherence."*
 
 ### Shadow Memory
-Shadow dialogue that queries EverMemOS for past shadow encounters before each session. Instead of starting fresh, the inquiry deepens across sessions.
+Shadow dialogue (Jungian shadow work via AI-guided Socratic inquiry) queries EverMemOS for past shadow encounters before each session. Instead of starting fresh, the system retrieves prior shadow work through **semantic consolidation** — the inquiry deepens across sessions.
 
 *"Your shadow remembers what you worked through last month."*
 
 ### Imprint Continuity
-Each Imprint (a visual artifact rendered as an impressionist oil painting) draws on prior motifs via **semantic consolidation**. The semiotic compiler weaves continuity into new generations.
+Each Imprint — a visual artifact rendered as an impressionist oil painting from the user's psychological state data — draws on prior recurring motifs via **semantic consolidation**. The semiotic compiler (experience → symbol transformation engine) weaves continuity into new generations.
 
 *"This Imprint echoes your recurring theme of sovereignty."*
 
@@ -94,15 +95,15 @@ Three data channels flow into EverMemOS as **MemCells**. Three query types flow 
 
 #### Phase 1: Episodic Trace
 
-Every user interaction creates a **MemCell** — the atomic unit of memory in EverMemOS:
+Every user interaction creates an episodic trace — stored as a **MemCell** (EverMemOS's atomic memory unit):
 
-| Channel | Liminal Event | MemCell Content | Tags |
-|---------|--------------|-----------------|------|
-| Coherence Check | User rates 7 inner factors (stability, vitality, agency, connection, expression, clarity, wholeness) | Factor scores, dominant/weakest, transition phase | `coherence-check`, `phase:EMERGING`, `tier:mid` |
-| Council Deliberation | 2-4 Jungian archetype agents deliberate on user's question via Claude API | Topic, archetypes, synthesis, convergence signal | `council`, `archetype:sage`, `archetype:warrior` |
-| Threshold Moment | User captures a moment of inner change — semiotic compiler extracts motifs and polarities | Event type, motifs, polarities, shadow elements, coherence snapshot | `myth-event`, `type:dissolution`, `motif:sovereignty` |
+| Channel | What the user does | What gets stored | Tags |
+|---------|-------------------|-----------------|------|
+| State Assessment | Rates 7 psychological factors (stability, vitality, agency, connection, expression, clarity, wholeness) on a 1-10 scale | Factor scores, dominant/weakest factor, developmental phase, coherence tier | `coherence-check`, `phase:EMERGING`, `tier:mid` |
+| Archetype Dialogue | 2-4 Jungian archetype agents (from a system of 12) deliberate on the user's question | Topic, which archetypes spoke, synthesis, convergence signal | `council`, `archetype:sage`, `archetype:warrior` |
+| Threshold Capture | User captures a psychologically significant moment — system extracts recurring symbolic patterns and polarity tensions | Event type, motifs, polarities, shadow elements, state snapshot | `myth-event`, `type:dissolution`, `motif:sovereignty` |
 
-MemCells are grouped into a **MemScene** per user — `group_id: "user-{userId}"` — representing the totality of one person's inner journey.
+All MemCells for a user are grouped into a single **MemScene** (`group_id: "user-{userId}"`) — their autobiographical memory store within EverMemOS.
 
 #### Phase 2: Semantic Consolidation
 
@@ -143,13 +144,13 @@ Without EverMemOS, Liminal Space has concrete gaps in its production codebase �
 
 | Gap | Before EverMemOS | After EverMemOS |
 |-----|-----------------|-----------------|
-| No transformation proof | Can't show "you changed over 3 months" | **Reconstructive recollection** generates transformation narrative from accumulated MemCells |
-| Shadow dialogue has no memory | Starts fresh every session | Retrieves past shadow encounters via **semantic consolidation** — deepens inquiry across sessions |
-| Imprints generate in isolation | Can't see previous motifs | Queries recurring motifs from **MemScene** — weaves continuity into new generation |
-| Council can't detect patterns | `recurringTopics: []` hardcoded | **Semantic consolidation** reveals topic patterns across sessions |
-| Coherence forecast limited | Only 14 days of data | Long-term **episodic traces** enable months of pattern data for forecasting |
+| No transformation proof | Can't show "you changed over 3 months" | **Reconstructive recollection** generates a transformation narrative from months of accumulated episodic traces |
+| Shadow work has no memory | Each session starts from zero | Retrieves past shadow encounters via **semantic consolidation** — inquiry deepens across sessions |
+| Visual artifacts generate in isolation | No awareness of prior symbolic patterns | Queries recurring motifs from the user's autobiographical memory — weaves continuity into new generation |
+| Archetype dialogue can't detect patterns | `recurringTopics: []` hardcoded | **Semantic consolidation** reveals topic and archetype patterns across sessions |
+| Psychological state forecasting limited | Only 14 days of assessment data | Long-term **episodic traces** enable months of multi-factor data for trajectory analysis |
 
-EverMemOS transforms Liminal from an app that *facilitates* inner work into one that *perceives* inner transformation — remembering who you were, understanding who you're becoming, and reflecting your arc back to you.
+EverMemOS transforms Liminal from an app that *facilitates* inner work into one that *perceives* psychological transformation — remembering who you were, understanding who you're becoming, and reflecting your developmental arc back to you.
 
 ---
 
