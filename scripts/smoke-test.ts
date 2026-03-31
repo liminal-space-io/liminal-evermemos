@@ -71,7 +71,6 @@ async function smokeTest() {
       limit: 5,
     };
 
-    // Try POST first (Evermind Cloud API may prefer POST for search)
     let res = await fetch(`${API_URL}/memories/search`, {
       method: 'POST',
       headers: headers(),

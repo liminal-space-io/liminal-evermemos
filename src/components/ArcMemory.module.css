@@ -1,0 +1,565 @@
+/* ── ArcMemory — Museum-Grade Trajectory Art ─────────────────────────────────
+ *
+ * Design system: Soleio principle — remove until it breaks.
+ * Every element earns its pixel. Spacing creates hierarchy.
+ * Gold is the only warm accent. Everything else: cool/neutral.
+ *
+ * Typography scale:
+ *   Display (Cormorant): tagline, scores, narrative
+ *   Body (Geist): descriptions, insight
+ *   Mono (Geist Mono): labels, dates, technical vocabulary
+ * ───────────────────────────────────────────────────────────────────────────── */
+
+.root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  padding: 0 24px 48px;
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+/* ── Act I: The Gallery ──────────────────────────────────────────────────── */
+/* Paintings dominate. Generous vertical space above and below.              */
+
+.gallery {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 56px;
+  margin-bottom: 48px;
+}
+
+.galleryLabel {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--silver);
+  opacity: 0.35;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+/* ── Paintings Row ───────────────────────────────────────────────────────── */
+
+.paintingsRow {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  width: 100%;
+  margin-bottom: 0;
+}
+
+.paintingColumn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  width: 220px;
+}
+
+/* Lifecycle tag — the architecture label above each painting */
+.lifecycleTag {
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity: 0.4;
+  margin-bottom: 16px;
+  text-align: center;
+  line-height: 1.4;
+}
+
+/* ── Painting Frame ──────────────────────────────────────────────────────── */
+
+.paintingFrame {
+  position: relative;
+  cursor: default;
+  transition: transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.paintingFrame:hover {
+  transform: scale(1.06);
+}
+
+.paintingBloom {
+  position: absolute;
+  inset: -50%;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.6;
+  transition: opacity 0.6s ease;
+}
+
+.paintingFrame:hover .paintingBloom {
+  opacity: 1;
+}
+
+/* ── Phase Data ──────────────────────────────────────────────────────────── */
+/* Below each painting: name, score, subtitle, month                         */
+
+.phaseData {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  margin-top: 20px;
+}
+
+.phaseName {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.phaseScore {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: 2.8rem;
+  letter-spacing: -0.05em;
+  color: var(--paper);
+  line-height: 1.1;
+  margin-top: 4px;
+}
+
+.phaseSubtitle {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  color: var(--silver);
+  opacity: 0.6;
+  margin-top: 4px;
+  letter-spacing: 0.01em;
+}
+
+.phaseMonth {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  color: var(--silver);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.4;
+  margin-top: 2px;
+}
+
+/* ── Trajectory ──────────────────────────────────────────────────────────── */
+
+.trajectorySection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin-top: 24px;
+  width: 100%;
+}
+
+.trajectoryLine {
+  width: 100%;
+  max-width: 640px;
+  display: flex;
+  justify-content: center;
+}
+
+.trajectoryLabel {
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity: 0.35;
+}
+
+/* ── Act II: The Story ───────────────────────────────────────────────────── */
+
+.narrativeSection {
+  width: 100%;
+  max-width: 700px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.narrative {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-style: italic;
+  font-size: 1.2rem;
+  line-height: 1.75;
+  letter-spacing: -0.01em;
+  color: var(--paper);
+  text-align: center;
+  max-width: 600px;
+  padding: 0;
+  margin: 0 0 32px;
+  opacity: 0.9;
+  border: none;
+}
+
+/* ── Phase Details ───────────────────────────────────────────────────────── */
+/* Three columns, each with a colored dot, month, description, key moment    */
+
+.phaseDetails {
+  display: flex;
+  gap: 24px;
+  width: 100%;
+  justify-content: center;
+}
+
+.phaseDetail {
+  flex: 1;
+  max-width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.phaseDetailHeader {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.phaseDetailDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.phaseDetailName {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--paper);
+  opacity: 0.7;
+}
+
+.phaseDetailText {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  color: var(--silver);
+  line-height: 1.55;
+  opacity: 0.75;
+}
+
+.phaseDetailMoment {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  color: var(--silver);
+  opacity: 0.5;
+  font-style: italic;
+  line-height: 1.45;
+  margin-top: 2px;
+}
+
+.momentDate {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--gold);
+  opacity: 0.7;
+  font-style: normal;
+}
+
+/* ── Act III: Patterns ───────────────────────────────────────────────────── */
+
+.patternsSection {
+  width: 100%;
+  max-width: 700px;
+  margin-bottom: 40px;
+}
+
+.sectionRule {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.sectionRuleText {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--silver);
+  opacity: 0.4;
+  white-space: nowrap;
+}
+
+.sectionRuleLine {
+  flex: 1;
+  height: 1px;
+  background: var(--border-subtle);
+}
+
+.motifsGrid {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.motifCard {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 18px;
+  border-radius: 8px;
+  background: var(--surface-card);
+  border: 1px solid var(--border-subtle);
+  flex: 1;
+  max-width: 220px;
+  transition: border-color 0.4s ease, background 0.4s ease;
+}
+
+.motifCard:hover {
+  border-color: var(--border-hover);
+  background: var(--surface-card-hover);
+}
+
+.motifName {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity: 0.8;
+}
+
+.motifEvolution {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  color: var(--silver);
+  line-height: 1.55;
+  opacity: 0.75;
+}
+
+/* ── Act IV: Architecture ────────────────────────────────────────────────── */
+
+.architectureSection {
+  width: 100%;
+  max-width: 700px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  padding-top: 32px;
+  border-top: 1px solid var(--border-subtle);
+  margin-bottom: 32px;
+}
+
+/* Memory → Reasoning → Action loop */
+
+.loopRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+  width: 100%;
+  justify-content: center;
+}
+
+.loopStep {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 160px;
+}
+
+.loopIcon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-style: italic;
+  color: var(--gold);
+  opacity: 0.7;
+}
+
+.loopLabel {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--paper);
+  opacity: 0.7;
+  margin-top: 4px;
+}
+
+.loopDesc {
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  color: var(--silver);
+  opacity: 0.5;
+  text-align: center;
+  line-height: 1.45;
+}
+
+.loopArrow {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--gold);
+  opacity: 0.3;
+  margin-top: 6px;
+  padding: 0 4px;
+}
+
+/* Category claim */
+
+.categoryBar {
+  padding: 0 16px;
+  text-align: center;
+}
+
+.categoryText {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  color: var(--paper);
+  line-height: 1.6;
+  opacity: 0.6;
+}
+
+/* Stats */
+
+.statsRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.stat {
+  font-family: var(--font-mono);
+  font-size: 0.52rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--silver);
+  opacity: 0.4;
+}
+
+.statDivider {
+  font-family: var(--font-mono);
+  font-size: 0.52rem;
+  color: var(--silver);
+  opacity: 0.25;
+}
+
+/* ── Colophon ────────────────────────────────────────────────────────────── */
+
+.colophon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-subtle);
+  width: 100%;
+  max-width: 700px;
+}
+
+.colophonBrand {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  color: var(--silver);
+  opacity: 0.4;
+  letter-spacing: 0.04em;
+}
+
+.evermemos {
+  color: var(--paper);
+  opacity: 1;
+  font-weight: 500;
+}
+
+.liminal {
+  color: var(--paper);
+  opacity: 0.8;
+}
+
+.colophonTagline {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-style: italic;
+  font-size: 0.9rem;
+  color: var(--silver);
+  opacity: 0.35;
+  letter-spacing: -0.02em;
+}
+
+/* ── Responsive ──────────────────────────────────────────────────────────── */
+
+@media (max-width: 720px) {
+  .gallery {
+    padding-top: 40px;
+  }
+
+  .paintingsRow {
+    flex-direction: column;
+    align-items: center;
+    gap: 36px;
+  }
+
+  .paintingColumn {
+    width: 100%;
+    max-width: 260px;
+  }
+
+  .trajectorySection {
+    display: none;
+  }
+
+  .phaseDetails {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .phaseDetail {
+    max-width: 280px;
+    text-align: center;
+  }
+
+  .phaseDetailHeader {
+    justify-content: center;
+  }
+
+  .narrative {
+    font-size: 1.05rem;
+  }
+
+  .motifsGrid {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .motifCard {
+    max-width: 300px;
+    width: 100%;
+  }
+
+  .loopRow {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .loopArrow {
+    transform: rotate(90deg);
+    margin: 0;
+    padding: 0;
+  }
+}
