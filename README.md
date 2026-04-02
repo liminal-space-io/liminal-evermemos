@@ -247,8 +247,11 @@ npx ts-node scripts/seed-demo-data.ts    # Seed 7 synthetic MemCells across phas
 npx ts-node scripts/smoke-test.ts        # Health check + store/search round-trip
 ```
 
-### Demo Mode
-Visit `/agent/arc?demo=true` for a pre-seeded experience — no auth required.
+### Demo
+
+**Interactive POC:** [liminal-space-io.github.io/liminal-evermemos/LIMINAL_EVERMEMOS_POC.html](https://liminal-space-io.github.io/liminal-evermemos/LIMINAL_EVERMEMOS_POC.html) — no auth, no setup. Arrow keys to navigate, M to toggle Day 1 / Day 90.
+
+See `DEMO.md` for the full walkthrough guide.
 
 ---
 

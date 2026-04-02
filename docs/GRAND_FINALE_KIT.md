@@ -146,7 +146,7 @@ The system doesn't reflect your arc back to you. It presents a disputable accoun
 
 Memory for who you're becoming.
 
-→ Demo: theliminalspace.io/agent/arc?demo=true
+→ Demo: liminal-space-io.github.io/liminal-evermemos/LIMINAL_EVERMEMOS_POC.html
 → GitHub: github.com/liminal-space-io/liminal-evermemos
 → Vote: [evermind.ai link]
 
@@ -174,7 +174,7 @@ That correction IS the product. The system learns. Not from the data — from th
 
 This is the Memory → Reasoning → Action loop applied to inner life. Nobody else is building this.
 
-→ Try the demo (no login): theliminalspace.io/agent/arc?demo=true
+→ Try the demo (no login): liminal-space-io.github.io/liminal-evermemos/LIMINAL_EVERMEMOS_POC.html
 → GitHub: github.com/liminal-space-io/liminal-evermemos
 
 Built by Shruti Rajagopal and Shayaun Nejad.
@@ -205,7 +205,7 @@ Hey everyone — sharing what we built with EverMemOS.
 
 Happy to share what we learned about the agentic retrieval API — it's powerful but has some nuances around GET-with-body vs POST for search.
 
-→ Demo: theliminalspace.io/agent/arc?demo=true
+→ Demo: liminal-space-io.github.io/liminal-evermemos/LIMINAL_EVERMEMOS_POC.html
 → Repo: github.com/liminal-space-io/liminal-evermemos
 
 ---
@@ -213,7 +213,7 @@ Happy to share what we learned about the agentic retrieval API — it's powerful
 ## 4. Pre-Event Checklist (April 3–4)
 
 ### Night Before (April 3)
-- [ ] Demo URL live: `theliminalspace.io/agent/arc?demo=true` — test from phone + laptop
+- [ ] Demo URL live: `liminal-space-io.github.io/liminal-evermemos/LIMINAL_EVERMEMOS_POC.html` — test from phone + laptop
 - [ ] GitHub repo public and clean — star count visible
 - [ ] Social posts scheduled/drafted (Twitter thread + LinkedIn + Discord)
 - [ ] Pitch rehearsed once out loud (time it — must be under 5 min)
