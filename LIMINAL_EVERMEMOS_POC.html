@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Liminal Space × EverMemOS</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /*
+   * CREATIVE DIRECTION v2
+   * ─────────────────────
+   * Metaphor: "A developing room. Something is emerging in the dark."
+   *
+   * NOT a dashboard. NOT a SaaS app. A dark surface where inner data
+   * develops like a photograph — slowly, then all at once.
+   *
+   * Structure: Full-screen scenes, not tabs-in-a-shell.
+   *   Scene 1 — The Check (without memory, then WITH memory)
+   *   Scene 2 — The Council (memory enters before archetypes speak)
+   *   Scene 3 — The Arc (the full reconstruction)
+   *
+   * The hero moment: the Memory toggle. Without memory = a score.
+   * With memory = perception. The delta IS the thesis.
+   *
+   * Violet = the system perceiving.
+   * Gold = memory surfacing.
+   * Teal = what's emerging.
+   * The room itself changes temperature when memory is on.
+   */
+
+  :root {
+    --ink: #0c0b10;
+    --ink-warm: #100e16;
+    --ink-card: #16141e;
+    --ink-elevated: #1e1b2a;
+    --paper: #f3f1ef;
+    --silver: #b8b2ab;
+    --gold: #FFDD88;
+    --gold-dim: rgba(255,221,136,0.45);
+    --violet: #8e66fb;
+    --violet-glow: rgba(142,102,251,0.12);
+    --violet-dim: rgba(142,102,251,0.4);
+    --teal: #0ed7f2;
+    --teal-glow: rgba(14,215,242,0.1);
+    --rose: #FF5588;
+    --rose-glow: rgba(255,85,136,0.08);
+    --border: rgba(255,255,255,0.05);
+    --border-on: rgba(255,255,255,0.1);
+    --display: 'Cormorant Garamond', Georgia, serif;
+    --body: 'Inter', -apple-system, system-ui, sans-serif;
+    --mono: 'SF Mono', 'Fira Code', monospace;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { height:100%; overflow:hidden; background:var(--ink); color:var(--paper); font-family:var(--body); -webkit-font-smoothing:antialiased; }
+
+  /* ─── Grain ─── */
+  body::before {
+    content:''; position:fixed; inset:0; pointer-events:none; z-index:9999; opacity:0.025;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size:256px;
+  }
+
+  /* ═══════════════════════════════════════
+     LAYOUT — full screen scenes, keyboard nav
+     ═══════════════════════════════════════ */
+  .scene { display:none; height:100vh; flex-direction:column; }
+  .scene.on { display:flex; animation:sceneIn 0.5s ease-out; }
+  @keyframes sceneIn { from{opacity:0;} to{opacity:1;} }
+
+  /* Minimal top bar — not a dashboard, just orientation */
+  .bar {
+    height:36px; display:flex; align-items:center; padding:0 32px;
+    border-bottom:1px solid var(--border); flex-shrink:0;
+  }
+  .bar-left { display:flex; align-items:center; gap:10px; }
+  .bar-orb { width:8px; height:8px; border-radius:50%; background:var(--violet); box-shadow:0 0 8px var(--violet-glow); }
+  .bar-brand { font:500 11px/1 var(--body); color:var(--paper); opacity:0.5; letter-spacing:-0.2px; }
+  .bar-right { margin-left:auto; display:flex; align-items:center; gap:14px; }
+  .bar-scene-label { font:400 9px/1 var(--mono); color:var(--silver); opacity:0.3; letter-spacing:0.06em; text-transform:uppercase; }
+  .bar-mem {
+    font:600 7px/1 var(--mono); text-transform:uppercase; letter-spacing:0.5px;
+    padding:3px 8px; border-radius:10px;
+    transition:all 0.5s;
+  }
+  .bar-mem.off { color:var(--silver); opacity:0.3; border:1px solid var(--border); background:transparent; }
+  .bar-mem.on { color:var(--gold); border:1px solid rgba(255,221,136,0.2); background:rgba(255,221,136,0.04); }
+
+  /* Scene nav dots */
+  .scene-nav {
+    position:fixed; right:20px; top:50%; transform:translateY(-50%);
+    display:flex; flex-direction:column; gap:10px; z-index:100;
+  }
+  .scene-dot {
+    width:6px; height:6px; border-radius:50%;
+    background:rgba(255,255,255,0.12); cursor:pointer;
+    transition:all 0.3s;
+  }
+  .scene-dot.on { background:var(--violet); box-shadow:0 0 6px var(--violet-glow); }
+  .scene-dot:hover { background:rgba(255,255,255,0.3); }
+
+  /* ─── Content area ─── */
+  .content { flex:1; overflow-y:auto; display:flex; justify-content:center; padding:40px 48px 80px; }
+  .content-inner { width:100%; max-width:780px; }
+
+  /* ═══════════════════════════════════════
+     SCENE 1: THE CHECK
+     ═══════════════════════════════════════
+     The hero moment: toggle memory on/off.
+     Without = a number. With = perception.
+     ═══════════════════════════════════════ */
+
+  .check-hero { text-align:center; margin-bottom:40px; }
+  .check-phase { font:600 8px/1 var(--mono); text-transform:uppercase; letter-spacing:0.8px; color:var(--teal); opacity:0.5; margin-bottom:10px; }
+  .check-title { font:300 38px/1.15 var(--display); color:var(--paper); letter-spacing:-0.5px; margin-bottom:6px; }
+  .check-date { font:400 10px/1 var(--mono); color:var(--silver); opacity:0.3; }
+
+  /* The big score */
+  .score-block { text-align:center; margin-bottom:32px; }
+  .score-num { font:300 80px/1 var(--display); color:var(--paper); letter-spacing:-3px; transition:all 0.5s; }
+  .score-label { font:400 10px/1 var(--mono); color:var(--silver); opacity:0.35; letter-spacing:0.06em; text-transform:uppercase; margin-top:4px; }
+  .score-delta { font:500 14px/1 var(--body); color:var(--teal); opacity:0; transition:opacity 0.6s; margin-top:6px; }
+  .score-delta.on { opacity:1; }
+
+  /* Factor row — horizontal, compact */
+  .factors { display:flex; gap:6px; margin-bottom:36px; }
+  .factor {
+    flex:1; display:flex; flex-direction:column; align-items:center; gap:4px;
+    padding:14px 4px; background:var(--ink-card); border:1px solid var(--border);
+    border-radius:6px; transition:all 0.5s;
+  }
+  .factor.highlight { border-color:var(--violet-dim); background:var(--ink-elevated); }
+  .factor-name { font:600 7px/1 var(--mono); text-transform:uppercase; letter-spacing:0.5px; color:var(--silver); opacity:0.4; }
+  .factor-val { font:300 24px/1 var(--display); color:var(--paper); }
+  .factor-bar { width:80%; height:2px; background:rgba(255,255,255,0.04); border-radius:1px; overflow:hidden; }
+  .factor-fill { height:100%; border-radius:1px; transition:width 0.8s ease-out; width:0%; }
+  .factor-delta { font:400 9px/1 var(--mono); opacity:0; transition:opacity 0.5s; min-height:12px; }
+  .factor-delta.on { opacity:1; }
+  .factor-delta.up { color:var(--teal); }
+  .factor-delta.dn { color:var(--rose); }
+
+  /* ─── THE TOGGLE — memory on/off ─── */
+
+  /* ─── DAY 1 vs DAY 90 STATE ─── */
+  .day-state { text-align:center; }
+  
+  .day1 { padding:32px 0; }
+  .day-recorded { font:400 14px/1.4 var(--body); color:var(--silver); opacity:0.4; margin-bottom:16px; }
+  .day-label { font:400 11px/1 var(--mono); text-transform:uppercase; letter-spacing:0.8px; color:var(--silver); opacity:0.3; }
+
+  .day90 { }
+
+  /* ─── CLAIM CARD — confrontation ─── */
+  .claim {
+    padding:28px 32px; background:var(--ink-card); border-radius:6px;
+    position:relative; overflow:hidden;
+    opacity:0; transform:translateY(8px); transition:all 0.6s cubic-bezier(0.16,1,0.3,1);
+    margin-bottom:24px;
+  }
+  .claim.on { opacity:1; transform:none; }
+  .claim::before { content:''; position:absolute; left:0; top:10px; bottom:10px; width:3px; background:var(--violet); border-radius:0 2px 2px 0; box-shadow:0 0 16px var(--violet-glow); }
+  .claim::after { content:''; position:absolute; left:0; top:0; bottom:0; width:120px; background:linear-gradient(90deg,var(--violet-glow) 0%,transparent 100%); pointer-events:none; }
+
+  .claim-header { font:600 8px/1 var(--mono); text-transform:uppercase; letter-spacing:0.8px; color:var(--violet); margin-bottom:12px; position:relative; z-index:1; }
+  
+  .claim-assertion { font:500 20px/1.3 var(--display); color:var(--paper); letter-spacing:-0.2px; margin-bottom:16px; position:relative; z-index:1; }
+  
+  .claim-evidence { margin:16px 0; position:relative; z-index:1; }
+  .claim-evidence-item { font:400 13px/1.5 var(--body); color:var(--silver); opacity:0.7; margin-bottom:8px; padding-left:16px; position:relative; }
+  .claim-evidence-item::before { content:'·'; position:absolute; left:0; color:var(--gold); }
+
+  .claim-edge { font:400 13px/1.6 var(--body); font-style:italic; color:var(--rose); opacity:0.8; margin-top:16px; position:relative; z-index:1; }
+
+  /* ─── RESPONSE INTERFACE ─── */
+  .response-bar {
+    display:flex; gap:12px; margin-bottom:24px;
+    opacity:0; transform:translateY(8px); transition:all 0.6s cubic-bezier(0.16,1,0.3,1);
+    transition-delay:0.3s;
+  }
+  .response-bar.on { opacity:1; transform:none; }
+
+  .response-btn {
+    flex:1; padding:12px 16px; border-radius:20px;
+    background:var(--ink-card); border:1px solid var(--border);
+    font:400 12px/1 var(--body); color:var(--silver);
+    cursor:pointer; user-select:none;
+    transition:all 0.3s;
+  }
+  .response-btn:hover { border-color:rgba(255,255,255,0.15); background:var(--ink-elevated); }
+  .response-btn.active { background:var(--violet); border-color:var(--violet); color:var(--paper); }
+
+  /* ─── CORRECTION INPUT & TEXT ─── */
+  .correction-input-wrap {
+    margin-bottom:24px;
+    opacity:0; transform:translateY(6px); transition:all 0.5s;
+  }
+  .correction-input-wrap.show { opacity:1; transform:none; }
+
+  .correction-input {
+    width:100%; padding:12px 16px; border-radius:6px;
+    background:var(--ink-card); border:1px solid var(--border);
+    font:400 13px/1.4 var(--body); color:var(--paper);
+    outline:none; transition:border 0.3s;
+  }
+  .correction-input:focus { border-color:rgba(255,221,136,0.3); }
+  .correction-input::placeholder { color:var(--silver); opacity:0.4; }
+
+  .correction-text {
+    margin-top:16px; padding:16px 20px;
+    background:rgba(255,221,136,0.02); border:1px solid rgba(255,221,136,0.06);
+    border-left:2px solid var(--gold-dim); border-radius:0 6px 6px 0;
+    font:400 12px/1.6 var(--body); color:var(--silver);
+    opacity:0; transform:translateY(6px); transition:all 0.5s;
+  }
+  .correction-text.show { opacity:1; transform:none; }
+  .correction-text strong { color:var(--paper); font-weight:500; }
+
+  .correction-stored {
+    font:400 9px/1 var(--mono); color:var(--gold-dim); margin-top:8px; opacity:0.6;
+  }
+
+  /* ─── EVIDENCE EXPAND ─── */
+  .evidence-expand {
+    margin-top:20px; padding:20px; background:var(--ink-elevated);
+    border-radius:6px; border:1px solid var(--border);
+    opacity:0; transform:translateY(6px); transition:all 0.5s;
+  }
+  .evidence-expand.show { opacity:1; transform:none; }
+
+  .evidence-expand-label { font:600 8px/1 var(--mono); text-transform:uppercase; letter-spacing:0.7px; color:var(--gold); margin-bottom:12px; }
+  
+  .evidence-expand-list { }
+  .evidence-item { display:flex; gap:12px; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.05); }
+  .evidence-item:last-child { border-bottom:none; }
+
+  .evidence-date { font:400 9px/1.4 var(--mono); color:var(--gold-dim); white-space:nowrap; min-width:50px; }
+  .evidence-content { font:400 12px/1.5 var(--body); color:var(--silver); opacity:0.7; }
+
+  .voice-mem {
+    margin:10px 0 0 15px; padding:8px 12px;
+    background:rgba(255,221,136,0.02); border-left:2px solid rgba(255,221,136,0.1);
+    border-radius:0 4px 4px 0;
+    font:400 11px/1.5 var(--body); color:var(--gold-dim);
+    opacity:0; transition:opacity 0.5s;
+  }
+  .voice-mem.on { opacity:1; }
+
+  /* Synthesis */
+  .synthesis { padding:22px 26px; background:var(--ink-elevated); border:1px solid var(--border); border-radius:6px; margin-top:16px; opacity:0; transition:opacity 0.5s; }
+  .synthesis.on { opacity:1; }
+  .synth-label { font:600 7px/1 var(--mono); text-transform:uppercase; letter-spacing:0.7px; color:var(--silver); opacity:0.35; margin-bottom:8px; }
+  .synth-text { font:400 17px/1.6 var(--display); font-style:italic; color:var(--paper); opacity:0.8; }
+  .synth-conv { display:flex; align-items:center; gap:8px; margin-top:12px; font:400 9px/1 var(--mono); color:var(--silver); opacity:0.3; }
+  .conv-bar { width:36px; height:2px; background:rgba(255,255,255,0.06); border-radius:1px; overflow:hidden; }
+  .conv-fill { height:100%; background:var(--teal); border-radius:1px; width:82%; }
+
+  /* ═══════════════════════════════════════
+     SCENE 3: THE ARC
+     ═══════════════════════════════════════ */
+
+  .arc-hero { text-align:center; margin-bottom:36px; }
+  .arc-tag { font:400 8px/1 var(--mono); text-transform:uppercase; letter-spacing:0.14em; color:var(--gold); opacity:0.35; margin-bottom:16px; }
+  .arc-title { font:300 36px/1.15 var(--display); color:var(--paper); letter-spacing:-0.5px; }
+
+  /* Paintings — BIG. These are the emotional center. */
+  .paintings { display:flex; justify-content:center; gap:28px; margin-bottom:16px; }
+  .paint-col { display:flex; flex-direction:column; align-items:center; opacity:0; transform:translateY(14px); transition:all 1.2s cubic-bezier(0.25,0.1,0.25,1); }
+  .paint-col.on { opacity:1; transform:none; }
+
+  .lc-tag { font:400 6.5px/1 var(--mono); text-transform:uppercase; letter-spacing:0.12em; color:var(--gold); opacity:0.3; margin-bottom:10px; text-align:center; }
+
+  .paint-wrap { position:relative; }
+  .paint-wrap:hover .paint-bloom { opacity:1; }
+  .paint-bloom { position:absolute; inset:-50%; pointer-events:none; z-index:-1; opacity:0.4; transition:opacity 0.5s; }
+
+  .ph-data { display:flex; flex-direction:column; align-items:center; margin-top:14px; }
+  .ph-name { font:600 8px/1 var(--mono); letter-spacing:0.1em; text-transform:uppercase; }
+  .ph-score { font:300 32px/1.1 var(--display); color:var(--paper); margin-top:4px; letter-spacing:-1px; }
+  .ph-sub { font:400 10px/1 var(--body); color:var(--silver); opacity:0.45; margin-top:3px; }
+  .ph-month { font:400 7px/1 var(--mono); color:var(--silver); opacity:0.25; letter-spacing:0.05em; text-transform:uppercase; margin-top:2px; }
+
+  /* Trajectory */
+  .traj { display:flex; flex-direction:column; align-items:center; margin-bottom:28px; opacity:0; transition:opacity 0.6s; }
+  .traj.on { opacity:1; }
+  .traj-label { font:400 7px/1 var(--mono); letter-spacing:0.1em; text-transform:uppercase; color:var(--gold); opacity:0.25; margin-top:4px; }
+
+  /* Narrative */
+  .arc-narr {
+    font:400 19px/1.75 var(--display); font-style:italic; color:var(--paper);
+    text-align:center; max-width:600px; margin:0 auto 32px; opacity:0; transition:opacity 0.8s;
+  }
+  .arc-narr.on { opacity:0.85; }
+
+  /* Phase details */
+  .ph-details { display:flex; gap:20px; justify-content:center; margin-bottom:28px; opacity:0; transition:opacity 0.6s; }
+  .ph-details.on { opacity:1; }
+  .ph-det { flex:1; max-width:210px; }
+  .pd-head { display:flex; align-items:center; gap:5px; margin-bottom:5px; }
+  .pd-dot { width:5px; height:5px; border-radius:50%; }
+  .pd-mo { font:400 9px/1 var(--mono); letter-spacing:0.06em; text-transform:uppercase; color:var(--paper); opacity:0.5; }
+  .pd-txt { font:400 11.5px/1.5 var(--body); color:var(--silver); opacity:0.55; margin-bottom:4px; }
+  .pd-ev { font:400 10.5px/1.4 var(--body); color:var(--silver); opacity:0.35; font-style:italic; }
+  .pd-ev-d { font:400 8px/1 var(--mono); color:var(--gold); opacity:0.45; font-style:normal; }
+
+  /* Motifs */
+  .motif-rule { display:flex; align-items:center; gap:10px; margin-bottom:12px; opacity:0; transition:opacity 0.5s; }
+  .motif-rule.on { opacity:1; }
+  .mr-text { font:400 7px/1 var(--mono); letter-spacing:0.12em; text-transform:uppercase; color:var(--silver); opacity:0.25; white-space:nowrap; }
+  .mr-line { flex:1; height:1px; background:var(--border); }
+
+  .motifs { display:flex; gap:8px; justify-content:center; margin-bottom:28px; opacity:0; transition:opacity 0.5s; }
+  .motifs.on { opacity:1; }
+  .motif { flex:1; max-width:220px; padding:12px 14px; background:var(--ink-card); border:1px solid var(--border); border-radius:6px; }
+  .motif:hover { border-color:var(--border-on); }
+  .motif-name { font:500 7.5px/1 var(--mono); letter-spacing:0.07em; text-transform:uppercase; color:var(--gold); opacity:0.65; margin-bottom:5px; }
+  .motif-evo { font:400 11px/1.5 var(--body); color:var(--silver); opacity:0.55; }
+
+  /* Architecture */
+  .arch { padding-top:20px; border-top:1px solid var(--border); text-align:center; opacity:0; transition:opacity 0.5s; }
+  .arch.on { opacity:1; }
+
+  .loop { display:flex; justify-content:center; align-items:flex-start; margin-bottom:16px; }
+  .loop-s { display:flex; flex-direction:column; align-items:center; gap:3px; width:140px; }
+  .loop-i { width:26px; height:26px; border-radius:50%; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font:600 10px/1 var(--display); font-style:italic; color:var(--gold); opacity:0.5; }
+  .loop-l { font:400 7px/1 var(--mono); letter-spacing:0.08em; text-transform:uppercase; color:var(--paper); opacity:0.5; margin-top:3px; }
+  .loop-d { font:400 10px/1.35 var(--body); color:var(--silver); opacity:0.35; text-align:center; }
+  .loop-a { font:400 11px/1 var(--mono); color:var(--gold); opacity:0.15; margin-top:6px; padding:0 4px; }
+
+  .cat-claim { font:400 12px/1.6 var(--body); color:var(--paper); opacity:0.4; margin-bottom:12px; }
+  .stats { display:flex; align-items:center; gap:6px; justify-content:center; flex-wrap:wrap; }
+  .st { font:400 7.5px/1 var(--mono); letter-spacing:0.04em; text-transform:uppercase; color:var(--silver); opacity:0.3; }
+  .st-d { font:400 7.5px/1 var(--mono); color:var(--silver); opacity:0.15; }
+
+  .colo { text-align:center; padding-top:16px; border-top:1px solid var(--border); margin-top:24px; }
+  .colo-brand { font:400 9px/1 var(--mono); color:var(--silver); opacity:0.3; }
+  .colo-brand .em { color:var(--paper); opacity:1; font-weight:500; }
+  .colo-line { font:300 14px/1 var(--display); font-style:italic; color:var(--silver); opacity:0.25; margin-top:5px; }
+
+  /* ─── Keyboard hint ─── */
+  .key-hint {
+    position:fixed; bottom:14px; left:50%; transform:translateX(-50%);
+    font:400 9px/1 var(--mono); color:var(--silver); opacity:0.2;
+    letter-spacing:0.04em; z-index:100;
+  }
+  .key-hint kbd { padding:1px 5px; border:1px solid rgba(255,255,255,0.1); border-radius:3px; margin:0 2px; }
+</style>
+</head>
+<body>
+
+<!-- Scene navigation dots -->
+<div class="scene-nav">
+  <div class="scene-dot on" data-scene="0" title="The Check"></div>
+  <div class="scene-dot" data-scene="1" title="The Council"></div>
+  <div class="scene-dot" data-scene="2" title="The Arc"></div>
+</div>
+
+<div class="key-hint"><kbd>←</kbd> <kbd>→</kbd> to navigate · <kbd>M</kbd> to toggle memory</div>
+
+<!-- ════════════════════════════════════════
+     SCENE 1: THE CHECK
+     ════════════════════════════════════════ -->
+<div class="scene on" id="s0">
+  <div class="bar">
+    <div class="bar-left"><div class="bar-orb"></div><span class="bar-brand">Liminal Space</span></div>
+    <div class="bar-right">
+      <span class="bar-scene-label">1 / 3 · The Check</span>
+      <div class="bar-mem off" id="barMem">Memory Off</div>
+    </div>
+  </div>
+  <div class="content"><div class="content-inner">
+
+    <div class="check-hero">
+      <div class="check-phase">Phase: Emerging · Week 11</div>
+      <div class="check-title">Morning Coherence Check</div>
+      <div class="check-date">March 14, 2026 · 8:15 AM</div>
+    </div>
+
+    <div class="score-block">
+      <div class="score-num">76</div>
+      <div class="score-label">Overall Coherence</div>
+      <div class="score-delta" id="sDelta">↑ 14 points from 6 weeks ago</div>
+    </div>
+
+
+    <div class="factors" id="fGrid">
+      <div class="factor" data-s="70" data-d="+38"><div class="factor-name">Stability</div><div class="factor-val">70</div><div class="factor-bar"><div class="factor-fill" style="background:var(--rose)"></div></div><div class="factor-delta">+38</div></div>
+      <div class="factor" data-s="78" data-d="+43"><div class="factor-name">Vitality</div><div class="factor-val">78</div><div class="factor-bar"><div class="factor-fill" style="background:var(--gold)"></div></div><div class="factor-delta">+43</div></div>
+      <div class="factor highlight" data-s="85" data-d="+57"><div class="factor-name">Agency</div><div class="factor-val">85</div><div class="factor-bar"><div class="factor-fill" style="background:var(--teal)"></div></div><div class="factor-delta up">+57 ▲</div></div>
+      <div class="factor" data-s="68" data-d="+23"><div class="factor-name">Connection</div><div class="factor-val">68</div><div class="factor-bar"><div class="factor-fill" style="background:var(--violet)"></div></div><div class="factor-delta dn">+23 ↓</div></div>
+      <div class="factor" data-s="80" data-d="+40"><div class="factor-name">Expression</div><div class="factor-val">80</div><div class="factor-bar"><div class="factor-fill" style="background:var(--teal)"></div></div><div class="factor-delta">+40</div></div>
+      <div class="factor" data-s="82" data-d="+46"><div class="factor-name">Clarity</div><div class="factor-val">82</div><div class="factor-bar"><div class="factor-fill" style="background:var(--violet)"></div></div><div class="factor-delta">+46</div></div>
+      <div class="factor" data-s="72" data-d="+22"><div class="factor-name">Wholeness</div><div class="factor-val">72</div><div class="factor-bar"><div class="factor-fill" style="background:var(--rose)"></div></div><div class="factor-delta">+22</div></div>
+    </div>
+
+    <!-- Day 1 state — always visible initially -->
+    <div class="day-state day1" id="day1State">
+      <div class="day-recorded">Recorded.</div>
+      <div class="day-label">Day 1 — The system doesn't know you yet.</div>
+    </div>
+
+    <!-- Day 90 state — hidden by default, revealed on M key -->
+    <div class="day-state day90" id="day90State" style="display:none;">
+      <div class="claim" id="claimCard">
+        <div class="claim-header">THE SYSTEM'S CLAIM</div>
+        <div class="claim-assertion" id="claimAssertion">You've been avoiding connection for nine days.</div>
+        <div class="claim-evidence">
+          <div class="claim-evidence-item">Jan 14: agency 82, connection 47</div>
+          <div class="claim-evidence-item">Today: agency 85, connection 44</div>
+          <div class="claim-evidence-item">Last time this gap appeared, connection collapsed to 31 by Feb 2.</div>
+        </div>
+        <div class="claim-edge" id="claimEdge">Last time, you told yourself it was fine. It wasn't.</div>
+      </div>
+
+      <!-- Response interface -->
+      <div class="response-bar" id="responseBar">
+        <button class="response-btn" id="responseYes" data-response="yes">Yes</button>
+        <button class="response-btn" id="responseNo" data-response="no">No — here's what's happening</button>
+        <button class="response-btn" id="responseShow" data-response="show">Show me the evidence</button>
+      </div>
+
+      <!-- Correction input — shown after "No" is clicked -->
+      <div class="correction-input-wrap" id="correctionWrap" style="display:none;">
+        <input class="correction-input" id="correctionInput" type="text" placeholder="What's actually happening?" />
+        <div class="correction-text" id="correctionText" style="display:none;">
+          <strong>Your correction:</strong> <span id="correctionContent"></span>
+          <div class="correction-stored">Correction stored as MemCell</div>
+        </div>
+      </div>
+
+      <!-- Evidence expand — shown after "Show me" is clicked -->
+      <div class="evidence-expand" id="evidenceExpand" style="display:none;">
+        <div class="evidence-expand-label">MemCell Evidence</div>
+        <div class="evidence-expand-list">
+          <div class="evidence-item">
+            <span class="evidence-date">Jan 14</span>
+            <span class="evidence-content">Agency 82, Connection 47 · coherence-001 · Session check</span>
+          </div>
+          <div class="evidence-item">
+            <span class="evidence-date">Jan 21</span>
+            <span class="evidence-content">Connection began decline · Reported: "too busy for relationships" · coherence-007</span>
+          </div>
+          <div class="evidence-item">
+            <span class="evidence-date">Feb 2</span>
+            <span class="evidence-content">Connection 31 · 3-week dissolution stall · coherence-008</span>
+          </div>
+          <div class="evidence-item">
+            <span class="evidence-date">Today</span>
+            <span class="evidence-content">Agency 85, Connection 44 · Gap widening again · coherence-042</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div></div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SCENE 2: THE COUNCIL
+     ════════════════════════════════════════ -->
+<div class="scene" id="s1">
+  <div class="bar">
+    <div class="bar-left"><div class="bar-orb"></div><span class="bar-brand">Liminal Space</span></div>
+    <div class="bar-right">
+      <span class="bar-scene-label">2 / 3 · The Council</span>
+      <div class="bar-mem on">Memory On</div>
+    </div>
+  </div>
+  <div class="content"><div class="content-inner">
+
+    <div class="council-hero">
+      <div class="council-phase">Council Session · 3 archetypes present</div>
+      <div class="council-topic">"How do I step into what's next without a map?"</div>
+      <div class="council-meta">March 10, 2026 · 6:00 PM · Warrior, Sage, Sovereign</div>
+    </div>
+
+    <div class="retrieval" id="retr">
+      <div class="retrieval-label"><div class="dot"></div> EverMemOS · Retrieved before deliberation</div>
+      <div class="mem-item">
+        <div class="mem-item-date">Jan 20</div>
+        <div class="mem-item-text">Last council on sovereignty. <strong>Warrior urged action — user dismissed as "too aggressive."</strong> Sage reframed. User: resistant. <span class="mem-tag">council</span></div>
+      </div>
+      <div class="mem-item">
+        <div class="mem-item-date">Feb 10</div>
+        <div class="mem-item-text">Threshold: "The role I've been performing isn't mine anymore." Motifs: identity_dissolution, mask_removal, <strong>sovereignty</strong>. <span class="mem-tag">myth-event</span></div>
+      </div>
+      <div class="mem-item">
+        <div class="mem-item-date">Feb 24</div>
+        <div class="mem-item-text">Shadow: "Fear of being unseen isn't about visibility — it's about being seen as I actually am." Second encounter. <span class="mem-tag">shadow</span></div>
+      </div>
+    </div>
+
+    <div class="voice" id="v1">
+      <div class="voice-head"><div class="voice-pip" style="background:var(--rose)"></div><div class="voice-name">The Warrior</div><div class="voice-role">Speaks first — unlike January</div></div>
+      <div class="voice-quote">"You already have the map — it's the pattern you've been living. Stop waiting for permission."</div>
+      <div class="voice-mem" id="vm1">In January, you dismissed the Warrior. In February, you dissolved the mask. Now the Warrior speaks first — and you're listening. This shift took 7 weeks.</div>
+    </div>
+
+    <div class="voice" id="v2">
+      <div class="voice-head"><div class="voice-pip" style="background:var(--violet)"></div><div class="voice-name">The Sage</div><div class="voice-role">Affirms the motif</div></div>
+      <div class="voice-quote">"Sovereignty was always the motif. You didn't need to find it. You needed to stop performing its opposite."</div>
+      <div class="voice-mem" id="vm2">"Sovereignty" appeared in 4 threshold moments across 8 weeks. The Sage correlates with your highest clarity scores. Not coincidence — consolidation.</div>
+    </div>
+
+    <div class="voice" id="v3">
+      <div class="voice-head"><div class="voice-pip" style="background:var(--teal)"></div><div class="voice-name">The Sovereign</div><div class="voice-role">New presence</div></div>
+      <div class="voice-quote">"You don't find sovereignty. You practice it. Every check where you scored agency honestly was practice."</div>
+    </div>
+
+    <div class="synthesis" id="synth">
+      <div class="synth-label">Synthesis</div>
+      <div class="synth-text">"The map is the motif. Sovereignty isn't ahead of you — it's what you've been building."</div>
+      <div class="synth-conv"><span>Convergence</span><div class="conv-bar"><div class="conv-fill"></div></div><span>Strong · Deeply resonant</span></div>
+    </div>
+
+  </div></div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SCENE 3: THE ARC
+     ════════════════════════════════════════ -->
+<div class="scene" id="s2">
+  <div class="bar">
+    <div class="bar-left"><div class="bar-orb"></div><span class="bar-brand">Liminal Space</span></div>
+    <div class="bar-right">
+      <span class="bar-scene-label">3 / 3 · The Arc</span>
+      <div class="bar-mem on">Memory On</div>
+    </div>
+  </div>
+  <div class="content"><div class="content-inner">
+
+    <div class="arc-hero">
+      <div class="arc-tag">Reconstructive Recollection · 23 MemCells · 3 months</div>
+      <div class="arc-title">3 months of inner life, reconstructed from memory</div>
+    </div>
+
+    <div class="paintings">
+      <div class="paint-col" id="p1">
+        <div class="lc-tag">Episodic Trace</div>
+        <div class="paint-wrap"><svg width="200" height="200" viewBox="0 0 200 200" id="svg1"></svg><div class="paint-bloom" style="background:radial-gradient(circle,rgba(255,85,136,0.07) 0%,transparent 70%)"></div></div>
+        <div class="ph-data"><span class="ph-name" style="color:var(--rose)">ENDING</span><span class="ph-score">38</span><span class="ph-sub">What's ending</span><span class="ph-month">January</span></div>
+      </div>
+      <div class="paint-col" id="p2">
+        <div class="lc-tag">Semantic Consolidation</div>
+        <div class="paint-wrap"><svg width="200" height="200" viewBox="0 0 200 200" id="svg2"></svg><div class="paint-bloom" style="background:radial-gradient(circle,rgba(142,102,251,0.07) 0%,transparent 70%)"></div></div>
+        <div class="ph-data"><span class="ph-name" style="color:var(--violet)">LIMINAL</span><span class="ph-score">55</span><span class="ph-sub">The in-between</span><span class="ph-month">February</span></div>
+      </div>
+      <div class="paint-col" id="p3">
+        <div class="lc-tag">Reconstructive Recollection</div>
+        <div class="paint-wrap"><svg width="200" height="200" viewBox="0 0 200 200" id="svg3"></svg><div class="paint-bloom" style="background:radial-gradient(circle,rgba(14,215,242,0.07) 0%,transparent 70%)"></div></div>
+        <div class="ph-data"><span class="ph-name" style="color:var(--teal)">EMERGING</span><span class="ph-score">76</span><span class="ph-sub">What's emerging</span><span class="ph-month">March</span></div>
+      </div>
+    </div>
+
+    <div class="traj" id="traj"><svg width="560" height="44" id="trajSvg"></svg><div class="traj-label">Coherence Trajectory</div></div>
+
+    <div class="arc-narr" id="arcN">You entered January carrying the weight of an identity that no longer fit — a Warrior dismissing vulnerability as weakness. By February, the structure cracked open: coherence dropped, old certainties dissolved, and the liminal space began. Now in March, something new is crystallizing. The Warrior hasn't vanished — it's been consulted, not commanded. Your recurring motif is sovereignty. The system perceived it across 4 threshold moments before you named it yourself.</div>
+
+    <div class="ph-details" id="phD">
+      <div class="ph-det"><div class="pd-head"><div class="pd-dot" style="background:var(--rose)"></div><div class="pd-mo">January</div></div><div class="pd-txt">Old identity dissolving. Agency masking low connection.</div><div class="pd-ev"><span class="pd-ev-d">01-12</span> "Everything is falling apart"</div></div>
+      <div class="ph-det"><div class="pd-head"><div class="pd-dot" style="background:var(--violet)"></div><div class="pd-mo">February</div></div><div class="pd-txt">In-between space. Shadow work opened. Warrior questioned.</div><div class="pd-ev"><span class="pd-ev-d">02-09</span> Shadow: confronted avoidance</div></div>
+      <div class="ph-det"><div class="pd-head"><div class="pd-dot" style="background:var(--teal)"></div><div class="pd-mo">March</div></div><div class="pd-txt">New integration forming. Vow sealed. Motifs stabilizing.</div><div class="pd-ev"><span class="pd-ev-d">03-03</span> Vow: "sit with discomfort before acting"</div></div>
+    </div>
+
+    <div class="motif-rule" id="mR"><span class="mr-text">Recurring Motifs</span><span class="mr-line"></span></div>
+    <div class="motifs" id="mG">
+      <div class="motif"><div class="motif-name">Sovereignty</div><div class="motif-evo">4 threshold moments. Named by the system before the user named it herself.</div></div>
+      <div class="motif"><div class="motif-name">Shadow Integration</div><div class="motif-evo">Fear of being unseen → being seen as she actually is. Two encounters, deepening.</div></div>
+      <div class="motif"><div class="motif-name">Warrior Evolution</div><div class="motif-evo">Dismissed in January. Consulted in March. The relationship changed, not the archetype.</div></div>
+    </div>
+
+    <div class="arch" id="archS">
+      <div class="loop">
+        <div class="loop-s"><div class="loop-i">M</div><div class="loop-l">Memory</div><div class="loop-d">Every reflection → episodic trace</div></div>
+        <div class="loop-a">→</div>
+        <div class="loop-s"><div class="loop-i">R</div><div class="loop-l">Reasoning</div><div class="loop-d">Consolidation extracts patterns</div></div>
+        <div class="loop-a">→</div>
+        <div class="loop-s"><div class="loop-i">A</div><div class="loop-l">Action</div><div class="loop-d">Arc reconstructed and reflected</div></div>
+      </div>
+      <div class="cat-claim">Not a journal. Not a chatbot. A cognitive architecture for inner life.</div>
+      <div class="stats">
+        <span class="st">23 MemCells</span><span class="st-d">·</span>
+        <span class="st">Agentic Retrieval</span><span class="st-d">·</span>
+        <span class="st">3 Channels</span><span class="st-d">·</span>
+        <span class="st">16th EventBus Handler</span><span class="st-d">·</span>
+        <span class="st">271 API Routes</span>
+      </div>
+    </div>
+
+    <div class="colo">
+      <div class="colo-brand">Built with <span class="em">EverMemOS</span> · <span class="em">Liminal Space</span></div>
+      <div class="colo-line">Memory for who you're becoming.</div>
+    </div>
+
+  </div></div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+let current = 0;
+let memOn = false;
+
+// ─── Scene navigation ───
+function goScene(n) {
+  if (n < 0 || n > 2 || n === current) return;
+  document.querySelectorAll('.scene').forEach(s => s.classList.remove('on'));
+  document.querySelectorAll('.scene-dot').forEach(d => d.classList.remove('on'));
+  $('s'+n).classList.add('on');
+  document.querySelectorAll('.scene-dot')[n].classList.add('on');
+  current = n;
+  if (n === 0) animateCheck();
+  if (n === 1) animateCouncil();
+  if (n === 2) animateArc();
+}
+
+document.querySelectorAll('.scene-dot').forEach(d => {
+  d.addEventListener('click', () => goScene(parseInt(d.dataset.scene)));
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') goScene(current + 1);
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') goScene(current - 1);
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') goScene(current + 1);
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') goScene(current - 1);
+  if (e.key === 'm' || e.key === 'M') toggleDay();
+});
+
+// ─── Day toggle — Day 1 vs Day 90 confrontation ───
+let dayState = 'day1';
+let corrections = [];
+
+function toggleDay() {
+  dayState = dayState === 'day1' ? 'day90' : 'day1';
+  const day1 = $('day1State');
+  const day90 = $('day90State');
+  const barDay = $('barDay');
+
+  if (dayState === 'day90') {
+    day1.style.display = 'none';
+    day90.style.display = 'block';
+    
+    // Staggered reveal: claim card → response bar
+    setTimeout(() => $('claimCard').classList.add('on'), 200);
+    setTimeout(() => $('responseBar').classList.add('on'), 700);
+  } else {
+    day90.style.display = 'none';
+    day1.style.display = 'block';
+    
+    // Reset Day 90 UI when going back to Day 1
+    $('claimCard').classList.remove('on');
+    $('responseBar').classList.remove('on');
+    $('correctionWrap').classList.remove('show');
+    $('correctionText').classList.remove('show');
+    $('evidenceExpand').classList.remove('show');
+    
+    // Clear response button active states
+    document.querySelectorAll('.response-btn').forEach(b => b.classList.remove('active'));
+    $('correctionInput').value = '';
+  }
+  
+  // Update bar indicator if it exists
+  if (barDay) {
+    barDay.textContent = dayState === 'day1' ? 'Day 1' : 'Day 90';
+  }
+}
+
+// ─── Response button handlers ───
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', setupResponseHandlers);
+} else {
+  setupResponseHandlers();
+}
+
+function setupResponseHandlers() {
+  const yesBtn = $('responseYes');
+  const noBtn = $('responseNo');
+  const showBtn = $('responseShow');
+  const correctionWrap = $('correctionWrap');
+  const correctionInput = $('correctionInput');
+  const correctionText = $('correctionText');
+  const evidenceExpand = $('evidenceExpand');
+
+  if (yesBtn) {
+    yesBtn.addEventListener('click', () => {
+      yesBtn.classList.add('active');
+      noBtn.classList.remove('active');
+      showBtn.classList.remove('active');
+      correctionWrap.classList.remove('show');
+      evidenceExpand.classList.remove('show');
+    });
+  }
+
+  if (noBtn) {
+    noBtn.addEventListener('click', () => {
+      noBtn.classList.add('active');
+      yesBtn.classList.remove('active');
+      showBtn.classList.remove('active');
+      evidenceExpand.classList.remove('show');
+      correctionWrap.classList.add('show');
+    });
+  }
+
+  if (showBtn) {
+    showBtn.addEventListener('click', () => {
+      showBtn.classList.add('active');
+      yesBtn.classList.remove('active');
+      noBtn.classList.remove('active');
+      evidenceExpand.classList.add('show');
+      correctionWrap.classList.remove('show');
+      correctionText.classList.remove('show');
+    });
+  }
+
+  if (correctionInput) {
+    correctionInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter' && correctionInput.value.trim()) {
+        corrections.push({
+          text: correctionInput.value,
+          timestamp: new Date().toISOString()
+        });
+        $('correctionContent').textContent = correctionInput.value;
+        correctionText.classList.add('show');
+        correctionInput.style.display = 'none';
+      }
+    });
+  }
+}
+
+// ─── Check animations ───
+function animateCheck() {
+  document.querySelectorAll('#fGrid .factor-fill').forEach((f, i) => {
+    const score = f.closest('.factor').dataset.s;
+    setTimeout(() => { f.style.width = score + '%'; }, 150 + i * 60);
+  });
+  // Reset day state for clean demo
+  dayState = 'day1';
+  const day1 = $('day1State');
+  const day90 = $('day90State');
+  if (day1 && day90) {
+    day1.style.display = 'block';
+    day90.style.display = 'none';
+    $('claimCard').classList.remove('on');
+    $('responseBar').classList.remove('on');
+    $('correctionWrap').classList.remove('show');
+    $('correctionText').classList.remove('show');
+    $('evidenceExpand').classList.remove('show');
+    document.querySelectorAll('.response-btn').forEach(b => b.classList.remove('active'));
+  }
+  document.querySelectorAll('.factor-delta').forEach(d => d.classList.remove('on'));
+}
+
+    setTimeout(() => { f.style.width = score + '%'; }, 150 + i * 60);
+  });
+  // Reset memory state for clean demo
+  memOn = false;
+  $('memToggle').classList.remove('on');
+  $('barMem').classList.remove('on');
+  $('barMem').classList.add('off');
+  $('barMem').textContent = 'Memory Off';
+  $('s0').classList.remove('mem-on');
+  $('noMem').style.display = '';
+  $('noMem').classList.add('on');
+  $('memLayer').style.display = 'none';
+  $('sDelta').classList.remove('on');
+  $('mCtx').classList.remove('on');
+  $('perc').classList.remove('on');
+  document.querySelectorAll('.factor-delta').forEach(d => d.classList.remove('on'));
+}
+
+// ─── Council animations ───
+function animateCouncil() {
+  // Reset
+  ['retr','v1','v2','v3','synth','vm1','vm2'].forEach(id => $(id).classList.remove('on'));
+  setTimeout(() => $('retr').classList.add('on'), 300);
+  setTimeout(() => $('v1').classList.add('on'), 1000);
+  setTimeout(() => $('vm1').classList.add('on'), 1600);
+  setTimeout(() => $('v2').classList.add('on'), 2200);
+  setTimeout(() => $('vm2').classList.add('on'), 2800);
+  setTimeout(() => $('v3').classList.add('on'), 3200);
+  setTimeout(() => $('synth').classList.add('on'), 4000);
+}
+
+// ─── Arc animations ───
+function animateArc() {
+  ['p1','p2','p3','traj','arcN','phD','mR','mG','archS'].forEach(id => $(id).classList.remove('on'));
+  setTimeout(() => $('p1').classList.add('on'), 200);
+  setTimeout(() => $('p2').classList.add('on'), 600);
+  setTimeout(() => $('p3').classList.add('on'), 1000);
+  setTimeout(() => $('traj').classList.add('on'), 1500);
+  setTimeout(() => $('arcN').classList.add('on'), 2100);
+  setTimeout(() => $('phD').classList.add('on'), 2700);
+  setTimeout(() => { $('mR').classList.add('on'); $('mG').classList.add('on'); }, 3200);
+  setTimeout(() => $('archS').classList.add('on'), 3800);
+}
+
+// ─── Painting generator ───
+function genPainting(svgId, hue, coh, seed) {
+  const svg = $(svgId), sz = 200, cx = sz/2, cy = sz/2, mr = sz*0.42;
+  let s = seed;
+  const rnd = () => { s = (Math.imul(s,16807)+0)|0; if(s<=0) s+=2147483646; return(s-1)/2147483646; };
+  const fH = [348,39,54,95,187,256,300], cn = coh/100;
+  const fid = 'f-'+svgId, cid = 'c-'+svgId;
+  const bl = 1.5+0.7*2.5-cn, di = 10+0.7*8;
+  let h = `<defs><filter id="${fid}" x="-20%" y="-20%" width="140%" height="140%"><feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="3" seed="${seed}" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="${di}" xChannelSelector="R" yChannelSelector="G" result="w"/><feGaussianBlur in="w" stdDeviation="${bl}" result="b"/><feColorMatrix in="b" type="saturate" values="1.3"/></filter><clipPath id="${cid}"><circle cx="${cx}" cy="${cy}" r="${cx}"/></clipPath></defs><g clip-path="url(#${cid})" filter="url(#${fid})"><rect width="${sz}" height="${sz}" fill="hsla(${hue},25%,7%,1)"/><circle cx="${sz*0.45}" cy="${sz*0.45}" r="${sz*0.35}" fill="hsla(${hue},50%,25%,0.12)"/><circle cx="${sz*0.55}" cy="${sz*0.55}" r="${sz*0.3}" fill="hsla(${hue+30},45%,20%,0.1)"/>`;
+  for(let f=0;f<7;f++){const fh=fH[f],a=(f/7)*Math.PI*2+rnd()*0.3,st=0.3+cn*0.5+rnd()*0.2,d=mr*(0.2+st*0.6),ccx=cx+Math.cos(a)*d*0.5,ccy=cy+Math.sin(a)*d*0.5,ct=Math.floor(8+cn*12+rnd()*6);for(let i=0;i<ct;i++){const aa=rnd()*Math.PI*2,dd=Math.sqrt(rnd())*d*0.4,x=ccx+Math.cos(aa)*dd,y=ccy+Math.sin(aa)*dd,b=0.3+rnd()*0.4,hu=((fh*b+hue*(1-b))%360+360)%360,r=2+rnd()*6+cn*3,op=0.10+rnd()*0.18;h+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(1)}" fill="hsla(${hu.toFixed(0)},70%,60%,${op.toFixed(2)})"/>`;}}
+  for(let i=0;i<5;i++){const a=rnd()*Math.PI*2,d=rnd()*mr*0.15;h+=`<circle cx="${(cx+Math.cos(a)*d).toFixed(1)}" cy="${(cy+Math.sin(a)*d).toFixed(1)}" r="${(8+rnd()*12).toFixed(1)}" fill="hsla(${hue},70%,60%,${(0.08+rnd()*0.1).toFixed(2)})"/>`;} h+='</g>';
+  svg.innerHTML = h;
+}
+
+// ─── Trajectory ───
+function drawTraj() {
+  const svg = $('trajSvg'), sc=[38,55,76], w=560, h=44, pad=36;
+  const pts = sc.map((s,i)=>({x:pad+i*((w-pad*2)/2), y:h-pad/2-(s/100)*(h-pad)}));
+  let path = `M${pts[0].x},${pts[0].y}`;
+  for(let i=1;i<pts.length;i++){const cpx=(pts[i-1].x+pts[i].x)/2; path+=` C${cpx},${pts[i-1].y} ${cpx},${pts[i].y} ${pts[i].x},${pts[i].y}`;}
+  svg.innerHTML = `<path d="${path}" fill="none" stroke="rgba(255,221,136,0.2)" stroke-width="1.5" stroke-linecap="round"/>${pts.map((p,i)=>`<circle cx="${p.x}" cy="${p.y}" r="3" fill="${['var(--rose)','var(--violet)','var(--teal)'][i]}" opacity="0.6"/>`).join('')}`;
+}
+
+// ─── Init ───
+genPainting('svg1', 348, 38, 42);
+genPainting('svg2', 270, 55, 179);
+genPainting('svg3', 175, 76, 316);
+drawTraj();
+setTimeout(() => animateCheck(), 200);
+</script>
+</body>
+</html>
