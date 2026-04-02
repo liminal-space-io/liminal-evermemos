@@ -17,7 +17,9 @@ One sentence. Works as README hero, tweet, demo opening, LinkedIn hook.
 
 "Liminal Space gives form to inner life — daily reflections, Jungian dialogue, visual artifacts that track psychological development. But until now, every session started from zero. No continuity. No memory of who you were last month.
 
-EverMemOS changes that. Every coherence check, every archetype dialogue, every threshold moment becomes an episodic trace — a MemCell that accumulates over weeks and months. Then an agent we call Arc Memory performs reconstructive recollection: it reads your accumulated inner data and generates a transformation narrative. Not a summary. A story of who you're becoming.
+EverMemOS changes that. Every coherence check, every archetype dialogue, every threshold moment becomes an episodic trace — a MemCell that accumulates over weeks and months. Then an agent we call Arc Memory performs reconstructive recollection: it reads your accumulated inner data and presents a disputable account of your arc. Not a summary. A position specific enough to argue with.
+
+The system says: 'You've been avoiding connection. Last time this happened, connection collapsed.' You mark it wrong. That correction IS the product. The system learns not from the data—from the argument about what the data means.
 
 This is the Memory → Reasoning → Action loop applied to inner life. Nobody else is building this."
 
@@ -37,7 +39,8 @@ EverMemOS provides the memory infrastructure this system was missing:
 | Council deliberations (2-4 archetype agents) | **Episodic Trace** | Each council session becomes a MemCell. Topic, which archetypes spoke, synthesis, whether the user found it resonant. The Council stops being amnesiac. |
 | Threshold moments (semiotic capture → Imprint) | **Episodic Trace** | Each threshold moment becomes a MemCell. Motifs, polarities, shadow elements, coherence at the moment of capture. The raw material of transformation. |
 | Recurring motifs across months | **Semantic Consolidation** | EverMemOS detects that `sovereignty` appeared in 4 threshold moments over 8 weeks. That Sage consultations correlate with clarity increases. That shadow work on `fear of being unseen` surfaces every time connection drops below 50. Patterns the user can't see because they're inside them. |
-| Arc Memory transformation narrative | **Reconstructive Recollection** | Agentic retrieval reads the full MemScene — every MemCell across all channels — and reconstructs a transformation arc. "You moved from dissolution to emergence. Your recurring motif is sovereignty. The Warrior archetype went from dismissed to most-consulted." This is the demo moment. |
+| Arc Memory disputable account | **Reconstructive Recollection** | Agentic retrieval reads the full MemScene — every MemCell across all channels — and reconstructs a disputable account of your arc. "You've been avoiding connection for nine days. Last time this gap appeared, connection collapsed. You told yourself it was fine. It wasn't." The user pushes back. That correction reshapes the next reconstruction. The system learns from the argument about what the data means. |
+| User corrections on Arc | **Correction MemCell** | When the user marks a claim wrong ("I wasn't avoiding it, I was prioritizing differently"), that correction becomes a MemCell itself. It updates semantic consolidation and feeds into future reconstructive recollection. The argument IS the product. |
 
 ### Why This Matters to Judges
 
@@ -57,16 +60,16 @@ Key phrases for the 90-second video, mapped to the script structure in MEMORY_GE
 *No words. ImprintRenderer animation. The art speaks first.*
 
 ### [10-25s] What You're Seeing
-"Every reflection creates an episodic trace — a MemCell that captures your inner state. Over weeks, these traces accumulate into something no app has given you before: a memory of who you were."
+"Every reflection creates an episodic trace. Over weeks, these traces give the system standing — the ability to make claims about who you are that are specific enough to argue with."
 
 ### [25-45s] The Feature
-"Arc Memory performs reconstructive recollection — it reads months of accumulated MemCells and generates a transformation narrative."
+"The system doesn't summarize. It confronts. 'You've been avoiding connection. Last time this happened, you told yourself it was fine.' The user pushes back. That correction is the product."
 
 ### [45-70s] The Payoff
-"Over six weeks, you moved from dissolution to emergence. Your recurring motif is sovereignty. The Sage archetype correlates with your highest coherence. This isn't a summary — it's a mirror."
+"The system presents its account. 'Over six weeks, you moved from dissolution to emergence. Your recurring motif is sovereignty. Connection is where the next work lives.' She marks what's wrong. The correction makes the next account better."
 
 ### [70-85s] The Frame
-"This is the Memory → Reasoning → Action loop applied to inner life. Memory: every check, every dialogue, every threshold moment stored as episodic traces. Reasoning: semantic consolidation extracts patterns you can't see from inside. Action: the system reflects your arc back to you — and your next session starts from where you actually are."
+"This is the Memory → Reasoning → Action loop applied to inner life. Memory: every check, every dialogue, every threshold moment stored as episodic traces. Reasoning: semantic consolidation extracts patterns you can't see from inside. Action: the system confronts you with a disputable account — and your corrections reshape the next reconstruction."
 
 ### [85-90s] Close
 "Memory for who you're becoming. Built with EverMemOS."
@@ -75,11 +78,11 @@ Key phrases for the 90-second video, mapped to the script structure in MEMORY_GE
 
 ## Social Hooks
 
-**Twitter:** "What if AI remembered every moment of your inner transformation — and reflected your arc back to you? We built it. Memory for who you're becoming. #MemoryGenesis"
+**Twitter:** "What if AI held claims about your arc specific enough to argue with? We built it. Memory for who you're becoming. #MemoryGenesis"
 
-**LinkedIn:** "Liminal Space was built to give form to inner life. But every session started from zero — no memory of who you were last month. EverMemOS changes that. Three data channels, three phases of memory, one transformation narrative. This is what long-term memory looks like when it's applied to something that actually matters."
+**LinkedIn:** "Liminal Space was built to give form to inner life. But every session started from zero — no memory of who you were last month. EverMemOS changes that. The system holds a disputable account of who you are. You push back. That correction IS the product. This is what long-term memory looks like when applied to something that actually matters."
 
-**Discord (EverMind):** "We're using EverMemOS for something nobody else is building — long-term memory for psychological transformation. Coherence checks, Jungian archetype dialogues, and threshold moments become MemCells. An agent called Arc Memory performs reconstructive recollection to generate transformation narratives across months. Happy to share what we learned about the agentic retrieval API."
+**Discord (EverMind):** "We're using EverMemOS for something nobody else is building — long-term memory for psychological confrontation. Coherence checks, Jungian archetype dialogues, and threshold moments become MemCells. An agent called Arc Memory presents a disputable account of your arc. The correction loop IS the product. Happy to share what we learned about the agentic retrieval API."
 
 ---
 
@@ -90,6 +93,9 @@ Key phrases for the 90-second video, mapped to the script structure in MEMORY_GE
 - "Coaching" / "therapy" / "journaling app"
 - "We help you feel better" / "reduce stress" / "improve wellbeing"
 - Generic AI hype ("revolutionary," "groundbreaking," "next-generation")
+- "Perception card" / "the system surfaces" / "memory toggle"
+- "Reflects your arc back to you" (passive)
+- "The system perceives" (observation, not confrontation)
 - Anything that positions this as derivative of existing categories
 
 ## Do Say
@@ -100,3 +106,7 @@ Key phrases for the 90-second video, mapped to the script structure in MEMORY_GE
 - "Memory → Reasoning → Action loop"
 - "Cognitive architecture" / "ontology" / "symbolic system"
 - "Production app" / "271 API routes" / "125 database migrations"
+- "Confrontation" / "standing" / "the receipts"
+- "Disputable account" / "correction loop" / "the argument IS the product"
+- "The system holds a position" / "specific enough to argue with"
+- "Interlocutor" (not mirror, not companion)
