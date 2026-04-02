@@ -262,6 +262,117 @@
   .arc-tag { font:400 8px/1 var(--mono); text-transform:uppercase; letter-spacing:0.14em; color:var(--gold); opacity:0.35; margin-bottom:16px; }
   .arc-title { font:300 36px/1.15 var(--display); color:var(--paper); letter-spacing:-0.5px; }
 
+  /* Disputable sections */
+  .arc-section {
+    padding: 22px 26px;
+    background: var(--ink-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin-bottom: 14px;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: all 0.6s cubic-bezier(0.16,1,0.3,1);
+  }
+  .arc-section.on { opacity: 1; transform: none; }
+
+  .arc-section-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .arc-section-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+  .arc-section-month {
+    font: 600 9px/1 var(--mono);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--paper);
+    opacity: 0.6;
+  }
+  .arc-section-phase {
+    font: 400 9px/1 var(--mono);
+    color: var(--silver);
+    opacity: 0.3;
+    margin-left: auto;
+  }
+
+  .arc-section-claim {
+    font: 400 16px/1.65 var(--display);
+    font-style: italic;
+    color: var(--paper);
+    opacity: 0.8;
+    margin-bottom: 12px;
+  }
+
+  .arc-section-evidence {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+  .arc-ev-tag {
+    font: 500 8px/1 var(--mono);
+    color: var(--gold);
+    opacity: 0.5;
+    padding: 2px 6px;
+    background: rgba(255,221,136,0.04);
+    border: 1px solid rgba(255,221,136,0.08);
+    border-radius: 3px;
+  }
+
+  .arc-markup {
+    display: flex;
+    gap: 8px;
+  }
+  .arc-markup-btn {
+    font: 500 9px/1 var(--body);
+    padding: 6px 14px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--silver);
+    opacity: 0.5;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .arc-markup-btn:hover { opacity: 0.8; border-color: var(--border-on); }
+  .arc-markup-btn.accurate { color: var(--teal); border-color: rgba(14,215,242,0.3); background: rgba(14,215,242,0.04); opacity: 1; }
+  .arc-markup-btn.wrong { color: var(--rose); border-color: rgba(255,85,136,0.3); background: rgba(255,85,136,0.04); opacity: 1; }
+  .arc-markup-btn.missing { color: var(--gold); border-color: rgba(255,221,136,0.3); background: rgba(255,221,136,0.04); opacity: 1; }
+
+  .arc-correction {
+    margin-top: 12px;
+    padding: 12px 16px;
+    border-radius: 0 6px 6px 0;
+    font: 400 13px/1.6 var(--body);
+    opacity: 0;
+    transition: opacity 0.4s;
+    display: none;
+  }
+  .arc-correction.on { display: block; opacity: 1; }
+  .arc-correction.wrong-type {
+    color: var(--rose);
+    border-left: 2px solid rgba(255,85,136,0.3);
+    background: rgba(255,85,136,0.03);
+  }
+  .arc-correction.missing-type {
+    color: var(--gold);
+    border-left: 2px solid rgba(255,221,136,0.3);
+    background: rgba(255,221,136,0.03);
+  }
+  .arc-correction-label {
+    font: 600 7px/1 var(--mono);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-bottom: 6px;
+  }
+  .arc-correction-label.wrong-type { color: var(--rose); }
+  .arc-correction-label.missing-type { color: var(--gold); }
+
   /* Paintings — BIG. These are the emotional center. */
   .paintings { display:flex; justify-content:center; gap:28px; margin-bottom:16px; }
   .paint-col { display:flex; flex-direction:column; align-items:center; opacity:0; transform:translateY(14px); transition:all 1.2s cubic-bezier(0.25,0.1,0.25,1); }
@@ -529,23 +640,23 @@
   <div class="content"><div class="content-inner">
 
     <div class="arc-hero">
-      <div class="arc-tag">Reconstructive Recollection · 23 MemCells · 3 months</div>
-      <div class="arc-title">3 months of inner life, reconstructed from memory</div>
+      <div class="arc-tag">THE SYSTEM'S ACCOUNT · 23 MemCells · 3 months · Disputable</div>
+      <div class="arc-title">The system's account of who you've been. Mark what's wrong.</div>
     </div>
 
     <div class="paintings">
       <div class="paint-col" id="p1">
-        <div class="lc-tag">Episodic Trace</div>
+        <div class="lc-tag">Visual Evidence — January</div>
         <div class="paint-wrap"><svg width="200" height="200" viewBox="0 0 200 200" id="svg1"></svg><div class="paint-bloom" style="background:radial-gradient(circle,rgba(255,85,136,0.07) 0%,transparent 70%)"></div></div>
         <div class="ph-data"><span class="ph-name" style="color:var(--rose)">ENDING</span><span class="ph-score">38</span><span class="ph-sub">What's ending</span><span class="ph-month">January</span></div>
       </div>
       <div class="paint-col" id="p2">
-        <div class="lc-tag">Semantic Consolidation</div>
+        <div class="lc-tag">Visual Evidence — February</div>
         <div class="paint-wrap"><svg width="200" height="200" viewBox="0 0 200 200" id="svg2"></svg><div class="paint-bloom" style="background:radial-gradient(circle,rgba(142,102,251,0.07) 0%,transparent 70%)"></div></div>
         <div class="ph-data"><span class="ph-name" style="color:var(--violet)">LIMINAL</span><span class="ph-score">55</span><span class="ph-sub">The in-between</span><span class="ph-month">February</span></div>
       </div>
       <div class="paint-col" id="p3">
-        <div class="lc-tag">Reconstructive Recollection</div>
+        <div class="lc-tag">Visual Evidence — March</div>
         <div class="paint-wrap"><svg width="200" height="200" viewBox="0 0 200 200" id="svg3"></svg><div class="paint-bloom" style="background:radial-gradient(circle,rgba(14,215,242,0.07) 0%,transparent 70%)"></div></div>
         <div class="ph-data"><span class="ph-name" style="color:var(--teal)">EMERGING</span><span class="ph-score">76</span><span class="ph-sub">What's emerging</span><span class="ph-month">March</span></div>
       </div>
@@ -553,15 +664,76 @@
 
     <div class="traj" id="traj"><svg width="560" height="44" id="trajSvg"></svg><div class="traj-label">Coherence Trajectory</div></div>
 
-    <div class="arc-narr" id="arcN">You entered January carrying the weight of an identity that no longer fit — a Warrior dismissing vulnerability as weakness. By February, the structure cracked open: coherence dropped, old certainties dissolved, and the liminal space began. Now in March, something new is crystallizing. The Warrior hasn't vanished — it's been consulted, not commanded. Your recurring motif is sovereignty. The system perceived it across 4 threshold moments before you named it yourself.</div>
-
-    <div class="ph-details" id="phD">
-      <div class="ph-det"><div class="pd-head"><div class="pd-dot" style="background:var(--rose)"></div><div class="pd-mo">January</div></div><div class="pd-txt">Old identity dissolving. Agency masking low connection.</div><div class="pd-ev"><span class="pd-ev-d">01-12</span> "Everything is falling apart"</div></div>
-      <div class="ph-det"><div class="pd-head"><div class="pd-dot" style="background:var(--violet)"></div><div class="pd-mo">February</div></div><div class="pd-txt">In-between space. Shadow work opened. Warrior questioned.</div><div class="pd-ev"><span class="pd-ev-d">02-09</span> Shadow: confronted avoidance</div></div>
-      <div class="ph-det"><div class="pd-head"><div class="pd-dot" style="background:var(--teal)"></div><div class="pd-mo">March</div></div><div class="pd-txt">New integration forming. Vow sealed. Motifs stabilizing.</div><div class="pd-ev"><span class="pd-ev-d">03-03</span> Vow: "sit with discomfort before acting"</div></div>
+    <!-- Section 1: Where You Were (January) -->
+    <div class="arc-section" id="arcS1">
+      <div class="arc-section-head">
+        <div class="arc-section-dot" style="background:var(--rose)"></div>
+        <div class="arc-section-month">January</div>
+        <div class="arc-section-phase">ENDING</div>
+      </div>
+      <div class="arc-section-claim">You entered January carrying an identity that no longer fit. Agency was high but masking low connection. The Warrior was present but you dismissed it as 'too aggressive.' The system reads this as avoidance — performing strength to avoid vulnerability.</div>
+      <div class="arc-section-evidence">
+        <span class="arc-ev-tag">coherence-001 · Jan 6 — agency 82, connection 47</span>
+        <span class="arc-ev-tag">coherence-003 · Jan 14 — Warrior dismissed</span>
+      </div>
+      <div class="arc-markup">
+        <button class="arc-markup-btn accurate" data-type="accurate">Accurate</button>
+        <button class="arc-markup-btn wrong" data-type="wrong">Wrong</button>
+        <button class="arc-markup-btn missing" data-type="missing">Missing something</button>
+      </div>
+      <div class="arc-correction wrong-type">
+        <div class="arc-correction-label wrong-type">Your correction</div>
+        <div>It wasn't avoidance. I genuinely didn't see the connection gap. That's different.</div>
+      </div>
     </div>
 
-    <div class="motif-rule" id="mR"><span class="mr-text">Recurring Motifs</span><span class="mr-line"></span></div>
+    <!-- Section 2: What Shifted (February) -->
+    <div class="arc-section" id="arcS2">
+      <div class="arc-section-head">
+        <div class="arc-section-dot" style="background:var(--violet)"></div>
+        <div class="arc-section-month">February</div>
+        <div class="arc-section-phase">LIMINAL</div>
+      </div>
+      <div class="arc-section-claim">The structure cracked open in February. Coherence dropped. The mask-removal threshold on Feb 10 was the pivot — you named what was ending. Shadow work started. You told the shadow 'it's different this time.' The data says it was the same pattern.</div>
+      <div class="arc-section-evidence">
+        <span class="arc-ev-tag">myth-002 · Feb 10 — mask_removal, sovereignty</span>
+        <span class="arc-ev-tag">shadow-001 · Feb 24 — 'fear of being unseen'</span>
+      </div>
+      <div class="arc-markup">
+        <button class="arc-markup-btn accurate" data-type="accurate">Accurate</button>
+        <button class="arc-markup-btn wrong" data-type="wrong">Wrong</button>
+        <button class="arc-markup-btn missing" data-type="missing">Missing something</button>
+      </div>
+      <div class="arc-correction wrong-type">
+        <div class="arc-correction-label wrong-type">Your correction</div>
+        <div>The shadow work WAS different. The first time I was performing. The second time I meant it.</div>
+      </div>
+    </div>
+
+    <!-- Section 3: Where You Are (March) -->
+    <div class="arc-section" id="arcS3">
+      <div class="arc-section-head">
+        <div class="arc-section-dot" style="background:var(--teal)"></div>
+        <div class="arc-section-month">March</div>
+        <div class="arc-section-phase">EMERGING</div>
+      </div>
+      <div class="arc-section-claim">Something is crystallizing. Agency and clarity are at personal highs. The Warrior hasn't vanished — you consult it now instead of dismissing it. The system's read: sovereignty is the through-line. The question is whether the connection gap is a choice or a blind spot.</div>
+      <div class="arc-section-evidence">
+        <span class="arc-ev-tag">coherence-007 · Mar 14 — agency 85, connection 44</span>
+        <span class="arc-ev-tag">council-003 · Mar 10 — Warrior speaks first</span>
+      </div>
+      <div class="arc-markup">
+        <button class="arc-markup-btn accurate" data-type="accurate">Accurate</button>
+        <button class="arc-markup-btn wrong" data-type="wrong">Wrong</button>
+        <button class="arc-markup-btn missing" data-type="missing">Missing something</button>
+      </div>
+      <div class="arc-correction missing-type">
+        <div class="arc-correction-label missing-type">What's missing</div>
+        <div>What's missing: the cost. The clarity came from cutting people off. That's not sovereignty — that's armor.</div>
+      </div>
+    </div>
+
+    <div class="motif-rule" id="mR"><span class="mr-text">Recurring Patterns the System Detected</span><span class="mr-line"></span></div>
     <div class="motifs" id="mG">
       <div class="motif"><div class="motif-name">Sovereignty</div><div class="motif-evo">4 threshold moments. Named by the system before the user named it herself.</div></div>
       <div class="motif"><div class="motif-name">Shadow Integration</div><div class="motif-evo">Fear of being unseen → being seen as she actually is. Two encounters, deepening.</div></div>
@@ -576,7 +748,7 @@
         <div class="loop-a">→</div>
         <div class="loop-s"><div class="loop-i">A</div><div class="loop-l">Action</div><div class="loop-d">Arc reconstructed and reflected</div></div>
       </div>
-      <div class="cat-claim">Not a journal. Not a chatbot. A cognitive architecture for inner life.</div>
+      <div class="cat-claim">Not a mirror. An interlocutor. Memory gives the system standing.</div>
       <div class="stats">
         <span class="st">23 MemCells</span><span class="st-d">·</span>
         <span class="st">Agentic Retrieval</span><span class="st-d">·</span>
@@ -783,15 +955,24 @@ function animateCouncil() {
 
 // ─── Arc animations ───
 function animateArc() {
-  ['p1','p2','p3','traj','arcN','phD','mR','mG','archS'].forEach(id => $(id).classList.remove('on'));
+  // Reset all
+  ['p1','p2','p3','traj','arcS1','arcS2','arcS3','mR','mG','archS'].forEach(id => {
+    const el = $(id);
+    if (el) el.classList.remove('on');
+  });
+  // Also reset any corrections and markup buttons
+  document.querySelectorAll('.arc-correction').forEach(c => { c.classList.remove('on'); c.style.display = 'none'; });
+  document.querySelectorAll('.arc-markup-btn').forEach(b => { b.classList.remove('accurate','wrong','missing'); });
+
   setTimeout(() => $('p1').classList.add('on'), 200);
   setTimeout(() => $('p2').classList.add('on'), 600);
   setTimeout(() => $('p3').classList.add('on'), 1000);
   setTimeout(() => $('traj').classList.add('on'), 1500);
-  setTimeout(() => $('arcN').classList.add('on'), 2100);
-  setTimeout(() => $('phD').classList.add('on'), 2700);
-  setTimeout(() => { $('mR').classList.add('on'); $('mG').classList.add('on'); }, 3200);
-  setTimeout(() => $('archS').classList.add('on'), 3800);
+  setTimeout(() => $('arcS1').classList.add('on'), 2000);
+  setTimeout(() => $('arcS2').classList.add('on'), 2500);
+  setTimeout(() => $('arcS3').classList.add('on'), 3000);
+  setTimeout(() => { if($('mR')) $('mR').classList.add('on'); if($('mG')) $('mG').classList.add('on'); }, 3500);
+  setTimeout(() => $('archS').classList.add('on'), 4000);
 }
 
 // ─── Painting generator ───
@@ -816,6 +997,33 @@ function drawTraj() {
   for(let i=1;i<pts.length;i++){const cpx=(pts[i-1].x+pts[i].x)/2; path+=` C${cpx},${pts[i-1].y} ${cpx},${pts[i].y} ${pts[i].x},${pts[i].y}`;}
   svg.innerHTML = `<path d="${path}" fill="none" stroke="rgba(255,221,136,0.2)" stroke-width="1.5" stroke-linecap="round"/>${pts.map((p,i)=>`<circle cx="${p.x}" cy="${p.y}" r="3" fill="${['var(--rose)','var(--violet)','var(--teal)'][i]}" opacity="0.6"/>`).join('')}`;
 }
+
+// ─── Arc section markup handlers ───
+document.querySelectorAll('.arc-markup-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const section = this.closest('.arc-section');
+    const allBtns = section.querySelectorAll('.arc-markup-btn');
+    const correction = section.querySelector('.arc-correction');
+
+    // Reset buttons in this section
+    allBtns.forEach(b => b.classList.remove('accurate','wrong','missing'));
+
+    // Activate clicked button
+    const type = this.dataset.type;
+    this.classList.add(type);
+
+    // Show/hide correction
+    if (correction) {
+      if (type === 'accurate') {
+        correction.classList.remove('on');
+        correction.style.display = 'none';
+      } else {
+        correction.style.display = 'block';
+        setTimeout(() => correction.classList.add('on'), 50);
+      }
+    }
+  });
+});
 
 // ─── Init ───
 genPainting('svg1', 348, 38, 42);

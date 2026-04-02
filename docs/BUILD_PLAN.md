@@ -41,14 +41,14 @@ Apr 4              Grand Finale — Computer History Museum, Mountain View
 
 | # | Task | Owner | Status | Notes |
 |---|------|-------|--------|-------|
-| 0.1 | Get EverMemOS API key from console.evermind.ai | Shruti | ☐ | Need this before anything else |
-| 0.2 | Add `EVERMIND_API_KEY` + `EVERMIND_API_URL` to `.env.local` | Shayaun | ☐ | See INTEGRATION_REFERENCE.md § Setup |
-| 0.3 | Create `src/lib/evermemos/client.ts` — typed API wrapper | Shayaun | ☐ | POST /memories, GET /memories/search, error handling |
-| 0.4 | Wire coherence check → EverMemOS (Channel 1) | Shayaun | ☐ | After `CoherenceService.submitCheck()`, POST memory. See INTEGRATION_REFERENCE.md § Layer 1 |
-| 0.5 | Wire myth events → EverMemOS (Channel 3) | Shayaun | ☐ | After `myth_events` insert. See INTEGRATION_REFERENCE.md § Layer 1 |
-| 0.6 | Wire council sessions → EverMemOS (Channel 2) | Shayaun | ☐ | After council save. See INTEGRATION_REFERENCE.md § Layer 1 |
-| 0.7 | Seed demo data — 5-7 synthetic MemCells across phases | Shruti | ☐ | Coherence checks showing arc: ENDING(Jan) → LIMINAL(Feb) → EMERGING(Mar) |
-| 0.8 | Smoke test: POST a memory, search it back | Shayaun | ☐ | Verify Cloud API works. If issues → Supabase pgvector fallback |
+| 0.1 | Get EverMemOS API key from console.evermind.ai | Shruti | ☑ | Need this before anything else |
+| 0.2 | Add `EVERMIND_API_KEY` + `EVERMIND_API_URL` to `.env.local` | Shayaun | ☑ | See INTEGRATION_REFERENCE.md § Setup |
+| 0.3 | Create `src/lib/evermemos/client.ts` — typed API wrapper | Shayaun | ☑ | POST /memories, GET /memories/search, error handling |
+| 0.4 | Wire coherence check → EverMemOS (Channel 1) | Shayaun | ☑ | After `CoherenceService.submitCheck()`, POST memory. See INTEGRATION_REFERENCE.md § Layer 1 |
+| 0.5 | Wire myth events → EverMemOS (Channel 3) | Shayaun | ☑ | After `myth_events` insert. See INTEGRATION_REFERENCE.md § Layer 1 |
+| 0.6 | Wire council sessions → EverMemOS (Channel 2) | Shayaun | ☑ | After council save. See INTEGRATION_REFERENCE.md § Layer 1 |
+| 0.7 | Seed demo data — 5-7 synthetic MemCells across phases | Shruti | ☑ | Coherence checks showing arc: ENDING(Jan) → LIMINAL(Feb) → EMERGING(Mar) |
+| 0.8 | Smoke test: POST a memory, search it back | Shayaun | ☑ | Verify Cloud API works. If issues → Supabase pgvector fallback |
 | 0.9 | Submit preliminary version on evermind.ai/activities | Shruti | ☐ | Basic README + working integration proof |
 
 ### Phase 0 Gate
@@ -64,12 +64,12 @@ Apr 4              Grand Finale — Computer History Museum, Mountain View
 
 | # | Task | Owner | Status | Notes |
 |---|------|-------|--------|-------|
-| 1.1 | Create `/api/agent/arc` route | Shayaun | ☐ | Accepts `userId`, optional `?demo=true` |
-| 1.2 | Build reconstructive query logic | Shayaun | ☐ | `retrieve_method: 'agentic'` — queries EverMemOS for transformation arc |
-| 1.3 | Narrative generation prompt | Shruti | ☐ | Claude API call: memories in → natural language arc narrative out |
-| 1.4 | Arc Memory UI component | Shruti | ☐ | Timeline visualization + narrative card. Frontier tokens. Framer Motion. |
-| 1.5 | `/agent/arc?demo=true` flow | Shayaun | ☐ | Pre-seeded data, no auth required, judges can click through |
-| 1.6 | Connect ImprintRenderer to arc view | Shruti | ☐ | Show Imprints along the timeline — this IS the Aha Case moment |
+| 1.1 | Create `/api/agent/arc` route | Shayaun | ☑ | Accepts `userId`, optional `?demo=true` |
+| 1.2 | Build reconstructive query logic | Shayaun | ☑ | `retrieve_method: 'agentic'` — queries EverMemOS for transformation arc |
+| 1.3 | Narrative generation prompt | Shruti | ☑ | Claude API call: memories in → natural language arc narrative out |
+| 1.4 | Arc Memory UI component | Shruti | ☑ | Timeline visualization + narrative card. Frontier tokens. Framer Motion. |
+| 1.5 | `/agent/arc?demo=true` flow | Shayaun | ☑ | Pre-seeded data, no auth required, judges can click through |
+| 1.6 | Connect ImprintRenderer to arc view | Shruti | ☑ | Show Imprints along the timeline — this IS the Aha Case moment |
 
 ### Phase 1 Gate
 - [ ] `/agent/arc?demo=true` returns a transformation narrative from EverMemOS data
@@ -104,14 +104,14 @@ Apr 4              Grand Finale — Computer History Museum, Mountain View
 | # | Task | Owner | Status | Notes |
 |---|------|-------|--------|-------|
 | 3.1 | Record 90-second demo video | Shruti | ☐ | Follow script in MEMORY_GENESIS_BRIEF.md § Demo Strategy |
-| 3.2 | Create standalone GitHub repo or clean module | Shayaun | ☐ | `liminal-evermemos` — the integration layer others can learn from |
+| 3.2 | Create standalone GitHub repo or clean module | Shayaun | ☑ | `liminal-evermemos` — the integration layer others can learn from |
 | 3.3 | Write README with EverMemOS vocabulary | Both | ☐ | "MemCell", "episodic trace", "reconstructive recollection" — by name |
-| 3.4 | Deploy public `?demo=true` URL | Shayaun | ☐ | Judges must be able to click through without auth |
+| 3.4 | Deploy public `?demo=true` URL | Shayaun | ☑ | Judges must be able to click through without auth |
 | 3.5 | Twitter campaign — demo video + "vote for inner life" | Shruti | ☐ | Day of submission, not after |
 | 3.6 | LinkedIn post — founder angle + competition narrative | Shruti | ☐ | "Liminal Space was selected for Memory Genesis..." |
 | 3.7 | Discord engagement — post in EverMind Discord | Both | ☐ | Community Impact = 30% of score. Be visible. |
 | 3.8 | Prepare 5-minute live pitch for April 4 | Shruti | ☐ | Champion prize requires strong in-person pitch |
-| 3.9 | Edge case hardening + error states | Shayaun | ☐ | What happens when EverMemOS is slow? Graceful fallbacks. |
+| 3.9 | Edge case hardening + error states | Shayaun | ☑ | What happens when EverMemOS is slow? Graceful fallbacks. |
 | 3.10 | Final quality gates | Both | ☐ | type-check, lint, test, build — all green |
 
 ### Phase 3 Gate
@@ -149,11 +149,11 @@ Apr 4              Grand Finale — Computer History Museum, Mountain View
 
 ## Infrastructure Checklist
 
-- [ ] `.env.local` has `EVERMIND_API_KEY` + `EVERMIND_API_URL`
-- [ ] EverMemOS Cloud API accessible (not just local Docker)
-- [ ] Vercel deployment includes evermemos env vars
-- [ ] `?demo=true` route bypasses auth
-- [ ] Demo data seeded and retrievable
+- [x] `.env.local` has `EVERMIND_API_KEY` + `EVERMIND_API_URL`
+- [x] EverMemOS Cloud API accessible (not just local Docker)
+- [x] Vercel deployment includes evermemos env vars
+- [x] `?demo=true` route bypasses auth
+- [x] Demo data seeded and retrievable
 - [ ] `.vercelignore` excludes heavy dirs (pre-deploy check)
 
 ---
