@@ -7,9 +7,10 @@
 ---
 
 <!-- PRESENTER NOTE:
-5-minute pitch. 30+ judges. PRD on right, POC on left.
-Flow: Section 1 (1 min) → POC Day 1 vs Day 90 (2 min) → Sections 2-4 (2 min) → Section 5 overview (1 min) → Stop.
-Timing is tight. Stick to the script. Imprints first (30s), then claim loop demo (1 min), then context (3.5 min).
+5-minute pitch. 30+ judges. Deck on screen, POC ready on laptop.
+Flow: Slide 2 (tagline) → POC Day 1 → Day 90 confrontation (2 min) → Council (1 min) → Arc disputable (1 min) → Architecture slide (30s) → Close.
+Video mode (press V) runs 90s auto-play. Use for pre-recorded submission. For live pitch, navigate manually.
+Key demo path: Scene 1 Day 1 → press M for Day 90 → click "Show me evidence" → Scene 2 Council → Scene 3 Arc → click "Wrong" on January.
 -->
 
 # The Interlocutor — Structured Confrontation Engine for Inner Life
