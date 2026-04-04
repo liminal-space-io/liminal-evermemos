@@ -508,8 +508,8 @@
       <div class="day1-value">Without memory, this is all you get — a number.</div>
       <!-- Annotation: Day 1 -->
       <div class="annotation" style="bottom:-60px;right:40px;">
-        <div class="a-label">Why this matters</div>
-        Day 1 is just measurement. No confrontation. No standing. The system hasn't earned the right to have an opinion.
+        <div class="a-label">EverMemOS Phase 1 · Episodic Trace</div>
+        Day 1: the system stores a MemCell but hasn't accumulated enough to confront. This restraint is intentional — a system honest about its ignorance is more credible when it later claims to see a pattern. Target: Day 1→Day 3 retention >40%.
       </div>
     </div>
 
@@ -549,8 +549,8 @@
 
       <!-- Annotation: Confrontation -->
       <div class="annotation" style="top:0;right:-280px;">
-        <div class="a-label">The product moment</div>
-        This claim is specific enough to argue with. That's the point — the disagreement IS the highest-signal data.
+        <div class="a-label">The Correction Flywheel</div>
+        Claim → Response → Correction → Better future claims. This is the atomic unit of value. The system cites 4 MemCells by date. Maya can agree, dispute, or ask for evidence. Her correction becomes the highest-signal data — stored as a MemCell that reshapes future confrontations. Target correction rate: 20-40%.
       </div>
     </div>
   </div>
@@ -574,8 +574,8 @@
 
     <!-- Annotation: Memory retrieval -->
     <div class="annotation" style="top:220px;right:-280px;">
-      <div class="a-label">What EverMemOS enables</div>
-      Without memory, each council session starts from zero. With it, the archetypes can reference January when speaking in March.
+      <div class="a-label">EverMemOS Phase 2 · Semantic Consolidation</div>
+      3 MemCells retrieved via hybrid search before archetypes speak. Without memory, archetypes are fortune cookies — generic wisdom from a personality template. With memory, they reference what Maya said in January, what she dismissed, what she followed through on. The Warrior's callback to "too aggressive" is grounded in a specific MemCell from Jan 20. Claim specificity target: ≥3 citations per confrontation.
     </div>
 
     <div class="voice-card" id="v1">
@@ -627,6 +627,12 @@
     <div class="arc-meta">23 MemCells · 3 months · Disputable</div>
     <div class="arc-value">Every claim is disputable. The correction IS the product.</div>
 
+    <!-- Annotation: Arc overview -->
+    <div class="annotation" style="top:10px;right:-280px;">
+      <div class="a-label">EverMemOS Phase 3 · Reconstructive Recollection</div>
+      Agentic retrieval (retrieve_method: 'agentic') reconstructs 3 months of MemCells into a disputable account. Not a passive narrative — each section has Accurate / Wrong / Missing buttons. Maya's markups become correction MemCells that reshape the next reconstruction. The paintings are generated from coherence data, not decorative — visual evidence of state change.
+    </div>
+
     <div class="paintings">
       <div class="paint-col" id="p1">
         <div class="lc-tag">January</div>
@@ -654,6 +660,11 @@
       <div class="as-evs"><span class="as-ev">coherence-001 · Jan 6 — agency 82, connection 47</span><span class="as-ev">coherence-003 · Jan 14 — Warrior dismissed</span></div>
       <div class="as-markup"><button class="as-btn" data-type="accurate">Accurate</button><button class="as-btn" data-type="wrong">Wrong</button><button class="as-btn" data-type="missing">Missing something</button></div>
       <div class="as-correction wrong-type"><div class="as-cor-label wrong-type">Your correction</div>It wasn't avoidance. I genuinely didn't see the connection gap. That's different.</div>
+      <!-- Annotation: Correction as product -->
+      <div class="annotation" style="top:120px;right:-280px;">
+        <div class="a-label">Why corrections are the product</div>
+        Maya marks January "Wrong." Her correction — "I didn't see the gap, I wasn't avoiding it" — is stored as a MemCell tagged self-narrative:correction with retrieval boost. Next time the system sees this pattern, it holds both the data AND Maya's differentiation. The system learns not from the data, but from the argument about what the data means.
+      </div>
     </div>
 
     <!-- Section 2: February -->
@@ -690,6 +701,11 @@
         <div class="loop-step"><div class="loop-icon">A</div><div class="loop-lbl">Action</div><div class="loop-desc">Arc reconstructed and reflected</div></div>
       </div>
       <div class="arch-claim">Not a mirror. An interlocutor. Memory gives the system standing.</div>
+      <!-- Annotation: Architecture -->
+      <div class="annotation" style="top:-10px;right:-280px;">
+        <div class="a-label">Integration Architecture</div>
+        3 channels into EverMemOS: coherence checks (16th EventBus handler, fire-and-forget), council deliberations (per-route), threshold moments (per-route). 66 source files across 6 API routes. 125 Supabase migrations. The app works identically with or without EverMemOS — graceful degradation via isEnabled() gate + 10s timeout.
+      </div>
       <div class="arch-stats">
         <span class="stat">23 MemCells</span><span class="stat-d">·</span>
         <span class="stat">Agentic Retrieval</span><span class="stat-d">·</span>
@@ -970,38 +986,41 @@ function stopVideo() {
 // ═══════════════════════════════════════
 
 const walkSteps = [
-  { time:'0:00', label:'Maya opens the app', annotations:true,
-    say:'<strong>This is Maya.</strong> 34. Creative director. Recently promoted, recently divorced, first time doing structured inner work. Day 94.',
+  { time:'0:00', label:'The problem', annotations:false,
+    say:'Every app that touches inner life has the same problem: <strong>amnesia.</strong> You reflect, you check in, next session — gone. Apps that add memory show you summaries. We built a system that holds claims about who you\'ve been — <strong>specific enough to argue with.</strong>',
     action:() => { goScene(0); if(dayState==='day90') toggleDay(); }},
-  { time:'0:30', label:'Day 1 — Just numbers', annotations:true,
-    say:'On Day 1, this is all Maya gets. A score. Seven dimensions. <strong>No memory. No opinion. No standing.</strong> The system hasn\'t earned the right to speak.',
+  { time:'0:20', label:'Meet Maya — Day 1', annotations:true,
+    say:'<strong>Maya, 34.</strong> Creative director. Recently promoted, recently divorced. First time doing structured inner work. On Day 1, the system stores her check as an <strong>episodic trace</strong> — a MemCell in EverMemOS — but stays silent. It hasn\'t earned standing yet.',
     action:() => { if(dayState==='day90') toggleDay(); }},
-  { time:'1:30', label:'Day 90 — The confrontation', annotations:true,
-    say:'Press M. 90 days later, the system has something to say. <strong>"You\'ve been avoiding connection for nine days."</strong> This is specific enough to argue with.',
+  { time:'0:50', label:'Day 90 — Memory enables standing', annotations:true,
+    say:'90 days later, the system has accumulated 23 MemCells. Now it can confront: <strong>"You\'ve been avoiding connection for nine days."</strong> Not a summary — a position. Grounded in evidence Maya has forgotten. This is what memory enables: <strong>standing.</strong>',
     action:() => { if(dayState==='day1') toggleDay(); }},
-  { time:'2:30', label:'She asks for evidence', annotations:false,
-    say:'Maya clicks "Show me the evidence." Four MemCells across three months. <strong>The system shows its work.</strong> This is what standing looks like.',
+  { time:'1:20', label:'The evidence — show me the receipts', annotations:false,
+    say:'Maya clicks "Show me the evidence." Four MemCells cited by date. Jan 14: agency 82, connection 47. Today: agency 85, connection 44. <strong>Every claim has receipts.</strong> The system never asserts without evidence the user can verify.',
     action:() => { $('rShow')?.click(); }},
-  { time:'3:00', label:'The correction loop', annotations:true,
-    say:'Every confrontation is an invitation to correct. <strong>The disagreement IS the highest-signal data.</strong> The argument is the product.',
-    action:() => {}},
-  { time:'3:30', label:'The Council — archetypes with memory', annotations:true,
-    say:'Maya asks: "How do I step into what\'s next without a map?" Three archetypes convene — but they have <strong>memory</strong> now.',
+  { time:'1:50', label:'The flywheel — corrections as product', annotations:true,
+    say:'<strong>The correction flywheel:</strong> Claim → Response → Correction → Better future claims. Maya disagrees? That correction becomes a MemCell — the <strong>highest-signal data</strong> in the system. Target correction rate: 20-40%. Too high means the system is wrong. Too low means it\'s unchallenging.',
+    action:() => { $('evPanel').style.display='none'; }},
+  { time:'2:20', label:'The Council — archetypes with receipts', annotations:true,
+    say:'Maya asks: "How do I step into what\'s next?" Three archetypes convene. Before speaking, the system retrieves 3 MemCells via <strong>semantic consolidation</strong> — EverMemOS\'s second phase. Without memory, archetypes are fortune cookies. With it, they have relationship history.',
     action:() => { goScene(1); }},
-  { time:'4:30', label:'The Warrior remembers January', annotations:false,
-    say:'"You told me I was too aggressive. Then you spent three weeks stuck." <strong>That\'s a callback to January</strong> — specific, grounded, impossible to dismiss.',
+  { time:'2:50', label:'The Warrior\'s callback', annotations:false,
+    say:'The Warrior: "You told me I was too aggressive. Then you spent three weeks stuck." <strong>That\'s grounded in a specific MemCell from January 20.</strong> The Sage asks the question Maya is avoiding. The Sovereign — a new presence, earned through months of work, not given.',
     action:() => {}},
-  { time:'5:00', label:'The disputable arc', annotations:true,
-    say:'Three months of inner life. Not a story to read — <strong>an account to argue with.</strong> Every claim is disputable.',
+  { time:'3:20', label:'The Arc — a disputable account', annotations:true,
+    say:'EverMemOS Phase 3: <strong>reconstructive recollection.</strong> Agentic retrieval rebuilds 3 months of inner life from 23 MemCells. Not a narrative to read — an account to argue with. Each section: Accurate / Wrong / Missing something.',
     action:() => { goScene(2); }},
-  { time:'5:30', label:'Maya marks January wrong', annotations:false,
-    say:'"It wasn\'t avoidance. I genuinely didn\'t see the connection gap." <strong>That correction reshapes the next reconstruction.</strong>',
+  { time:'3:50', label:'Maya corrects January', annotations:true,
+    say:'Maya marks January "Wrong": "It wasn\'t avoidance. I didn\'t see the connection gap." <strong>That correction reshapes the next reconstruction.</strong> The system learns not from the data, but from the argument about what the data means. Return-after-correction target: >80%.',
     action:() => { const b = document.querySelector('#arcS1 .as-btn[data-type="wrong"]'); if(b) b.click(); }},
-  { time:'6:00', label:'Architecture', annotations:false,
-    say:'Three data channels. 16th EventBus handler. Episodic → Semantic → Reconstructive. <strong>The correction loop IS the product.</strong>',
+  { time:'4:20', label:'Architecture — 3 channels, zero latency', annotations:true,
+    say:'<strong>Three channels</strong> into EverMemOS: coherence checks (16th EventBus handler), council deliberations, threshold moments. All fire-and-forget. 66 source files. 125 database migrations. <strong>The app works identically with or without EverMemOS</strong> — graceful degradation.',
     action:() => { $('archS')?.scrollIntoView({behavior:'smooth',block:'center'}); }},
-  { time:'6:30', label:'Close', annotations:false,
-    say:'<strong>Memory for who you\'re becoming.</strong> ★ PAUSE. Let them ask.',
+  { time:'4:50', label:'The central calibration problem', annotations:false,
+    say:'The #1 engineering challenge: <strong>when to confront and when to shut up.</strong> A system that confronts too often is annoying. A system that never confronts is a dashboard. v1 defaults: ≥4 MemCells, ≥14 days of data, ≥2 factors with >15-point delta. Conservative. Tuned by correction rate.',
+    action:() => {}},
+  { time:'5:00', label:'Memory for who you\'re becoming', annotations:false,
+    say:'<strong>Memory for who you\'re becoming.</strong> The correction loop IS the product. Built with EverMemOS. Deployed at theliminalspace.io.',
     action:() => {}}
 ];
 
