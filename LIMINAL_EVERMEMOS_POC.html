@@ -4,806 +4,674 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Liminal Space × EverMemOS</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  /* Preload font fallbacks for headless/offline rendering */
-  @font-face { font-family: 'Cormorant Garamond'; font-style: normal; font-weight: 300; src: local('Cormorant Garamond Light'), local('Georgia'); }
-  @font-face { font-family: 'Inter'; font-style: normal; font-weight: 400; src: local('Inter'), local('-apple-system'), local('Helvetica Neue'); }
-</style>
-<style>
-  /*
-   * CREATIVE DIRECTION v2
-   * ─────────────────────
-   * Metaphor: "A developing room. Something is emerging in the dark."
-   *
-   * NOT a dashboard. NOT a SaaS app. A dark surface where inner data
-   * develops like a photograph — slowly, then all at once.
-   *
-   * Structure: Full-screen scenes, not tabs-in-a-shell.
-   *   Scene 1 — The Check (without memory, then WITH memory)
-   *   Scene 2 — The Council (memory enters before archetypes speak)
-   *   Scene 3 — The Arc (the full reconstruction)
-   *
-   * The hero moment: the Memory toggle. Without memory = a score.
-   * With memory = perception. The delta IS the thesis.
-   *
-   * Violet = the system perceiving.
-   * Gold = memory surfacing.
-   * Teal = what's emerging.
-   * The room itself changes temperature when memory is on.
-   */
+  /* ═══════════════════════════════════════════════════════════════
+     LIMINAL SPACE × EVERMEMOS — Grand Finale POC
+     Dark. Editorial. Ravey. Product-grade.
+     Inspired by: Soleio spatial intent, EvenUp A/P mode pattern
+     ═══════════════════════════════════════════════════════════════ */
 
   :root {
-    --ink: #0c0b10;
-    --ink-warm: #100e16;
-    --ink-card: #16141e;
-    --ink-elevated: #1e1b2a;
+    --ink: #09080d;
+    --ink-card: #12101a;
+    --ink-elevated: #1a1726;
     --paper: #f3f1ef;
-    --silver: #b8b2ab;
+    --silver: #9e9890;
     --gold: #FFDD88;
-    --gold-dim: rgba(255,221,136,0.45);
+    --gold-dim: rgba(255,221,136,0.4);
     --violet: #8e66fb;
     --violet-glow: rgba(142,102,251,0.12);
-    --violet-dim: rgba(142,102,251,0.4);
     --teal: #0ed7f2;
-    --teal-glow: rgba(14,215,242,0.1);
+    --teal-glow: rgba(14,215,242,0.08);
     --rose: #FF5588;
     --rose-glow: rgba(255,85,136,0.08);
-    --border: rgba(255,255,255,0.05);
-    --border-on: rgba(255,255,255,0.1);
-    --display: 'Cormorant Garamond', Georgia, serif;
-    --body: 'Inter', -apple-system, system-ui, sans-serif;
-    --mono: 'SF Mono', 'Fira Code', monospace;
+    --border: rgba(255,255,255,0.06);
+    --display: 'Space Grotesk', sans-serif;
+    --body: 'Inter', -apple-system, sans-serif;
+    --serif: 'Cormorant Garamond', Georgia, serif;
+    --hand: 'Caveat', cursive;
   }
 
   * { margin:0; padding:0; box-sizing:border-box; }
-  html, body { height:100%; overflow:hidden; background:var(--ink); color:var(--paper); font-family:var(--body); -webkit-font-smoothing:antialiased; }
 
-  /* ─── Grain ─── */
+  html, body {
+    height:100%; overflow:hidden;
+    background: var(--ink); color: var(--paper);
+    font: 400 14px/1.6 var(--body);
+    -webkit-font-smoothing: antialiased;
+    transition: background 1s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  body[data-state="day1"]  { background: radial-gradient(ellipse at 50% 40%, rgba(142,102,251,0.03) 0%, transparent 60%), #09080d; }
+  body[data-state="day90"] { background: radial-gradient(ellipse at 50% 35%, rgba(142,102,251,0.06) 0%, transparent 55%), radial-gradient(ellipse at 55% 60%, rgba(255,85,136,0.03) 0%, transparent 50%), #0d0b14; }
+  body[data-state="council"] { background: radial-gradient(ellipse at 45% 40%, rgba(142,102,251,0.05) 0%, transparent 55%), #0b0a12; }
+  body[data-state="arc"] { background: radial-gradient(ellipse at 50% 50%, rgba(14,215,242,0.03) 0%, transparent 55%), #0a0910; }
+
+  /* Grain */
   body::before {
-    content:''; position:fixed; inset:0; pointer-events:none; z-index:9999; opacity:0.025;
-    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    content:''; position:fixed; inset:0; pointer-events:none; z-index:9999; opacity:0.02;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
     background-size:256px;
   }
 
-  /* ═══════════════════════════════════════
-     LAYOUT — full screen scenes, keyboard nav
-     ═══════════════════════════════════════ */
-  .scene { display:none; height:100vh; flex-direction:column; }
-  .scene.on { display:flex; animation:sceneIn 0.5s ease-out; }
-  @keyframes sceneIn { from{opacity:0;} to{opacity:1;} }
-
-  /* Minimal top bar — not a dashboard, just orientation */
-  .bar {
-    height:36px; display:flex; align-items:center; padding:0 32px;
-    border-bottom:1px solid var(--border); flex-shrink:0;
+  /* ─── Sidebar ─── */
+  .sidebar {
+    position:fixed; left:0; top:0; bottom:0; width:220px;
+    padding: 32px 24px;
+    display:flex; flex-direction:column;
+    z-index:50;
+    border-right: 1px solid var(--border);
+    transition: opacity 0.5s, transform 0.5s;
   }
-  .bar-left { display:flex; align-items:center; gap:10px; }
-  .bar-orb { width:8px; height:8px; border-radius:50%; background:var(--violet); box-shadow:0 0 8px var(--violet-glow); }
-  .bar-brand { font:500 11px/1 var(--body); color:var(--paper); opacity:0.5; letter-spacing:-0.2px; }
-  .bar-right { margin-left:auto; display:flex; align-items:center; gap:14px; }
-  .bar-scene-label { font:400 10px/1 var(--mono); color:var(--silver); opacity:0.3; letter-spacing:0.06em; text-transform:uppercase; }
-  .bar-mem {
-    font:600 7px/1 var(--mono); text-transform:uppercase; letter-spacing:0.5px;
-    padding:3px 8px; border-radius:10px;
-    transition:all 0.5s;
+  .sidebar.hidden { opacity:0; pointer-events:none; transform:translateX(-20px); }
+
+  .sb-orb {
+    width:10px; height:10px; border-radius:50%;
+    background:var(--violet);
+    box-shadow: 0 0 12px var(--violet-glow);
+    animation: orbPulse 3s ease-in-out infinite;
+    margin-bottom: 6px;
   }
-  .bar-mem.off { color:var(--silver); opacity:0.3; border:1px solid var(--border); background:transparent; }
-  .bar-mem.on { color:var(--gold); border:1px solid rgba(255,221,136,0.2); background:rgba(255,221,136,0.04); }
-
-  /* Scene nav dots */
-  .scene-nav {
-    position:fixed; right:20px; top:50%; transform:translateY(-50%);
-    display:flex; flex-direction:column; gap:10px; z-index:100;
+  @keyframes orbPulse {
+    0%,100% { box-shadow: 0 0 12px var(--violet-glow); }
+    50% { box-shadow: 0 0 20px rgba(142,102,251,0.25); }
   }
-  .scene-dot {
-    width:6px; height:6px; border-radius:50%;
-    background:rgba(255,255,255,0.12); cursor:pointer;
-    transition:all 0.3s;
+  .sb-brand { font: 400 11px var(--display); color:var(--silver); opacity:0.4; letter-spacing:-0.2px; margin-bottom:48px; }
+
+  .sb-nav { display:flex; flex-direction:column; gap:2px; flex:1; }
+  .sb-link {
+    padding:10px 14px; border-radius:8px;
+    font: 500 13px var(--body); color:var(--silver); opacity:0.5;
+    cursor:pointer; border:none; background:none; text-align:left;
+    transition: all 0.25s; letter-spacing:-0.2px;
   }
-  .scene-dot.on { background:var(--violet); box-shadow:0 0 6px var(--violet-glow); }
-  .scene-dot:hover { background:rgba(255,255,255,0.3); }
+  .sb-link:hover { opacity:0.8; background:rgba(255,255,255,0.03); }
+  .sb-link.on { opacity:1; color:var(--paper); background:rgba(142,102,251,0.08); }
 
-  /* ─── Content area ─── */
-  .content { flex:1; overflow-y:auto; display:flex; justify-content:center; padding:40px 48px 80px; }
-  .content-inner { width:100%; max-width:780px; }
+  .sb-user {
+    margin-top:auto; padding-top:20px;
+    border-top:1px solid var(--border);
+  }
+  .sb-name { font: 500 13px var(--body); color:var(--paper); opacity:0.7; }
+  .sb-day { font: 400 10px var(--body); color:var(--gold-dim); margin-top:3px; letter-spacing:0.3px; }
 
-  /* ═══════════════════════════════════════
-     SCENE 1: THE CHECK
-     ═══════════════════════════════════════
-     The hero moment: toggle memory on/off.
-     Without = a number. With = perception.
-     ═══════════════════════════════════════ */
+  /* ─── Scenes ─── */
+  .scene {
+    display:none; position:absolute; top:0; right:0; bottom:0; left:220px;
+    overflow-y:auto; overflow-x:hidden;
+  }
+  .scene.on { display:block; animation: fadeIn 0.5s ease-out; }
+  @keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
 
-  .check-hero { text-align:center; margin-bottom:40px; }
-  .check-phase { font:600 8px/1 var(--mono); text-transform:uppercase; letter-spacing:0.8px; color:var(--teal); opacity:0.5; margin-bottom:10px; }
-  .check-title { font:300 38px/1.15 var(--display); color:var(--paper); letter-spacing:-0.5px; margin-bottom:6px; }
-  .check-date { font:400 10px/1 var(--mono); color:var(--silver); opacity:0.3; }
+  .stage {
+    max-width:720px; margin:0 auto;
+    padding: 60px 48px 120px;
+  }
 
-  /* The big score */
-  .score-block { text-align:center; margin-bottom:32px; }
-  .score-num { font:300 80px/1 var(--display); color:var(--paper); letter-spacing:-3px; transition:all 0.5s; }
-  .score-label { font:400 10px/1 var(--mono); color:var(--silver); opacity:0.35; letter-spacing:0.06em; text-transform:uppercase; margin-top:4px; }
-  .score-delta { font:500 14px/1 var(--body); color:var(--teal); opacity:0; transition:opacity 0.6s; margin-top:6px; }
+  /* ─── Annotations (A mode) ─── */
+  .annotation {
+    display:none; position:absolute; z-index:90;
+    max-width:260px; padding:14px 18px;
+    background:rgba(142,102,251,0.12); border:1px solid rgba(142,102,251,0.25);
+    border-radius:10px; backdrop-filter:blur(12px);
+    font: 400 12px/1.5 var(--body); color:rgba(255,255,255,0.85);
+    animation: annotPop 0.3s cubic-bezier(0.16,1,0.3,1);
+  }
+  .annotation .a-label { font:600 8px var(--body); text-transform:uppercase; letter-spacing:0.8px; color:var(--violet); margin-bottom:6px; }
+  @keyframes annotPop { from{opacity:0;transform:scale(0.95);} to{opacity:1;transform:scale(1);} }
+  body.annotations-on .annotation { display:block; }
+
+  /* ─── Walk Bar (P mode) ─── */
+  .walk-bar {
+    position:fixed; bottom:0; left:220px; right:0; z-index:200;
+    background:rgba(9,8,13,0.95); border-top:1px solid var(--border);
+    backdrop-filter:blur(20px);
+    padding:16px 32px; display:flex; align-items:center; gap:24px;
+    transform:translateY(100%); transition:transform 0.35s cubic-bezier(0.16,1,0.3,1);
+  }
+  .walk-bar.active { transform:translateY(0); }
+  .walk-bar.hide { transform:translateY(100%); }
+
+  .walk-time { font:600 11px var(--display); color:var(--violet); min-width:40px; }
+  .walk-label { font:600 12px var(--body); color:var(--paper); min-width:140px; }
+  .walk-say { font:400 12px/1.5 var(--body); color:var(--silver); flex:1; }
+  .walk-say strong { color:var(--gold); font-weight:500; }
+  .walk-dots { display:flex; gap:4px; margin-left:auto; }
+  .walk-dot { width:5px; height:5px; border-radius:50%; background:rgba(255,255,255,0.1); }
+  .walk-dot.done { background:var(--violet); opacity:0.4; }
+  .walk-dot.cur { background:var(--violet); opacity:0.9; width:14px; border-radius:3px; }
+  .walk-hint { font:400 9px var(--body); color:var(--silver); opacity:0.3; margin-left:12px; white-space:nowrap; }
+
+  /* ─── Annot hint ─── */
+  .annot-hint {
+    position:fixed; bottom:52px; right:16px; z-index:201;
+    font:500 9px var(--body); color:var(--silver); opacity:0.3;
+    transition: all 0.3s;
+  }
+  body.annotations-on .annot-hint { color:var(--violet); opacity:0.7; }
+
+  /* ─── Scene 1: The Check ─── */
+  .score-hero { text-align:center; margin-bottom:48px; position:relative; }
+  .score-num {
+    font: 300 140px/1 var(--display);
+    color:var(--paper); letter-spacing:-6px;
+    transition: all 0.8s cubic-bezier(0.16,1,0.3,1);
+  }
+  .score-sub { font:400 12px var(--body); color:var(--silver); opacity:0.3; margin-top:8px; }
+  .score-delta { font:500 14px var(--body); color:var(--teal); opacity:0; transition:opacity 0.5s; margin-top:4px; }
   .score-delta.on { opacity:1; }
 
-  /* Factor row — horizontal, compact */
-  .factors { display:flex; gap:6px; margin-bottom:36px; }
+  /* Day 90: score shrinks */
+  body[data-mode="day90"] .score-num {
+    font-size:32px; letter-spacing:-1px; opacity:0.4;
+    position:absolute; top:0; right:0;
+  }
+  body[data-mode="day90"] .score-sub { display:none; }
+
+  .factors { display:flex; flex-direction:column; gap:10px; margin-bottom:40px; }
   .factor {
-    flex:1; display:flex; flex-direction:column; align-items:center; gap:4px;
-    padding:14px 4px; background:var(--ink-card); border:1px solid var(--border);
-    border-radius:6px; transition:all 0.5s;
+    display:grid; grid-template-columns:90px 1fr 32px; gap:12px; align-items:center;
+    opacity:0; animation: slideUp 0.4s cubic-bezier(0.16,1,0.3,1) forwards;
   }
-  .factor.highlight { border-color:var(--violet-dim); background:var(--ink-elevated); }
-  .factor-name { font:600 9px/1 var(--mono); text-transform:uppercase; letter-spacing:0.5px; color:var(--silver); opacity:0.4; }
-  .factor-val { font:300 24px/1 var(--display); color:var(--paper); }
-  .factor-bar { width:80%; height:3px; background:rgba(255,255,255,0.04); border-radius:1px; overflow:hidden; }
-  .factor-fill { height:100%; border-radius:1px; transition:width 0.8s ease-out; width:0%; }
-  .factor-delta { font:400 10px/1 var(--mono); opacity:0; transition:opacity 0.5s; min-height:12px; }
-  .factor-delta.on { opacity:1; }
-  .factor-delta.up { color:var(--teal); }
-  .factor-delta.dn { color:var(--rose); }
+  .factor:nth-child(1){animation-delay:0.05s} .factor:nth-child(2){animation-delay:0.1s}
+  .factor:nth-child(3){animation-delay:0.15s} .factor:nth-child(4){animation-delay:0.2s}
+  .factor:nth-child(5){animation-delay:0.25s} .factor:nth-child(6){animation-delay:0.3s}
+  .factor:nth-child(7){animation-delay:0.35s}
+  @keyframes slideUp { from{opacity:0;transform:translateY(8px);} to{opacity:1;transform:none;} }
 
-  /* ─── THE TOGGLE — memory on/off ─── */
+  .f-name { font:500 12px var(--body); color:var(--silver); opacity:0.6; }
+  .f-bar { height:4px; background:rgba(255,255,255,0.04); border-radius:2px; overflow:hidden; }
+  .f-fill { height:100%; border-radius:2px; transition:width 0.8s cubic-bezier(0.16,1,0.3,1); width:0%; }
+  .f-val { font:300 16px var(--display); color:var(--paper); text-align:right; }
+  .f-delta { font:400 10px var(--body); opacity:0; transition:opacity 0.4s; margin-left:4px; }
+  .f-delta.on { opacity:1; }
+  .f-delta.up { color:var(--teal); }
+  .f-delta.dn { color:var(--rose); }
+  .f-hl { background:rgba(142,102,251,0.04); border-radius:4px; padding:2px 0; }
 
-  /* ─── DAY 1 vs DAY 90 STATE ─── */
-  .day-state { text-align:center; }
-  
-  .day1 { padding:32px 0; }
-  .day-recorded { font:400 14px/1.4 var(--body); color:var(--silver); opacity:0.4; margin-bottom:16px; }
-  .day-label { font:400 11px/1 var(--mono); text-transform:uppercase; letter-spacing:0.8px; color:var(--silver); opacity:0.3; }
+  /* Day 1 / Day 90 states */
+  .day1-content, .day90-content { transition: opacity 0.4s; }
+  .day90-content { display:none; }
 
-  .day90 { }
+  .day1-msg { text-align:center; margin-top:24px; }
+  .day1-msg .recorded { font:400 14px var(--body); color:var(--silver); opacity:0.35; margin-bottom:8px; }
+  .day1-msg .no-mem { font:300 15px/1.5 var(--display); color:var(--silver); opacity:0.25; font-style:italic; }
+  .day1-value { font:400 12px/1.6 var(--body); color:var(--silver); opacity:0.25; text-align:center; font-style:italic; margin-top:12px; }
 
-  /* ─── CLAIM CARD — confrontation ─── */
-  .claim {
-    padding:28px 32px; background:var(--ink-card); border-radius:6px;
-    position:relative; overflow:hidden;
-    opacity:0; transform:translateY(8px); transition:all 0.6s cubic-bezier(0.16,1,0.3,1);
-    margin-bottom:24px;
+  /* Claim — the confrontation */
+  .claim { text-align:center; margin-top:40px; position:relative; }
+  .claim-text {
+    font: 500 28px/1.3 var(--display); color:var(--paper);
+    letter-spacing:-0.5px; margin-bottom:20px;
+    opacity:0; transform:translateY(12px);
+    animation: claimIn 0.7s cubic-bezier(0.16,1,0.3,1) 0.3s forwards;
   }
-  .claim.on { opacity:1; transform:none; }
-  .claim::before { content:''; position:absolute; left:0; top:10px; bottom:10px; width:3px; background:var(--violet); border-radius:0 2px 2px 0; box-shadow:0 0 16px var(--violet-glow); }
-  .claim::after { content:''; position:absolute; left:0; top:0; bottom:0; width:120px; background:linear-gradient(90deg,var(--violet-glow) 0%,transparent 100%); pointer-events:none; }
-
-  .claim-header { font:600 8px/1 var(--mono); text-transform:uppercase; letter-spacing:0.8px; color:var(--violet); margin-bottom:12px; position:relative; z-index:1; }
-  
-  .claim-assertion { font:500 20px/1.3 var(--display); color:var(--paper); letter-spacing:-0.2px; margin-bottom:16px; position:relative; z-index:1; }
-  
-  .claim-evidence { margin:16px 0; position:relative; z-index:1; }
-  .claim-evidence-item { font:400 13px/1.5 var(--body); color:var(--silver); opacity:0.7; margin-bottom:8px; padding-left:16px; position:relative; }
-  .claim-evidence-item::before { content:'·'; position:absolute; left:0; color:var(--gold); }
-
-  .claim-edge { font:400 13px/1.6 var(--body); font-style:italic; color:var(--rose); opacity:0.8; margin-top:16px; position:relative; z-index:1; }
-
-  /* ─── RESPONSE INTERFACE ─── */
-  .response-bar {
-    display:flex; gap:12px; margin-bottom:24px;
-    opacity:0; transform:translateY(8px); transition:all 0.6s cubic-bezier(0.16,1,0.3,1);
-    transition-delay:0.3s;
+  @keyframes claimIn { to{opacity:1;transform:none;} }
+  .claim-line { width:40px; height:2px; background:var(--violet); margin:0 auto 20px; opacity:0.5; }
+  .claim-evidence { font:400 13px/1.7 var(--body); color:var(--silver); opacity:0.5; margin-bottom:8px; }
+  .claim-edge {
+    font:400 14px/1.6 var(--serif); font-style:italic;
+    color:var(--rose); opacity:0.8; margin:20px 0;
   }
-  .response-bar.on { opacity:1; transform:none; }
+  .claim-value { font:400 11px/1.5 var(--body); color:var(--violet); opacity:0.3; text-align:center; margin-top:16px; font-style:italic; }
 
-  .response-btn {
-    flex:1; padding:12px 16px; border-radius:20px;
-    background:var(--ink-card); border:1px solid var(--border);
-    font:400 12px/1 var(--body); color:var(--silver);
-    cursor:pointer; user-select:none;
-    transition:all 0.3s;
+  /* Response buttons */
+  .responses { display:flex; gap:10px; justify-content:center; margin-top:24px; flex-wrap:wrap; }
+  .resp-btn {
+    padding:10px 20px; border-radius:20px;
+    background:transparent; border:1px solid var(--border);
+    font:400 12px var(--body); color:var(--silver);
+    cursor:pointer; transition:all 0.3s;
   }
-  .response-btn:hover { border-color:rgba(255,255,255,0.15); background:var(--ink-elevated); }
-  .response-btn.active { background:var(--violet); border-color:var(--violet); color:var(--paper); }
+  .resp-btn:hover { border-color:rgba(255,255,255,0.15); color:var(--paper); box-shadow:0 0 12px var(--violet-glow); }
+  .resp-btn.on { background:var(--violet); border-color:var(--violet); color:var(--paper); }
 
-  /* ─── CORRECTION INPUT & TEXT ─── */
-  .correction-input-wrap {
-    margin-bottom:24px;
-    opacity:0; transform:translateY(6px); transition:all 0.5s;
-  }
-  .correction-input-wrap.show { opacity:1; transform:none; }
-
+  /* Correction input */
+  .correction-wrap { display:none; margin-top:20px; text-align:left; }
+  .correction-wrap.show { display:block; animation:slideUp 0.4s cubic-bezier(0.16,1,0.3,1); }
   .correction-input {
-    width:100%; padding:12px 16px; border-radius:6px;
-    background:var(--ink-card); border:1px solid var(--border);
-    font:400 13px/1.4 var(--body); color:var(--paper);
+    width:100%; padding:14px 18px; border-radius:8px;
+    background:rgba(255,221,136,0.03); border:1px solid var(--border);
+    font:400 16px/1.5 var(--hand); color:var(--paper);
     outline:none; transition:border 0.3s;
   }
   .correction-input:focus { border-color:rgba(255,221,136,0.3); }
-  .correction-input::placeholder { color:var(--silver); opacity:0.4; }
+  .correction-input::placeholder { color:var(--silver); opacity:0.3; }
+  .correction-stored { display:none; margin-top:12px; padding:14px 18px; background:rgba(255,221,136,0.02); border-left:2px solid var(--gold-dim); border-radius:0 6px 6px 0; }
+  .correction-stored.show { display:block; animation:slideUp 0.4s cubic-bezier(0.16,1,0.3,1); }
+  .correction-stored-text { font:400 14px/1.5 var(--hand); color:var(--silver); }
+  .correction-stored-label { font:500 8px var(--body); text-transform:uppercase; letter-spacing:0.6px; color:var(--gold-dim); margin-top:6px; }
 
-  .correction-text {
-    margin-top:16px; padding:16px 20px;
-    background:rgba(255,221,136,0.02); border:1px solid rgba(255,221,136,0.06);
-    border-left:2px solid var(--gold-dim); border-radius:0 6px 6px 0;
-    font:400 12px/1.6 var(--body); color:var(--silver);
-    opacity:0; transform:translateY(6px); transition:all 0.5s;
+  /* Evidence expand */
+  .evidence-panel { display:none; margin-top:20px; padding:20px; background:var(--ink-elevated); border-radius:8px; border:1px solid var(--border); border-left:2px solid rgba(255,221,136,0.15); text-align:left; }
+  .evidence-panel.show { display:block; animation:slideUp 0.4s cubic-bezier(0.16,1,0.3,1); }
+  .ev-label { font:600 8px var(--body); text-transform:uppercase; letter-spacing:0.7px; color:var(--gold); margin-bottom:12px; }
+  .ev-item { display:flex; gap:12px; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.04); }
+  .ev-item:last-child { border-bottom:none; }
+  .ev-date { font:400 10px var(--body); color:var(--gold-dim); min-width:44px; }
+  .ev-text { font:400 12px/1.5 var(--body); color:var(--silver); opacity:0.7; }
+
+  /* ─── Scene 2: The Council ─── */
+  .council-q {
+    font: 300 28px/1.35 var(--display); color:var(--paper);
+    text-align:center; letter-spacing:-0.3px; margin-bottom:8px;
   }
-  .correction-text.show { opacity:1; transform:none; }
-  .correction-text strong { color:var(--paper); font-weight:500; }
+  .council-meta { font:400 11px var(--body); color:var(--silver); opacity:0.3; text-align:center; margin-bottom:40px; }
+  .council-value { font:400 11px/1.5 var(--body); color:var(--violet); opacity:0.25; text-align:center; font-style:italic; margin-bottom:32px; }
 
-  .correction-stored {
-    font:400 9px/1 var(--mono); color:var(--gold-dim); margin-top:8px; opacity:0.6;
+  /* Memory retrieval card */
+  .mem-retrieval {
+    padding:24px; border-radius:10px;
+    background:rgba(255,221,136,0.02); border:1px solid rgba(255,221,136,0.08);
+    margin-bottom:40px;
+    opacity:0; transition:opacity 0.5s;
   }
+  .mem-retrieval.on { opacity:1; }
+  .mem-label { font:600 8px var(--body); text-transform:uppercase; letter-spacing:0.7px; color:var(--gold); margin-bottom:16px; display:flex; align-items:center; gap:8px; }
+  .mem-label .dot { width:6px; height:6px; border-radius:50%; background:var(--gold); opacity:0.5; }
+  .mem-item { padding:12px 0; border-bottom:1px solid rgba(255,221,136,0.04); display:flex; gap:14px; }
+  .mem-item:last-child { border-bottom:none; }
+  .mem-date { font:500 10px var(--body); color:var(--gold-dim); min-width:44px; padding-top:2px; }
+  .mem-text { font:400 13px/1.6 var(--body); color:var(--silver); opacity:0.8; }
+  .mem-text em { color:var(--gold-dim); }
 
-  /* ─── EVIDENCE EXPAND ─── */
-  .evidence-expand {
-    margin-top:20px; padding:20px; background:var(--ink-elevated);
-    border-radius:6px; border:1px solid var(--border);
-    opacity:0; transform:translateY(6px); transition:all 0.5s;
+  /* Voice cards — inspired by live app CouncilDeliberationView */
+  .voice-card {
+    padding:28px; border-radius:12px;
+    background:var(--ink-card); border:1px solid var(--border);
+    margin-bottom:16px;
+    opacity:0; transform:translateY(10px);
+    transition: all 0.5s cubic-bezier(0.16,1,0.3,1);
   }
-  .evidence-expand.show { opacity:1; transform:none; }
+  .voice-card.on { opacity:1; transform:none; }
 
-  .evidence-expand-label { font:600 8px/1 var(--mono); text-transform:uppercase; letter-spacing:0.7px; color:var(--gold); margin-bottom:12px; }
-  
-  .evidence-expand-list { }
-  .evidence-item { display:flex; gap:12px; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.05); }
-  .evidence-item:last-child { border-bottom:none; }
+  .voice-header { display:flex; align-items:center; gap:10px; margin-bottom:16px; }
+  .voice-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+  .voice-name { font:600 13px var(--display); color:var(--paper); letter-spacing:-0.2px; }
+  .voice-role { font:400 11px var(--body); color:var(--silver); opacity:0.4; font-style:italic; margin-left:auto; }
 
-  .evidence-date { font:400 9px/1.4 var(--mono); color:var(--gold-dim); white-space:nowrap; min-width:50px; }
-  .evidence-content { font:400 12px/1.5 var(--body); color:var(--silver); opacity:0.7; }
+  .voice-quote {
+    font: 400 18px/1.8 var(--serif); font-style:italic;
+    color:var(--paper); opacity:0.85;
+    margin-bottom:16px; padding-left:20px;
+    border-left:2px solid var(--border);
+  }
 
   .voice-mem {
-    margin:10px 0 0 15px; padding:8px 12px;
+    padding:12px 16px;
     background:rgba(255,221,136,0.02); border-left:2px solid rgba(255,221,136,0.1);
-    border-radius:0 4px 4px 0;
-    font:400 12px/1.5 var(--body); color:var(--gold-dim);
+    border-radius:0 6px 6px 0;
+    font:400 12px/1.6 var(--body); color:var(--gold-dim);
     opacity:0; transition:opacity 0.5s;
   }
   .voice-mem.on { opacity:0.7; }
 
   /* Synthesis */
-  .synthesis { padding:22px 26px; background:var(--ink-elevated); border:1px solid var(--border); border-radius:6px; margin-top:16px; opacity:0; transition:opacity 0.5s; }
-  .synthesis.on { opacity:1; }
-  .synth-label { font:600 7px/1 var(--mono); text-transform:uppercase; letter-spacing:0.7px; color:var(--silver); opacity:0.35; margin-bottom:8px; }
-  .synth-text { font:400 17px/1.6 var(--display); font-style:italic; color:var(--paper); opacity:0.8; }
-  .synth-conv { display:flex; align-items:center; gap:8px; margin-top:12px; font:400 9px/1 var(--mono); color:var(--silver); opacity:0.3; }
-  .conv-bar { width:36px; height:2px; background:rgba(255,255,255,0.06); border-radius:1px; overflow:hidden; }
+  .synth-card {
+    padding:28px; border-radius:12px;
+    background:var(--ink-elevated); border:1px solid var(--border);
+    margin-top:32px;
+    opacity:0; transition:opacity 0.6s;
+  }
+  .synth-card.on { opacity:1; }
+  .synth-label { font:600 8px var(--body); text-transform:uppercase; letter-spacing:0.7px; color:var(--silver); opacity:0.35; margin-bottom:12px; }
+  .synth-text { font:400 20px/1.7 var(--serif); font-style:italic; color:var(--paper); opacity:0.85; }
+  .synth-conv { display:flex; align-items:center; gap:8px; margin-top:14px; font:400 10px var(--body); color:var(--silver); opacity:0.3; }
+  .conv-bar { width:40px; height:2px; background:rgba(255,255,255,0.06); border-radius:1px; overflow:hidden; }
   .conv-fill { height:100%; background:var(--teal); border-radius:1px; width:82%; }
 
-  /* ═══════════════════════════════════════
-     SCENE 3: THE ARC
-     ═══════════════════════════════════════ */
+  /* ─── Scene 3: The Arc ─── */
+  .arc-hero { text-align:center; margin-bottom:8px; }
+  .arc-title { font:400 32px/1.2 var(--display); color:var(--paper); letter-spacing:-0.5px; }
+  .arc-sub { font:300 18px var(--display); color:var(--silver); opacity:0.4; margin-top:6px; }
+  .arc-meta { font:400 11px var(--body); color:var(--gold); opacity:0.35; margin-top:10px; margin-bottom:40px; text-align:center; }
+  .arc-value { font:400 11px/1.5 var(--body); color:var(--teal); opacity:0.25; text-align:center; font-style:italic; margin-bottom:32px; }
 
-  .arc-hero { text-align:center; margin-bottom:36px; }
-  .arc-tag { font:400 8px/1 var(--mono); text-transform:uppercase; letter-spacing:0.14em; color:var(--gold); opacity:0.35; margin-bottom:16px; }
-  .arc-title { font:300 36px/1.15 var(--display); color:var(--paper); letter-spacing:-0.5px; }
-
-  /* Disputable sections */
-  .arc-section {
-    padding: 22px 26px;
-    background: var(--ink-card);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    margin-bottom: 14px;
-    opacity: 0;
-    transform: translateY(8px);
-    transition: all 0.6s cubic-bezier(0.16,1,0.3,1);
-  }
-  .arc-section.on { opacity: 1; transform: none; }
-
-  .arc-section-head {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 10px;
-  }
-  .arc-section-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-  }
-  .arc-section-month {
-    font: 600 9px/1 var(--mono);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--paper);
-    opacity: 0.6;
-  }
-  .arc-section-phase {
-    font: 400 9px/1 var(--mono);
-    color: var(--silver);
-    opacity: 0.3;
-    margin-left: auto;
-  }
-
-  .arc-section-claim {
-    font: 400 20px/1.65 var(--display);
-    font-style: italic;
-    color: var(--paper);
-    opacity: 0.8;
-    margin-bottom: 12px;
-  }
-
-  .arc-section-evidence {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-bottom: 14px;
-  }
-  .arc-ev-tag {
-    font: 500 8px/1 var(--mono);
-    color: var(--gold);
-    opacity: 0.5;
-    padding: 2px 6px;
-    background: rgba(255,221,136,0.04);
-    border: 1px solid rgba(255,221,136,0.08);
-    border-radius: 3px;
-  }
-
-  .arc-markup {
-    display: flex;
-    gap: 8px;
-  }
-  .arc-markup-btn {
-    font: 500 9px/1 var(--body);
-    padding: 6px 14px;
-    border-radius: 14px;
-    border: 1px solid var(--border);
-    background: transparent;
-    color: var(--silver);
-    opacity: 0.5;
-    cursor: pointer;
-    transition: all 0.3s;
-  }
-  .arc-markup-btn:hover { opacity: 0.8; border-color: var(--border-on); }
-  .arc-markup-btn.accurate { color: var(--teal); border-color: rgba(14,215,242,0.3); background: rgba(14,215,242,0.04); opacity: 1; }
-  .arc-markup-btn.wrong { color: var(--rose); border-color: rgba(255,85,136,0.3); background: rgba(255,85,136,0.04); opacity: 1; }
-  .arc-markup-btn.missing { color: var(--gold); border-color: rgba(255,221,136,0.3); background: rgba(255,221,136,0.04); opacity: 1; }
-
-  .arc-correction {
-    margin-top: 12px;
-    padding: 12px 16px;
-    border-radius: 0 6px 6px 0;
-    font: 400 13px/1.6 var(--body);
-    opacity: 0;
-    transition: opacity 0.4s;
-    display: none;
-  }
-  .arc-correction.on { display: block; opacity: 1; }
-  .arc-correction.wrong-type {
-    color: var(--rose);
-    border-left: 2px solid rgba(255,85,136,0.3);
-    background: rgba(255,85,136,0.03);
-  }
-  .arc-correction.missing-type {
-    color: var(--gold);
-    border-left: 2px solid rgba(255,221,136,0.3);
-    background: rgba(255,221,136,0.03);
-  }
-  .arc-correction-label {
-    font: 600 7px/1 var(--mono);
-    text-transform: uppercase;
-    letter-spacing: 0.6px;
-    margin-bottom: 6px;
-  }
-  .arc-correction-label.wrong-type { color: var(--rose); }
-  .arc-correction-label.missing-type { color: var(--gold); }
-
-  /* Paintings — BIG. These are the emotional center. */
-  .paintings { display:flex; justify-content:center; gap:28px; margin-bottom:16px; }
-  .paint-col { display:flex; flex-direction:column; align-items:center; opacity:0; transform:translateY(14px); transition:all 1.2s cubic-bezier(0.25,0.1,0.25,1); }
+  /* Paintings */
+  .paintings { display:flex; justify-content:center; gap:20px; margin-bottom:20px; }
+  .paint-col { display:flex; flex-direction:column; align-items:center; opacity:0; transform:translateY(12px); transition:all 1s cubic-bezier(0.25,0.1,0.25,1); }
   .paint-col.on { opacity:1; transform:none; }
-
-  .lc-tag { font:400 8px/1 var(--mono); text-transform:uppercase; letter-spacing:0.12em; color:var(--gold); opacity:0.3; margin-bottom:10px; text-align:center; }
-
+  .lc-tag { font:400 8px var(--body); text-transform:uppercase; letter-spacing:0.1em; color:var(--gold); opacity:0.25; margin-bottom:8px; }
   .paint-wrap { position:relative; }
   .paint-wrap:hover .paint-bloom { opacity:1; }
   .paint-bloom { position:absolute; inset:-50%; pointer-events:none; z-index:-1; opacity:0.4; transition:opacity 0.5s; }
-
-  .ph-data { display:flex; flex-direction:column; align-items:center; margin-top:14px; }
-  .ph-name { font:600 9px/1 var(--mono); letter-spacing:0.1em; text-transform:uppercase; }
-  .ph-score { font:300 32px/1.1 var(--display); color:var(--paper); margin-top:4px; letter-spacing:-1px; }
-  .ph-sub { font:400 10px/1 var(--body); color:var(--silver); opacity:0.45; margin-top:3px; }
-  .ph-month { font:400 7px/1 var(--mono); color:var(--silver); opacity:0.25; letter-spacing:0.05em; text-transform:uppercase; margin-top:2px; }
+  .ph-data { display:flex; flex-direction:column; align-items:center; margin-top:12px; }
+  .ph-name { font:600 9px var(--body); letter-spacing:0.1em; text-transform:uppercase; }
+  .ph-score { font:300 28px/1.1 var(--display); color:var(--paper); margin-top:4px; letter-spacing:-1px; }
+  .ph-sub { font:400 10px var(--body); color:var(--silver); opacity:0.4; margin-top:2px; }
 
   /* Trajectory */
   .traj { display:flex; flex-direction:column; align-items:center; margin-bottom:28px; opacity:0; transition:opacity 0.6s; }
   .traj.on { opacity:1; }
-  .traj-label { font:400 7px/1 var(--mono); letter-spacing:0.1em; text-transform:uppercase; color:var(--gold); opacity:0.25; margin-top:4px; }
+  .traj-label { font:400 7px var(--body); letter-spacing:0.1em; text-transform:uppercase; color:var(--gold); opacity:0.2; margin-top:4px; }
 
-  /* Narrative */
-  .arc-narr {
-    font:400 19px/1.75 var(--display); font-style:italic; color:var(--paper);
-    text-align:center; max-width:600px; margin:0 auto 32px; opacity:0; transition:opacity 0.8s;
+  /* Arc sections */
+  .arc-section {
+    padding:24px 28px; background:var(--ink-card); border:1px solid var(--border); border-radius:10px;
+    margin-bottom:14px; opacity:0; transform:translateY(8px);
+    transition: all 0.5s cubic-bezier(0.16,1,0.3,1);
   }
-  .arc-narr.on { opacity:0.85; }
-
-  /* Phase details */
-  .ph-details { display:flex; gap:20px; justify-content:center; margin-bottom:28px; opacity:0; transition:opacity 0.6s; }
-  .ph-details.on { opacity:1; }
-  .ph-det { flex:1; max-width:210px; }
-  .pd-head { display:flex; align-items:center; gap:5px; margin-bottom:5px; }
-  .pd-dot { width:5px; height:5px; border-radius:50%; }
-  .pd-mo { font:400 9px/1 var(--mono); letter-spacing:0.06em; text-transform:uppercase; color:var(--paper); opacity:0.5; }
-  .pd-txt { font:400 11.5px/1.5 var(--body); color:var(--silver); opacity:0.55; margin-bottom:4px; }
-  .pd-ev { font:400 10.5px/1.4 var(--body); color:var(--silver); opacity:0.35; font-style:italic; }
-  .pd-ev-d { font:400 8px/1 var(--mono); color:var(--gold); opacity:0.45; font-style:normal; }
+  .arc-section.on { opacity:1; transform:none; }
+  .as-head { display:flex; align-items:center; gap:8px; margin-bottom:12px; }
+  .as-dot { width:8px; height:8px; border-radius:50%; }
+  .as-month { font:600 11px var(--display); text-transform:uppercase; letter-spacing:0.05em; color:var(--paper); opacity:0.7; }
+  .as-phase { font:400 10px var(--body); color:var(--silver); opacity:0.3; margin-left:auto; }
+  .as-claim { font:400 17px/1.7 var(--serif); font-style:italic; color:var(--paper); opacity:0.8; margin-bottom:12px; }
+  .as-evs { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+  .as-ev {
+    font:500 8px var(--body); color:var(--gold); opacity:0.5;
+    padding:2px 7px; background:rgba(255,221,136,0.04); border:1px solid rgba(255,221,136,0.08); border-radius:3px;
+  }
+  .as-markup { display:flex; gap:8px; }
+  .as-btn {
+    font:500 10px var(--body); padding:7px 16px; border-radius:14px;
+    border:1px solid var(--border); background:transparent; color:var(--silver); opacity:0.5;
+    cursor:pointer; transition:all 0.3s;
+  }
+  .as-btn:hover { opacity:0.8; border-color:var(--border); }
+  .as-btn.accurate { color:var(--teal); border-color:rgba(14,215,242,0.3); background:rgba(14,215,242,0.04); opacity:1; }
+  .as-btn.wrong { color:var(--rose); border-color:rgba(255,85,136,0.3); background:rgba(255,85,136,0.04); opacity:1; }
+  .as-btn.missing { color:var(--gold); border-color:rgba(255,221,136,0.3); background:rgba(255,221,136,0.04); opacity:1; }
+  .as-correction { display:none; margin-top:12px; padding:12px 16px; border-radius:0 6px 6px 0; font:400 15px/1.6 var(--hand); opacity:0; transition:opacity 0.4s; }
+  .as-correction.on { display:block; opacity:1; }
+  .as-correction.wrong-type { color:var(--rose); border-left:2px solid rgba(255,85,136,0.3); background:rgba(255,85,136,0.03); }
+  .as-correction.missing-type { color:var(--gold); border-left:2px solid rgba(255,221,136,0.3); background:rgba(255,221,136,0.03); }
+  .as-cor-label { font:600 7px var(--body); text-transform:uppercase; letter-spacing:0.6px; margin-bottom:4px; }
+  .as-cor-label.wrong-type { color:var(--rose); }
+  .as-cor-label.missing-type { color:var(--gold); }
 
   /* Motifs */
-  .motif-rule { display:flex; align-items:center; gap:10px; margin-bottom:12px; opacity:0; transition:opacity 0.5s; }
+  .motif-rule { display:flex; align-items:center; gap:10px; margin:28px 0 12px; opacity:0; transition:opacity 0.5s; }
   .motif-rule.on { opacity:1; }
-  .mr-text { font:400 7px/1 var(--mono); letter-spacing:0.12em; text-transform:uppercase; color:var(--silver); opacity:0.25; white-space:nowrap; }
+  .mr-text { font:400 7px var(--body); letter-spacing:0.12em; text-transform:uppercase; color:var(--silver); opacity:0.25; white-space:nowrap; }
   .mr-line { flex:1; height:1px; background:var(--border); }
-
-  .motifs { display:flex; gap:8px; justify-content:center; margin-bottom:28px; opacity:0; transition:opacity 0.5s; }
+  .motifs { display:flex; gap:8px; margin-bottom:28px; opacity:0; transition:opacity 0.5s; }
   .motifs.on { opacity:1; }
-  .motif { flex:1; max-width:220px; padding:12px 14px; background:var(--ink-card); border:1px solid var(--border); border-radius:6px; }
-  .motif:hover { border-color:var(--border-on); }
-  .motif-name { font:500 9px/1 var(--mono); letter-spacing:0.07em; text-transform:uppercase; color:var(--gold); opacity:0.65; margin-bottom:5px; }
-  .motif-evo { font:400 11px/1.5 var(--body); color:var(--silver); opacity:0.55; }
+  .motif { flex:1; padding:14px 16px; background:var(--ink-card); border:1px solid var(--border); border-radius:8px; }
+  .motif-name { font:500 10px var(--body); letter-spacing:0.05em; text-transform:uppercase; color:var(--gold); opacity:0.6; margin-bottom:6px; }
+  .motif-evo { font:400 11px/1.5 var(--body); color:var(--silver); opacity:0.5; }
 
   /* Architecture */
   .arch { padding-top:20px; border-top:1px solid var(--border); text-align:center; opacity:0; transition:opacity 0.5s; }
   .arch.on { opacity:1; }
-
-  .loop { display:flex; justify-content:center; align-items:flex-start; margin-bottom:16px; }
-  .loop-s { display:flex; flex-direction:column; align-items:center; gap:3px; width:140px; }
-  .loop-i { width:26px; height:26px; border-radius:50%; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font:600 10px/1 var(--display); font-style:italic; color:var(--gold); opacity:0.5; }
-  .loop-l { font:400 7px/1 var(--mono); letter-spacing:0.08em; text-transform:uppercase; color:var(--paper); opacity:0.5; margin-top:3px; }
-  .loop-d { font:400 10px/1.35 var(--body); color:var(--silver); opacity:0.35; text-align:center; }
-  .loop-a { font:400 11px/1 var(--mono); color:var(--gold); opacity:0.15; margin-top:6px; padding:0 4px; }
-
-  .cat-claim { font:400 12px/1.6 var(--body); color:var(--paper); opacity:0.4; margin-bottom:12px; }
-  .stats { display:flex; align-items:center; gap:6px; justify-content:center; flex-wrap:wrap; }
-  .st { font:400 9px/1 var(--mono); letter-spacing:0.04em; text-transform:uppercase; color:var(--silver); opacity:0.3; }
-  .st-d { font:400 9px/1 var(--mono); color:var(--silver); opacity:0.15; }
-
+  .loop-row { display:flex; justify-content:center; align-items:flex-start; margin-bottom:16px; }
+  .loop-step { display:flex; flex-direction:column; align-items:center; gap:3px; width:140px; }
+  .loop-icon { width:28px; height:28px; border-radius:50%; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font:600 11px var(--serif); font-style:italic; color:var(--gold); opacity:0.5; }
+  .loop-lbl { font:400 7px var(--body); letter-spacing:0.08em; text-transform:uppercase; color:var(--paper); opacity:0.5; margin-top:3px; }
+  .loop-desc { font:400 10px/1.35 var(--body); color:var(--silver); opacity:0.35; text-align:center; }
+  .loop-arrow { font:400 11px var(--body); color:var(--gold); opacity:0.15; margin-top:8px; padding:0 4px; }
+  .arch-claim { font:400 13px/1.6 var(--body); color:var(--paper); opacity:0.4; margin-bottom:12px; }
+  .arch-stats { display:flex; align-items:center; gap:6px; justify-content:center; flex-wrap:wrap; }
+  .stat { font:400 9px var(--body); letter-spacing:0.04em; text-transform:uppercase; color:var(--silver); opacity:0.3; }
+  .stat-d { font:400 9px var(--body); color:var(--silver); opacity:0.15; }
   .colo { text-align:center; padding-top:16px; border-top:1px solid var(--border); margin-top:24px; }
-  .colo-brand { font:400 9px/1 var(--mono); color:var(--silver); opacity:0.3; }
+  .colo-brand { font:400 9px var(--body); color:var(--silver); opacity:0.3; }
   .colo-brand .em { color:var(--paper); opacity:1; font-weight:500; }
-  .colo-line { font:300 14px/1 var(--display); font-style:italic; color:var(--silver); opacity:0.25; margin-top:5px; }
+  .colo-line { font:300 14px var(--serif); font-style:italic; color:var(--silver); opacity:0.25; margin-top:5px; }
 
-  /* ─── Keyboard hint ─── */
-  .key-hint {
-    position:fixed; bottom:14px; left:50%; transform:translateX(-50%);
-    font:400 9px/1 var(--mono); color:var(--silver); opacity:0.35;
-    letter-spacing:0.04em; z-index:100;
-    transition:opacity 0.5s;
-  }
-  .key-hint kbd { padding:1px 5px; border:1px solid rgba(255,255,255,0.1); border-radius:3px; margin:0 2px; }
+  /* ─── Video mode ─── */
+  .narration { position:fixed; bottom:40px; left:calc(50% + 110px); transform:translateX(-50%); max-width:640px; width:85%; z-index:200; pointer-events:none; }
+  .narr-inner { padding:18px 28px; background:rgba(9,8,13,0.92); border:1px solid rgba(255,255,255,0.08); border-radius:10px; backdrop-filter:blur(20px); opacity:0; transform:translateY(8px); transition:all 0.6s cubic-bezier(0.16,1,0.3,1); }
+  .narr-inner.on { opacity:1; transform:none; }
+  .narr-label { font:600 7px var(--body); text-transform:uppercase; letter-spacing:0.8px; color:var(--violet); opacity:0.6; margin-bottom:8px; }
+  .narr-text { font:400 15px/1.65 var(--serif); color:var(--paper); letter-spacing:-0.1px; }
+  .narr-text em { color:var(--gold); font-style:italic; }
+  .narr-text strong { color:var(--violet); font-weight:500; }
+
+  .vid-progress { position:fixed; top:0; left:220px; right:0; height:2px; z-index:300; background:rgba(255,255,255,0.03); opacity:0; transition:opacity 0.5s; }
+  .vid-progress.on { opacity:1; }
+  .vid-fill { height:100%; background:var(--violet); border-radius:0 1px 1px 0; width:0%; transition:width 0.3s linear; }
+
+  .vid-badge { position:fixed; top:12px; right:20px; z-index:300; font:600 7px var(--body); text-transform:uppercase; letter-spacing:0.6px; color:var(--rose); opacity:0; transition:opacity 0.5s; display:flex; align-items:center; gap:6px; }
+  .vid-badge.on { opacity:1; }
+  .vid-badge-dot { width:6px; height:6px; border-radius:50%; background:var(--rose); animation:recPulse 1.5s ease-in-out infinite; }
+  @keyframes recPulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+
+  /* Key hint */
+  .key-hint { position:fixed; bottom:14px; left:calc(50% + 110px); transform:translateX(-50%); font:400 9px var(--body); color:var(--silver); opacity:0.2; z-index:100; transition:opacity 0.5s; }
+  .key-hint kbd { padding:1px 5px; border:1px solid rgba(255,255,255,0.08); border-radius:3px; margin:0 2px; }
   .key-hint.hidden { opacity:0; pointer-events:none; }
 
-  /* ═══════════════════════════════════════
-     VIDEO MODE — narration overlay
-     ═══════════════════════════════════════ */
-  .narration {
-    position:fixed; bottom:40px; left:50%; transform:translateX(-50%);
-    max-width:680px; width:90%; z-index:200;
-    pointer-events:none;
-  }
-  .narration-inner {
-    padding:18px 28px;
-    background:rgba(12,11,16,0.92);
-    border:1px solid rgba(255,255,255,0.08);
-    border-radius:10px;
-    backdrop-filter:blur(20px);
-    -webkit-backdrop-filter:blur(20px);
-    opacity:0; transform:translateY(8px);
-    transition:all 0.6s cubic-bezier(0.16,1,0.3,1);
-  }
-  .narration-inner.on { opacity:1; transform:none; }
-  .narration-text {
-    font:400 15px/1.65 var(--display);
-    color:var(--paper);
-    letter-spacing:-0.1px;
-  }
-  .narration-text em { color:var(--gold); font-style:italic; }
-  .narration-text strong { color:var(--violet); font-weight:500; }
-  .narration-label {
-    font:600 7px/1 var(--mono);
-    text-transform:uppercase;
-    letter-spacing:0.8px;
-    color:var(--violet);
-    opacity:0.6;
-    margin-bottom:8px;
-  }
-
-  /* Progress bar */
-  .video-progress {
-    position:fixed; top:0; left:0; right:0; height:2px; z-index:300;
-    background:rgba(255,255,255,0.03);
-    opacity:0; transition:opacity 0.5s;
-  }
-  .video-progress.on { opacity:1; }
-  .video-progress-fill {
-    height:100%; background:var(--violet); border-radius:0 1px 1px 0;
-    width:0%; transition:width 0.3s linear;
-  }
-
-  /* Video mode indicator */
-  .video-badge {
-    position:fixed; top:10px; right:20px; z-index:300;
-    font:600 7px/1 var(--mono); text-transform:uppercase; letter-spacing:0.6px;
-    color:var(--rose); opacity:0; transition:opacity 0.5s;
-    display:flex; align-items:center; gap:6px;
-  }
-  .video-badge.on { opacity:1; }
-  .video-badge-dot {
-    width:6px; height:6px; border-radius:50%; background:var(--rose);
-    animation:recPulse 1.5s ease-in-out infinite;
-  }
-  @keyframes recPulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+  /* Scrollbar */
+  ::-webkit-scrollbar { width:4px; }
+  ::-webkit-scrollbar-track { background:transparent; }
+  ::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.06); border-radius:2px; }
 </style>
 </head>
-<body>
+<body data-state="day1" data-mode="day1">
 
-<!-- Scene navigation dots -->
-<div class="scene-nav">
-  <div class="scene-dot on" data-scene="0" title="The Check"></div>
-  <div class="scene-dot" data-scene="1" title="The Council"></div>
-  <div class="scene-dot" data-scene="2" title="The Arc"></div>
+<!-- Sidebar -->
+<nav class="sidebar" id="sidebar">
+  <div>
+    <div class="sb-orb"></div>
+    <div class="sb-brand">Liminal Space</div>
+  </div>
+  <div class="sb-nav">
+    <button class="sb-link on" data-scene="0">The Check</button>
+    <button class="sb-link" data-scene="1">The Council</button>
+    <button class="sb-link" data-scene="2">The Arc</button>
+  </div>
+  <div class="sb-user">
+    <div class="sb-name">Maya</div>
+    <div class="sb-day">Day 94 · Emerging</div>
+  </div>
+</nav>
+
+<!-- Key hint -->
+<div class="key-hint" id="keyHint"><kbd>←</kbd><kbd>→</kbd> scenes · <kbd>M</kbd> Day 1/90 · <kbd>V</kbd> video · <kbd>P</kbd> present · <kbd>A</kbd> annotate</div>
+
+<!-- Video mode overlay elements -->
+<div class="vid-badge" id="vidBadge"><div class="vid-badge-dot"></div>RECORDING</div>
+<div class="vid-progress" id="vidProgress"><div class="vid-fill" id="vidFill"></div></div>
+<div class="narration" id="narration"><div class="narr-inner" id="narrInner"><div class="narr-label" id="narrLabel"></div><div class="narr-text" id="narrText"></div></div></div>
+
+<!-- Annotation hint -->
+<div class="annot-hint" id="annotHint"></div>
+
+<!-- Walk bar (P mode) -->
+<div class="walk-bar" id="walkBar">
+  <div class="walk-time" id="walkTime">—</div>
+  <div class="walk-label" id="walkLabel">Press → to begin</div>
+  <div class="walk-say" id="walkSay"></div>
+  <div class="walk-dots" id="walkDots"></div>
+  <div class="walk-hint">← → step · H hide · P exit · A annotate</div>
 </div>
 
-<div class="key-hint" id="keyHint"><kbd>←</kbd> <kbd>→</kbd> scenes · <kbd>M</kbd> Day 1 / Day 90 · <kbd>V</kbd> auto-play video</div>
-
-<!-- Video mode overlay -->
-<div class="video-badge" id="videoBadge"><div class="video-badge-dot"></div>RECORDING</div>
-<div class="video-progress" id="videoProgress"><div class="video-progress-fill" id="videoProgressFill"></div></div>
-<div class="narration" id="narration"><div class="narration-inner" id="narrationInner"><div class="narration-label" id="narrationLabel"></div><div class="narration-text" id="narrationText"></div></div></div>
-
-<!-- ════════════════════════════════════════
+<!-- ═══════════════════════════════════════
      SCENE 1: THE CHECK
-     ════════════════════════════════════════ -->
+     ═══════════════════════════════════════ -->
 <div class="scene on" id="s0">
-  <div class="bar">
-    <div class="bar-left"><div class="bar-orb"></div><span class="bar-brand">Liminal Space</span></div>
-    <div class="bar-right">
-      <span class="bar-scene-label">1 / 3 · The Ritual</span>
-      <div class="bar-mem off" id="barDay">Day 1</div>
-    </div>
-  </div>
-  <div class="content"><div class="content-inner">
-
-    <div class="check-hero">
-      <div class="check-phase">Phase: Emerging · Week 11</div>
-      <div class="check-title">Morning Coherence Check</div>
-      <div class="check-date">March 14, 2026 · 8:15 AM</div>
-    </div>
-
-    <div class="score-block">
-      <div class="score-num">76</div>
-      <div class="score-label">Overall Coherence</div>
+  <div class="stage">
+    <div class="score-hero">
+      <div class="score-num" id="scoreNum">76</div>
+      <div class="score-sub">Morning check · March 14</div>
       <div class="score-delta" id="sDelta">↑ 14 points from 6 weeks ago</div>
     </div>
 
-
     <div class="factors" id="fGrid">
-      <div class="factor" data-s="70" data-d="+38"><div class="factor-name">Stability</div><div class="factor-val">70</div><div class="factor-bar"><div class="factor-fill" style="background:var(--rose)"></div></div><div class="factor-delta">+38</div></div>
-      <div class="factor" data-s="78" data-d="+43"><div class="factor-name">Vitality</div><div class="factor-val">78</div><div class="factor-bar"><div class="factor-fill" style="background:var(--gold)"></div></div><div class="factor-delta">+43</div></div>
-      <div class="factor highlight" data-s="85" data-d="+57"><div class="factor-name">Agency</div><div class="factor-val">85</div><div class="factor-bar"><div class="factor-fill" style="background:var(--teal)"></div></div><div class="factor-delta up">+57 ▲</div></div>
-      <div class="factor" data-s="68" data-d="+23"><div class="factor-name">Connection</div><div class="factor-val">68</div><div class="factor-bar"><div class="factor-fill" style="background:var(--violet)"></div></div><div class="factor-delta dn">+23 ↓</div></div>
-      <div class="factor" data-s="80" data-d="+40"><div class="factor-name">Expression</div><div class="factor-val">80</div><div class="factor-bar"><div class="factor-fill" style="background:var(--teal)"></div></div><div class="factor-delta">+40</div></div>
-      <div class="factor" data-s="82" data-d="+46"><div class="factor-name">Clarity</div><div class="factor-val">82</div><div class="factor-bar"><div class="factor-fill" style="background:var(--violet)"></div></div><div class="factor-delta">+46</div></div>
-      <div class="factor" data-s="72" data-d="+22"><div class="factor-name">Wholeness</div><div class="factor-val">72</div><div class="factor-bar"><div class="factor-fill" style="background:var(--rose)"></div></div><div class="factor-delta">+22</div></div>
+      <div class="factor" data-s="70" data-d="+38"><span class="f-name">Stability</span><div class="f-bar"><div class="f-fill" style="background:var(--rose)"></div></div><span class="f-val">70</span><span class="f-delta">+38</span></div>
+      <div class="factor" data-s="78" data-d="+43"><span class="f-name">Vitality</span><div class="f-bar"><div class="f-fill" style="background:var(--gold)"></div></div><span class="f-val">78</span><span class="f-delta">+43</span></div>
+      <div class="factor f-hl" data-s="85" data-d="+57"><span class="f-name">Agency</span><div class="f-bar"><div class="f-fill" style="background:var(--teal)"></div></div><span class="f-val">85</span><span class="f-delta up">+57 ▲</span></div>
+      <div class="factor" data-s="68" data-d="+23"><span class="f-name">Connection</span><div class="f-bar"><div class="f-fill" style="background:var(--violet)"></div></div><span class="f-val">68</span><span class="f-delta dn">+23 ↓</span></div>
+      <div class="factor" data-s="80" data-d="+40"><span class="f-name">Expression</span><div class="f-bar"><div class="f-fill" style="background:var(--teal)"></div></div><span class="f-val">80</span><span class="f-delta">+40</span></div>
+      <div class="factor" data-s="82" data-d="+46"><span class="f-name">Clarity</span><div class="f-bar"><div class="f-fill" style="background:var(--violet)"></div></div><span class="f-val">82</span><span class="f-delta">+46</span></div>
+      <div class="factor" data-s="72" data-d="+22"><span class="f-name">Wholeness</span><div class="f-bar"><div class="f-fill" style="background:var(--rose)"></div></div><span class="f-val">72</span><span class="f-delta">+22</span></div>
     </div>
 
-    <!-- Day 1 state — always visible initially -->
-    <div class="day-state day1" id="day1State">
-      <div class="day-recorded">Recorded.</div>
-      <div class="day-label">Day 1 — The system doesn't know you yet.</div>
-    </div>
-
-    <!-- Day 90 state — hidden by default, revealed on M key -->
-    <div class="day-state day90" id="day90State" style="display:none;">
-      <div class="claim" id="claimCard">
-        <div class="claim-header">THE SYSTEM'S CLAIM</div>
-        <div class="claim-assertion" id="claimAssertion">You've been avoiding connection for nine days.</div>
-        <div class="claim-evidence">
-          <div class="claim-evidence-item">Jan 14: agency 82, connection 47</div>
-          <div class="claim-evidence-item">Today: agency 85, connection 44</div>
-          <div class="claim-evidence-item">Last time this gap appeared, connection collapsed to 31 by Feb 2.</div>
-        </div>
-        <div class="claim-edge" id="claimEdge">Last time, you told yourself it was fine. It wasn't.</div>
+    <!-- Day 1 state -->
+    <div class="day1-content" id="day1Content">
+      <div class="day1-msg">
+        <div class="recorded">Recorded.</div>
+        <div class="no-mem">Day 1 — The system doesn't know you yet.</div>
       </div>
-
-      <!-- Response interface -->
-      <div class="response-bar" id="responseBar">
-        <button class="response-btn" id="responseYes" data-response="yes">Yes</button>
-        <button class="response-btn" id="responseNo" data-response="no">No — here's what's happening</button>
-        <button class="response-btn" id="responseShow" data-response="show">Show me the evidence</button>
-      </div>
-
-      <!-- Correction input — shown after "No" is clicked -->
-      <div class="correction-input-wrap" id="correctionWrap">
-        <input class="correction-input" id="correctionInput" type="text" placeholder="What's actually happening?" />
-        <div class="correction-text" id="correctionText">
-          <strong>Your correction:</strong> <span id="correctionContent"></span>
-          <div class="correction-stored">Correction stored as MemCell</div>
-        </div>
-      </div>
-
-      <!-- Evidence expand — shown after "Show me" is clicked -->
-      <div class="evidence-expand" id="evidenceExpand">
-        <div class="evidence-expand-label">MemCell Evidence</div>
-        <div class="evidence-expand-list">
-          <div class="evidence-item">
-            <span class="evidence-date">Jan 14</span>
-            <span class="evidence-content">Agency 82, Connection 47 · coherence-001 · Session check</span>
-          </div>
-          <div class="evidence-item">
-            <span class="evidence-date">Jan 21</span>
-            <span class="evidence-content">Connection began decline · Reported: "too busy for relationships" · coherence-007</span>
-          </div>
-          <div class="evidence-item">
-            <span class="evidence-date">Feb 2</span>
-            <span class="evidence-content">Connection 31 · 3-week dissolution stall · coherence-008</span>
-          </div>
-          <div class="evidence-item">
-            <span class="evidence-date">Today</span>
-            <span class="evidence-content">Agency 85, Connection 44 · Gap widening again · coherence-042</span>
-          </div>
-        </div>
+      <div class="day1-value">Without memory, this is all you get — a number.</div>
+      <!-- Annotation: Day 1 -->
+      <div class="annotation" style="bottom:-60px;right:40px;">
+        <div class="a-label">Why this matters</div>
+        Day 1 is just measurement. No confrontation. No standing. The system hasn't earned the right to have an opinion.
       </div>
     </div>
 
-  </div></div>
-</div>
+    <!-- Day 90 state -->
+    <div class="day90-content" id="day90Content">
+      <div class="claim">
+        <div class="claim-text">You've been avoiding connection for nine days.</div>
+        <div class="claim-line"></div>
+        <div class="claim-evidence">Jan 14: agency 82, connection 47</div>
+        <div class="claim-evidence">Today: agency 85, connection 44</div>
+        <div class="claim-evidence">Last time this gap appeared, connection collapsed to 31 by Feb 2.</div>
+        <div class="claim-edge">Last time, you told yourself it was fine. It wasn't.</div>
+        <div class="claim-value">90 days of memory gives the system standing to confront.</div>
+      </div>
 
-<!-- ════════════════════════════════════════
-     SCENE 2: THE COUNCIL
-     ════════════════════════════════════════ -->
-<div class="scene" id="s1">
-  <div class="bar">
-    <div class="bar-left"><div class="bar-orb"></div><span class="bar-brand">Liminal Space</span></div>
-    <div class="bar-right">
-      <span class="bar-scene-label">2 / 3 · The Council</span>
-      <div class="bar-mem on">Memory On</div>
+      <div class="responses" id="responseBar">
+        <button class="resp-btn" id="rYes" data-r="yes">Yes</button>
+        <button class="resp-btn" id="rNo" data-r="no">No — here's what's happening</button>
+        <button class="resp-btn" id="rShow" data-r="show">Show me the evidence</button>
+      </div>
+
+      <div class="correction-wrap" id="corrWrap">
+        <input class="correction-input" id="corrInput" type="text" placeholder="What's actually happening?">
+        <div class="correction-stored" id="corrStored">
+          <div class="correction-stored-text" id="corrText"></div>
+          <div class="correction-stored-label">Correction stored as MemCell</div>
+        </div>
+      </div>
+
+      <div class="evidence-panel" id="evPanel">
+        <div class="ev-label">MemCell Evidence</div>
+        <div class="ev-item"><span class="ev-date">Jan 14</span><span class="ev-text">Agency 82, Connection 47 · coherence-001 · Session check</span></div>
+        <div class="ev-item"><span class="ev-date">Jan 21</span><span class="ev-text">Connection began decline · Reported: "too busy for relationships" · coherence-007</span></div>
+        <div class="ev-item"><span class="ev-date">Feb 2</span><span class="ev-text">Connection 31 · 3-week dissolution stall · coherence-008</span></div>
+        <div class="ev-item"><span class="ev-date">Today</span><span class="ev-text">Agency 85, Connection 44 · Gap widening again · coherence-042</span></div>
+      </div>
+
+      <!-- Annotation: Confrontation -->
+      <div class="annotation" style="top:0;right:-280px;">
+        <div class="a-label">The product moment</div>
+        This claim is specific enough to argue with. That's the point — the disagreement IS the highest-signal data.
+      </div>
     </div>
   </div>
-  <div class="content"><div class="content-inner">
+</div>
 
-    <div class="council-hero">
-      <div class="council-phase">Council Session · 3 archetypes present</div>
-      <div class="council-topic">"How do I step into what's next without a map?"</div>
-      <div class="council-meta">March 10, 2026 · 6:00 PM · Warrior, Sage, Sovereign</div>
+<!-- ═══════════════════════════════════════
+     SCENE 2: THE COUNCIL
+     ═══════════════════════════════════════ -->
+<div class="scene" id="s1">
+  <div class="stage">
+    <div class="council-q">"How do I step into what's next without a map?"</div>
+    <div class="council-meta">March 10, 2026 · 6:00 PM · Warrior, Sage, Sovereign</div>
+    <div class="council-value">Memory lets archetypes reference YOUR history — not generic wisdom.</div>
+
+    <div class="mem-retrieval" id="memRetr">
+      <div class="mem-label"><div class="dot"></div> MEMORY RETRIEVAL · 3 MemCells across 8 weeks</div>
+      <div class="mem-item"><span class="mem-date">Jan 20</span><span class="mem-text">Council on sovereignty. Warrior urged action. You called it "too aggressive" and dismissed it. <em>(Your words, not mine.)</em></span></div>
+      <div class="mem-item"><span class="mem-date">Feb 10</span><span class="mem-text">Threshold: "The role I've been performing isn't mine anymore." You named sovereignty before the system did.</span></div>
+      <div class="mem-item"><span class="mem-date">Feb 24</span><span class="mem-text">Shadow: "Fear of being unseen." Second encounter. You said "it's different this time." The data says it's the same pattern.</span></div>
     </div>
 
-    <div class="retrieval" id="retr">
-      <div class="retrieval-label"><div class="dot"></div> MEMORY RETRIEVAL · 3 MemCells across 8 weeks</div>
-      <div class="mem-item">
-        <div class="mem-item-date">Jan 20</div>
-        <div class="mem-item-text">Council on sovereignty. Warrior urged action. You called it "too aggressive" and dismissed it. <em>(Your words, not mine.)</em></div>
-      </div>
-      <div class="mem-item">
-        <div class="mem-item-date">Feb 10</div>
-        <div class="mem-item-text">Threshold: "The role I've been performing isn't mine anymore." You named sovereignty before the system did.</div>
-      </div>
-      <div class="mem-item">
-        <div class="mem-item-date">Feb 24</div>
-        <div class="mem-item-text">Shadow: "Fear of being unseen." Second encounter. You said "it's different this time." The data says it's the same pattern.</div>
-      </div>
+    <!-- Annotation: Memory retrieval -->
+    <div class="annotation" style="top:220px;right:-280px;">
+      <div class="a-label">What EverMemOS enables</div>
+      Without memory, each council session starts from zero. With it, the archetypes can reference January when speaking in March.
     </div>
 
-    <div class="voice" id="v1">
-      <div class="voice-head"><div class="voice-pip" style="background:var(--rose)"></div><div class="voice-name">The Warrior</div><div class="voice-role">Speaks first — unlike January, when you dismissed it</div></div>
+    <div class="voice-card" id="v1">
+      <div class="voice-header">
+        <div class="voice-dot" style="background:var(--rose)"></div>
+        <div class="voice-name">The Warrior</div>
+        <div class="voice-role">Speaks first — unlike January, when you dismissed it</div>
+      </div>
       <div class="voice-quote">"You told me I was too aggressive. Then you spent three weeks stuck. I'm going to say it again: stop waiting for permission."</div>
       <div class="voice-mem" id="vm1">In January, you dismissed the Warrior. In February, you dissolved the mask. Now the Warrior speaks first — and you're listening. Not because it changed. Because you did.</div>
     </div>
 
-    <div class="voice" id="v2">
-      <div class="voice-head"><div class="voice-pip" style="background:var(--violet)"></div><div class="voice-name">The Sage</div><div class="voice-role">Asks the question you're avoiding</div></div>
+    <div class="voice-card" id="v2">
+      <div class="voice-header">
+        <div class="voice-dot" style="background:var(--violet)"></div>
+        <div class="voice-name">The Sage</div>
+        <div class="voice-role">Asks the question you're avoiding</div>
+      </div>
       <div class="voice-quote">"You've consulted me four times when clarity was above 80. Every time, you already knew the answer. What do you actually come to me for?"</div>
       <div class="voice-mem" id="vm2">Sage consultations correlate with your highest clarity scores. The pattern isn't that the Sage makes you clear. It's that you seek the Sage when you're already clear — looking for permission to trust yourself.</div>
     </div>
 
-    <div class="voice" id="v3">
-      <div class="voice-head"><div class="voice-pip" style="background:var(--teal)"></div><div class="voice-name">The Sovereign</div><div class="voice-role">New presence — earned, not given</div></div>
+    <div class="voice-card" id="v3">
+      <div class="voice-header">
+        <div class="voice-dot" style="background:var(--teal)"></div>
+        <div class="voice-name">The Sovereign</div>
+        <div class="voice-role">New presence — earned, not given</div>
+      </div>
       <div class="voice-quote">"The Warrior and the Sage have been arguing for weeks. I'm what happens when you stop choosing between them."</div>
     </div>
 
-    <div class="synthesis" id="synth">
+    <div class="synth-card" id="synth">
       <div class="synth-label">Synthesis</div>
       <div class="synth-text">"The map is the motif. Sovereignty isn't ahead of you — it's what you've been building. The question isn't 'how do I step into what's next.' It's 'why do you keep asking permission for something you're already doing?'"</div>
       <div class="synth-conv"><span>Convergence</span><div class="conv-bar"><div class="conv-fill"></div></div><span>Strong · Deeply resonant</span></div>
     </div>
-
-  </div></div>
+  </div>
 </div>
 
-<!-- ════════════════════════════════════════
+<!-- ═══════════════════════════════════════
      SCENE 3: THE ARC
-     ════════════════════════════════════════ -->
+     ═══════════════════════════════════════ -->
 <div class="scene" id="s2">
-  <div class="bar">
-    <div class="bar-left"><div class="bar-orb"></div><span class="bar-brand">Liminal Space</span></div>
-    <div class="bar-right">
-      <span class="bar-scene-label">3 / 3 · The Arc</span>
-      <div class="bar-mem on">Memory On</div>
-    </div>
-  </div>
-  <div class="content"><div class="content-inner">
-
+  <div class="stage">
     <div class="arc-hero">
-      <div class="arc-tag">THE SYSTEM'S ACCOUNT · 23 MemCells · 3 months · Disputable</div>
-      <div class="arc-title">The system's account of who you've been. Mark what's wrong.</div>
+      <div class="arc-title">The system's account of who you've been.</div>
+      <div class="arc-sub">Mark what's wrong.</div>
     </div>
+    <div class="arc-meta">23 MemCells · 3 months · Disputable</div>
+    <div class="arc-value">Every claim is disputable. The correction IS the product.</div>
 
     <div class="paintings">
       <div class="paint-col" id="p1">
-        <div class="lc-tag">Visual Evidence — January</div>
-        <div class="paint-wrap"><svg width="260" height="260" viewBox="0 0 260 260" id="svg1"></svg><div class="paint-bloom" style="background:radial-gradient(circle,rgba(255,85,136,0.07) 0%,transparent 70%)"></div></div>
-        <div class="ph-data"><span class="ph-name" style="color:var(--rose)">ENDING</span><span class="ph-score">38</span><span class="ph-sub">What's ending</span><span class="ph-month">January</span></div>
+        <div class="lc-tag">January</div>
+        <div class="paint-wrap"><svg width="220" height="220" viewBox="0 0 260 260" id="svg1"></svg><div class="paint-bloom" style="background:radial-gradient(circle,rgba(255,85,136,0.07) 0%,transparent 70%)"></div></div>
+        <div class="ph-data"><span class="ph-name" style="color:var(--rose)">ENDING</span><span class="ph-score">38</span><span class="ph-sub">What's ending</span></div>
       </div>
       <div class="paint-col" id="p2">
-        <div class="lc-tag">Visual Evidence — February</div>
-        <div class="paint-wrap"><svg width="260" height="260" viewBox="0 0 260 260" id="svg2"></svg><div class="paint-bloom" style="background:radial-gradient(circle,rgba(142,102,251,0.07) 0%,transparent 70%)"></div></div>
-        <div class="ph-data"><span class="ph-name" style="color:var(--violet)">LIMINAL</span><span class="ph-score">55</span><span class="ph-sub">The in-between</span><span class="ph-month">February</span></div>
+        <div class="lc-tag">February</div>
+        <div class="paint-wrap"><svg width="220" height="220" viewBox="0 0 260 260" id="svg2"></svg><div class="paint-bloom" style="background:radial-gradient(circle,rgba(142,102,251,0.07) 0%,transparent 70%)"></div></div>
+        <div class="ph-data"><span class="ph-name" style="color:var(--violet)">LIMINAL</span><span class="ph-score">55</span><span class="ph-sub">The in-between</span></div>
       </div>
       <div class="paint-col" id="p3">
-        <div class="lc-tag">Visual Evidence — March</div>
-        <div class="paint-wrap"><svg width="260" height="260" viewBox="0 0 260 260" id="svg3"></svg><div class="paint-bloom" style="background:radial-gradient(circle,rgba(14,215,242,0.07) 0%,transparent 70%)"></div></div>
-        <div class="ph-data"><span class="ph-name" style="color:var(--teal)">EMERGING</span><span class="ph-score">76</span><span class="ph-sub">What's emerging</span><span class="ph-month">March</span></div>
+        <div class="lc-tag">March</div>
+        <div class="paint-wrap"><svg width="220" height="220" viewBox="0 0 260 260" id="svg3"></svg><div class="paint-bloom" style="background:radial-gradient(circle,rgba(14,215,242,0.07) 0%,transparent 70%)"></div></div>
+        <div class="ph-data"><span class="ph-name" style="color:var(--teal)">EMERGING</span><span class="ph-score">76</span><span class="ph-sub">What's emerging</span></div>
       </div>
     </div>
 
     <div class="traj" id="traj"><svg width="560" height="44" id="trajSvg"></svg><div class="traj-label">Coherence Trajectory</div></div>
 
-    <!-- Section 1: Where You Were (January) -->
+    <!-- Section 1: January -->
     <div class="arc-section" id="arcS1">
-      <div class="arc-section-head">
-        <div class="arc-section-dot" style="background:var(--rose)"></div>
-        <div class="arc-section-month">January</div>
-        <div class="arc-section-phase">ENDING</div>
-      </div>
-      <div class="arc-section-claim">You entered January carrying an identity that no longer fit. Agency was high but masking low connection. The Warrior was present but you dismissed it as 'too aggressive.' The system reads this as avoidance — performing strength to avoid vulnerability.</div>
-      <div class="arc-section-evidence">
-        <span class="arc-ev-tag">coherence-001 · Jan 6 — agency 82, connection 47</span>
-        <span class="arc-ev-tag">coherence-003 · Jan 14 — Warrior dismissed</span>
-      </div>
-      <div class="arc-markup">
-        <button class="arc-markup-btn accurate" data-type="accurate">Accurate</button>
-        <button class="arc-markup-btn wrong" data-type="wrong">Wrong</button>
-        <button class="arc-markup-btn missing" data-type="missing">Missing something</button>
-      </div>
-      <div class="arc-correction wrong-type">
-        <div class="arc-correction-label wrong-type">Your correction</div>
-        <div>It wasn't avoidance. I genuinely didn't see the connection gap. That's different.</div>
-      </div>
+      <div class="as-head"><div class="as-dot" style="background:var(--rose)"></div><div class="as-month">January</div><div class="as-phase">ENDING</div></div>
+      <div class="as-claim">You entered January carrying an identity that no longer fit. Agency was high but masking low connection. The Warrior was present but you dismissed it as 'too aggressive.' The system reads this as avoidance — performing strength to avoid vulnerability.</div>
+      <div class="as-evs"><span class="as-ev">coherence-001 · Jan 6 — agency 82, connection 47</span><span class="as-ev">coherence-003 · Jan 14 — Warrior dismissed</span></div>
+      <div class="as-markup"><button class="as-btn" data-type="accurate">Accurate</button><button class="as-btn" data-type="wrong">Wrong</button><button class="as-btn" data-type="missing">Missing something</button></div>
+      <div class="as-correction wrong-type"><div class="as-cor-label wrong-type">Your correction</div>It wasn't avoidance. I genuinely didn't see the connection gap. That's different.</div>
     </div>
 
-    <!-- Section 2: What Shifted (February) -->
+    <!-- Section 2: February -->
     <div class="arc-section" id="arcS2">
-      <div class="arc-section-head">
-        <div class="arc-section-dot" style="background:var(--violet)"></div>
-        <div class="arc-section-month">February</div>
-        <div class="arc-section-phase">LIMINAL</div>
-      </div>
-      <div class="arc-section-claim">The structure cracked open in February. Coherence dropped. The mask-removal threshold on Feb 10 was the pivot — you named what was ending. Shadow work started. You told the shadow 'it's different this time.' The data says it was the same pattern.</div>
-      <div class="arc-section-evidence">
-        <span class="arc-ev-tag">myth-002 · Feb 10 — mask_removal, sovereignty</span>
-        <span class="arc-ev-tag">shadow-001 · Feb 24 — 'fear of being unseen'</span>
-      </div>
-      <div class="arc-markup">
-        <button class="arc-markup-btn accurate" data-type="accurate">Accurate</button>
-        <button class="arc-markup-btn wrong" data-type="wrong">Wrong</button>
-        <button class="arc-markup-btn missing" data-type="missing">Missing something</button>
-      </div>
-      <div class="arc-correction wrong-type">
-        <div class="arc-correction-label wrong-type">Your correction</div>
-        <div>The shadow work WAS different. The first time I was performing. The second time I meant it.</div>
-      </div>
+      <div class="as-head"><div class="as-dot" style="background:var(--violet)"></div><div class="as-month">February</div><div class="as-phase">LIMINAL</div></div>
+      <div class="as-claim">The structure cracked open in February. Coherence dropped. The mask-removal threshold on Feb 10 was the pivot — you named what was ending. Shadow work started. You told the shadow 'it's different this time.' The data says it was the same pattern.</div>
+      <div class="as-evs"><span class="as-ev">myth-002 · Feb 10 — mask_removal, sovereignty</span><span class="as-ev">shadow-001 · Feb 24 — 'fear of being unseen'</span></div>
+      <div class="as-markup"><button class="as-btn" data-type="accurate">Accurate</button><button class="as-btn" data-type="wrong">Wrong</button><button class="as-btn" data-type="missing">Missing something</button></div>
+      <div class="as-correction wrong-type"><div class="as-cor-label wrong-type">Your correction</div>The shadow work WAS different. The first time I was performing. The second time I meant it.</div>
     </div>
 
-    <!-- Section 3: Where You Are (March) -->
+    <!-- Section 3: March -->
     <div class="arc-section" id="arcS3">
-      <div class="arc-section-head">
-        <div class="arc-section-dot" style="background:var(--teal)"></div>
-        <div class="arc-section-month">March</div>
-        <div class="arc-section-phase">EMERGING</div>
-      </div>
-      <div class="arc-section-claim">Something is crystallizing. Agency and clarity are at personal highs. The Warrior hasn't vanished — you consult it now instead of dismissing it. The system's read: sovereignty is the through-line. The question is whether the connection gap is a choice or a blind spot.</div>
-      <div class="arc-section-evidence">
-        <span class="arc-ev-tag">coherence-007 · Mar 14 — agency 85, connection 44</span>
-        <span class="arc-ev-tag">council-003 · Mar 10 — Warrior speaks first</span>
-      </div>
-      <div class="arc-markup">
-        <button class="arc-markup-btn accurate" data-type="accurate">Accurate</button>
-        <button class="arc-markup-btn wrong" data-type="wrong">Wrong</button>
-        <button class="arc-markup-btn missing" data-type="missing">Missing something</button>
-      </div>
-      <div class="arc-correction missing-type">
-        <div class="arc-correction-label missing-type">What's missing</div>
-        <div>What's missing: the cost. The clarity came from cutting people off. That's not sovereignty — that's armor.</div>
-      </div>
+      <div class="as-head"><div class="as-dot" style="background:var(--teal)"></div><div class="as-month">March</div><div class="as-phase">EMERGING</div></div>
+      <div class="as-claim">Something is crystallizing. Agency and clarity are at personal highs. The Warrior hasn't vanished — you consult it now instead of dismissing it. The system's read: sovereignty is the through-line. The question is whether the connection gap is a choice or a blind spot.</div>
+      <div class="as-evs"><span class="as-ev">coherence-007 · Mar 14 — agency 85, connection 44</span><span class="as-ev">council-003 · Mar 10 — Warrior speaks first</span></div>
+      <div class="as-markup"><button class="as-btn" data-type="accurate">Accurate</button><button class="as-btn" data-type="wrong">Wrong</button><button class="as-btn" data-type="missing">Missing something</button></div>
+      <div class="as-correction missing-type"><div class="as-cor-label missing-type">What's missing</div>What's missing: the cost. The clarity came from cutting people off. That's not sovereignty — that's armor.</div>
     </div>
 
     <div class="motif-rule" id="mR"><span class="mr-text">Recurring Patterns the System Detected</span><span class="mr-line"></span></div>
@@ -814,20 +682,19 @@
     </div>
 
     <div class="arch" id="archS">
-      <div class="loop">
-        <div class="loop-s"><div class="loop-i">M</div><div class="loop-l">Memory</div><div class="loop-d">Every reflection → episodic trace</div></div>
-        <div class="loop-a">→</div>
-        <div class="loop-s"><div class="loop-i">R</div><div class="loop-l">Reasoning</div><div class="loop-d">Consolidation extracts patterns</div></div>
-        <div class="loop-a">→</div>
-        <div class="loop-s"><div class="loop-i">A</div><div class="loop-l">Action</div><div class="loop-d">Arc reconstructed and reflected</div></div>
+      <div class="loop-row">
+        <div class="loop-step"><div class="loop-icon">M</div><div class="loop-lbl">Memory</div><div class="loop-desc">Every reflection → episodic trace</div></div>
+        <div class="loop-arrow">→</div>
+        <div class="loop-step"><div class="loop-icon">R</div><div class="loop-lbl">Reasoning</div><div class="loop-desc">Consolidation extracts patterns</div></div>
+        <div class="loop-arrow">→</div>
+        <div class="loop-step"><div class="loop-icon">A</div><div class="loop-lbl">Action</div><div class="loop-desc">Arc reconstructed and reflected</div></div>
       </div>
-      <div class="cat-claim">Not a mirror. An interlocutor. Memory gives the system standing.</div>
-      <div class="stats">
-        <span class="st">23 MemCells</span><span class="st-d">·</span>
-        <span class="st">Agentic Retrieval</span><span class="st-d">·</span>
-        <span class="st">3 Channels</span><span class="st-d">·</span>
-        <span class="st">16th EventBus Handler</span><span class="st-d">·</span>
-        <span class="st">271 API Routes</span>
+      <div class="arch-claim">Not a mirror. An interlocutor. Memory gives the system standing.</div>
+      <div class="arch-stats">
+        <span class="stat">23 MemCells</span><span class="stat-d">·</span>
+        <span class="stat">Agentic Retrieval</span><span class="stat-d">·</span>
+        <span class="stat">3 Channels</span><span class="stat-d">·</span>
+        <span class="stat">16th EventBus Handler</span>
       </div>
     </div>
 
@@ -835,202 +702,152 @@
       <div class="colo-brand">Built with <span class="em">EverMemOS</span> · <span class="em">Liminal Space</span></div>
       <div class="colo-line">Memory for who you're becoming.</div>
     </div>
-
-  </div></div>
+  </div>
 </div>
 
 <script>
 const $ = id => document.getElementById(id);
 let current = 0;
-let memOn = false;
+let dayState = 'day1';
+let videoPlaying = false;
+let videoTimeouts = [];
+let walkActive = false;
+let walkStep = -1;
 
-// ─── Scene navigation ───
+// ─��─ Scene navigation ─��─
 function goScene(n) {
   if (n < 0 || n > 2 || n === current) return;
   document.querySelectorAll('.scene').forEach(s => s.classList.remove('on'));
-  document.querySelectorAll('.scene-dot').forEach(d => d.classList.remove('on'));
   $('s'+n).classList.add('on');
-  document.querySelectorAll('.scene-dot')[n].classList.add('on');
+  document.querySelectorAll('.sb-link').forEach(l => l.classList.remove('on'));
+  document.querySelectorAll('.sb-link')[n].classList.add('on');
   current = n;
+  document.body.dataset.state = ['day1','council','arc'][n];
+  if (dayState === 'day90' && n === 0) document.body.dataset.state = 'day90';
   if (n === 0) animateCheck();
   if (n === 1) animateCouncil();
   if (n === 2) animateArc();
 }
 
-document.querySelectorAll('.scene-dot').forEach(d => {
-  d.addEventListener('click', () => goScene(parseInt(d.dataset.scene)));
+document.querySelectorAll('.sb-link').forEach((l,i) => {
+  l.addEventListener('click', () => goScene(i));
 });
 
+// ─── Keyboard ───
 document.addEventListener('keydown', e => {
   if (videoPlaying && e.key === 'Escape') { stopVideo(); return; }
-  if (videoPlaying) return; // block manual nav during video
+  if (videoPlaying) return;
+  if (walkActive) {
+    if (e.key === 'ArrowRight') walkTo(walkStep + 1);
+    else if (e.key === 'ArrowLeft' && walkStep > 0) walkTo(walkStep - 1);
+    else if (e.key === 'h' || e.key === 'H') $('walkBar').classList.toggle('hide');
+    else if (e.key === 'a' || e.key === 'A') document.body.classList.toggle('annotations-on');
+    else if (e.key === 'p' || e.key === 'P') { walkActive = false; $('walkBar').classList.remove('active'); document.body.classList.remove('annotations-on'); }
+    else if (e.key === 'Escape') { walkActive = false; $('walkBar').classList.remove('active'); document.body.classList.remove('annotations-on'); }
+    return;
+  }
   if (e.key === 'ArrowRight' || e.key === 'ArrowDown') goScene(current + 1);
   if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') goScene(current - 1);
   if (e.key === 'm' || e.key === 'M') toggleDay();
   if (e.key === 'v' || e.key === 'V') startVideo();
+  if (e.key === 'p' || e.key === 'P') startWalk();
+  if (e.key === 'a' || e.key === 'A') document.body.classList.toggle('annotations-on');
 });
 
-// ─── Day toggle — Day 1 vs Day 90 confrontation ───
-let dayState = 'day1';
-let corrections = [];
-
+// ─── Day 1 / Day 90 toggle ───
 function toggleDay() {
   dayState = dayState === 'day1' ? 'day90' : 'day1';
-  const day1 = $('day1State');
-  const day90 = $('day90State');
-  const barDay = $('barDay');
-
+  document.body.dataset.mode = dayState;
+  document.body.dataset.state = dayState;
   if (dayState === 'day90') {
-    day1.style.display = 'none';
-    day90.style.display = 'block';
-    
-    // Staggered reveal: claim card → response bar
-    setTimeout(() => $('claimCard').classList.add('on'), 200);
-    setTimeout(() => $('responseBar').classList.add('on'), 700);
+    $('day1Content').style.display = 'none';
+    $('day90Content').style.display = 'block';
+    $('sDelta').classList.add('on');
+    document.querySelectorAll('.f-delta').forEach(d => d.classList.add('on'));
   } else {
-    day90.style.display = 'none';
-    day1.style.display = 'block';
-    
-    // Reset Day 90 UI when going back to Day 1
-    $('claimCard').classList.remove('on');
-    $('responseBar').classList.remove('on');
-    $('correctionWrap').classList.remove('show');
-    $('correctionText').classList.remove('show');
-    $('evidenceExpand').classList.remove('show');
-    
-    // Clear response button active states
-    document.querySelectorAll('.response-btn').forEach(b => b.classList.remove('active'));
-    $('correctionInput').value = '';
-  }
-  
-  // Update bar indicator if it exists
-  if (barDay) {
-    barDay.textContent = dayState === 'day1' ? 'Day 1' : 'Day 90';
+    $('day1Content').style.display = 'block';
+    $('day90Content').style.display = 'none';
+    $('sDelta').classList.remove('on');
+    document.querySelectorAll('.f-delta').forEach(d => d.classList.remove('on'));
+    // Reset day90 state
+    document.querySelectorAll('.resp-btn').forEach(b => b.classList.remove('on'));
+    $('corrWrap').classList.remove('show');
+    $('corrStored').classList.remove('show');
+    $('evPanel').classList.remove('show');
+    $('corrInput').value = '';
+    $('corrInput').style.display = '';
   }
 }
 
-// ─── Response button handlers ───
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', setupResponseHandlers);
-} else {
-  setupResponseHandlers();
-}
+// ─── Response handlers ───
+$('rYes').addEventListener('click', () => { setResp('rYes'); $('corrWrap').classList.remove('show'); $('evPanel').classList.remove('show'); });
+$('rNo').addEventListener('click', () => { setResp('rNo'); $('corrWrap').classList.add('show'); $('evPanel').classList.remove('show'); });
+$('rShow').addEventListener('click', () => { setResp('rShow'); $('evPanel').classList.add('show'); $('corrWrap').classList.remove('show'); });
+function setResp(id) { document.querySelectorAll('.resp-btn').forEach(b => b.classList.remove('on')); $(id).classList.add('on'); }
 
-function setupResponseHandlers() {
-  const yesBtn = $('responseYes');
-  const noBtn = $('responseNo');
-  const showBtn = $('responseShow');
-  const correctionWrap = $('correctionWrap');
-  const correctionInput = $('correctionInput');
-  const correctionText = $('correctionText');
-  const evidenceExpand = $('evidenceExpand');
-
-  if (yesBtn) {
-    yesBtn.addEventListener('click', () => {
-      yesBtn.classList.add('active');
-      noBtn.classList.remove('active');
-      showBtn.classList.remove('active');
-      correctionWrap.classList.remove('show');
-      evidenceExpand.classList.remove('show');
-    });
+$('corrInput').addEventListener('keypress', e => {
+  if (e.key === 'Enter' && $('corrInput').value.trim()) {
+    $('corrText').textContent = $('corrInput').value;
+    $('corrStored').classList.add('show');
+    $('corrInput').style.display = 'none';
   }
+});
 
-  if (noBtn) {
-    noBtn.addEventListener('click', () => {
-      noBtn.classList.add('active');
-      yesBtn.classList.remove('active');
-      showBtn.classList.remove('active');
-      evidenceExpand.classList.remove('show');
-      correctionWrap.classList.add('show');
-    });
-  }
-
-  if (showBtn) {
-    showBtn.addEventListener('click', () => {
-      showBtn.classList.add('active');
-      yesBtn.classList.remove('active');
-      noBtn.classList.remove('active');
-      evidenceExpand.classList.add('show');
-      correctionWrap.classList.remove('show');
-      correctionText.classList.remove('show');
-    });
-  }
-
-  if (correctionInput) {
-    correctionInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter' && correctionInput.value.trim()) {
-        corrections.push({
-          text: correctionInput.value,
-          timestamp: new Date().toISOString()
-        });
-        $('correctionContent').textContent = correctionInput.value;
-        correctionText.classList.add('show');
-        correctionInput.style.display = 'none';
-      }
-    });
-  }
-}
-
-// ─── Check animations ───
+// ─── Factor animations ───
 function animateCheck() {
-  document.querySelectorAll('#fGrid .factor-fill').forEach((f, i) => {
+  document.querySelectorAll('#fGrid .f-fill').forEach((f, i) => {
     const score = f.closest('.factor').dataset.s;
-    setTimeout(() => { f.style.width = score + '%'; }, 150 + i * 60);
+    f.style.width = '0%';
+    setTimeout(() => { f.style.width = score + '%'; }, 100 + i * 60);
   });
-  // Reset day state for clean demo
-  dayState = 'day1';
-  const day1 = $('day1State');
-  const day90 = $('day90State');
-  if (day1 && day90) {
-    day1.style.display = 'block';
-    day90.style.display = 'none';
-    $('claimCard').classList.remove('on');
-    $('responseBar').classList.remove('on');
-    $('correctionWrap').classList.remove('show');
-    $('correctionText').classList.remove('show');
-    $('evidenceExpand').classList.remove('show');
-    document.querySelectorAll('.response-btn').forEach(b => b.classList.remove('active'));
-  }
-  document.querySelectorAll('.factor-delta').forEach(d => d.classList.remove('on'));
 }
-
 
 // ─── Council animations ───
 function animateCouncil() {
-  // Reset
-  ['retr','v1','v2','v3','synth','vm1','vm2'].forEach(id => $(id).classList.remove('on'));
-  setTimeout(() => $('retr').classList.add('on'), 300);
-  setTimeout(() => $('v1').classList.add('on'), 1000);
-  setTimeout(() => $('vm1').classList.add('on'), 1600);
-  setTimeout(() => $('v2').classList.add('on'), 2200);
-  setTimeout(() => $('vm2').classList.add('on'), 2800);
-  setTimeout(() => $('v3').classList.add('on'), 3200);
-  setTimeout(() => $('synth').classList.add('on'), 4000);
+  ['memRetr','v1','v2','v3','synth','vm1','vm2'].forEach(id => $(id)?.classList.remove('on'));
+  setTimeout(() => $('memRetr').classList.add('on'), 200);
+  setTimeout(() => $('v1').classList.add('on'), 800);
+  setTimeout(() => $('vm1').classList.add('on'), 1400);
+  setTimeout(() => $('v2').classList.add('on'), 2000);
+  setTimeout(() => $('vm2').classList.add('on'), 2600);
+  setTimeout(() => $('v3').classList.add('on'), 3000);
+  setTimeout(() => $('synth').classList.add('on'), 3800);
 }
 
 // ─── Arc animations ───
 function animateArc() {
-  // Reset all
   ['p1','p2','p3','traj','arcS1','arcS2','arcS3','mR','mG','archS'].forEach(id => {
-    const el = $(id);
-    if (el) el.classList.remove('on');
+    const el = $(id); if (el) el.classList.remove('on');
   });
-  // Also reset any corrections and markup buttons
-  document.querySelectorAll('.arc-correction').forEach(c => { c.classList.remove('on'); c.style.display = 'none'; });
-  document.querySelectorAll('.arc-markup-btn').forEach(b => { b.classList.remove('accurate','wrong','missing'); });
-
+  document.querySelectorAll('.as-correction').forEach(c => { c.classList.remove('on'); c.style.display = 'none'; });
+  document.querySelectorAll('.as-btn').forEach(b => { b.classList.remove('accurate','wrong','missing'); });
   setTimeout(() => $('p1').classList.add('on'), 200);
-  setTimeout(() => $('p2').classList.add('on'), 600);
-  setTimeout(() => $('p3').classList.add('on'), 1000);
-  setTimeout(() => $('traj').classList.add('on'), 1500);
-  setTimeout(() => $('arcS1').classList.add('on'), 2000);
-  setTimeout(() => $('arcS2').classList.add('on'), 2500);
-  setTimeout(() => $('arcS3').classList.add('on'), 3000);
-  setTimeout(() => { if($('mR')) $('mR').classList.add('on'); if($('mG')) $('mG').classList.add('on'); }, 3500);
-  setTimeout(() => $('archS').classList.add('on'), 4000);
+  setTimeout(() => $('p2').classList.add('on'), 500);
+  setTimeout(() => $('p3').classList.add('on'), 800);
+  setTimeout(() => $('traj').classList.add('on'), 1200);
+  setTimeout(() => $('arcS1').classList.add('on'), 1600);
+  setTimeout(() => $('arcS2').classList.add('on'), 2000);
+  setTimeout(() => $('arcS3').classList.add('on'), 2400);
+  setTimeout(() => { $('mR')?.classList.add('on'); $('mG')?.classList.add('on'); }, 2800);
+  setTimeout(() => $('archS').classList.add('on'), 3200);
 }
 
-// ─── Painting generator ───
+// ─── Arc markup handlers ───
+document.querySelectorAll('.as-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const section = this.closest('.arc-section');
+    section.querySelectorAll('.as-btn').forEach(b => b.classList.remove('accurate','wrong','missing'));
+    const type = this.dataset.type;
+    this.classList.add(type);
+    const correction = section.querySelector('.as-correction');
+    if (correction) {
+      if (type === 'accurate') { correction.classList.remove('on'); correction.style.display = 'none'; }
+      else { correction.style.display = 'block'; setTimeout(() => correction.classList.add('on'), 50); }
+    }
+  });
+});
+
+// ─── Painting generator (SVG) ───
 function genPainting(svgId, hue, coh, seed) {
   const svg = $(svgId), sz = 260, cx = sz/2, cy = sz/2, mr = sz*0.42;
   let s = seed;
@@ -1053,222 +870,86 @@ function drawTraj() {
   svg.innerHTML = `<path d="${path}" fill="none" stroke="rgba(255,221,136,0.2)" stroke-width="1.5" stroke-linecap="round"/>${pts.map((p,i)=>`<circle cx="${p.x}" cy="${p.y}" r="3" fill="${['var(--rose)','var(--violet)','var(--teal)'][i]}" opacity="0.6"/>`).join('')}`;
 }
 
-// ─── Arc section markup handlers ───
-document.querySelectorAll('.arc-markup-btn').forEach(btn => {
-  btn.addEventListener('click', function() {
-    const section = this.closest('.arc-section');
-    const allBtns = section.querySelectorAll('.arc-markup-btn');
-    const correction = section.querySelector('.arc-correction');
-
-    // Reset buttons in this section
-    allBtns.forEach(b => b.classList.remove('accurate','wrong','missing'));
-
-    // Activate clicked button
-    const type = this.dataset.type;
-    this.classList.add(type);
-
-    // Show/hide correction
-    if (correction) {
-      if (type === 'accurate') {
-        correction.classList.remove('on');
-        correction.style.display = 'none';
-      } else {
-        correction.style.display = 'block';
-        setTimeout(() => correction.classList.add('on'), 50);
-      }
-    }
-  });
-});
-
-// ══════════════════════════════��════════
-// VIDEO MODE — auto-play with narration
+// ═══════════════════════════════════════
+// VIDEO MODE — 90-second narrated walkthrough
 // ═══════════════════════════════════════
 
-let videoPlaying = false;
-let videoTimeouts = [];
-const TOTAL_VIDEO_MS = 90000; // 90 seconds
-
 function narrate(label, text, durationMs) {
-  const inner = $('narrationInner');
-  const lbl = $('narrationLabel');
-  const txt = $('narrationText');
-
-  // Fade out
-  inner.classList.remove('on');
-
+  const inner = $('narrInner'); inner.classList.remove('on');
   return new Promise(resolve => {
-    const t1 = setTimeout(() => {
-      lbl.innerHTML = label;
-      txt.innerHTML = text;
-      inner.classList.add('on');
-    }, 400);
+    const t1 = setTimeout(() => { $('narrLabel').innerHTML = label; $('narrText').innerHTML = text; inner.classList.add('on'); }, 400);
     videoTimeouts.push(t1);
-
-    const t2 = setTimeout(() => {
-      inner.classList.remove('on');
-    }, durationMs - 500);
+    const t2 = setTimeout(() => inner.classList.remove('on'), durationMs - 500);
     videoTimeouts.push(t2);
-
     const t3 = setTimeout(resolve, durationMs);
     videoTimeouts.push(t3);
   });
 }
 
-function updateProgress(pct) {
-  $('videoProgressFill').style.width = pct + '%';
-}
+function updateVidProgress(pct) { $('vidFill').style.width = pct + '%'; }
 
 async function startVideo() {
   if (videoPlaying) return;
   videoPlaying = true;
-
-  // Show video UI, hide manual hints
-  $('videoBadge').classList.add('on');
-  $('videoProgress').classList.add('on');
+  $('vidBadge').classList.add('on');
+  $('vidProgress').classList.add('on');
   $('keyHint').classList.add('hidden');
-  document.querySelector('.scene-nav').style.opacity = '0';
-  updateProgress(0);
+  $('sidebar').classList.add('hidden');
+  updateVidProgress(0);
 
-  // ─── ACT 1: THE RITUAL — Day 1 (0:00–0:12) ───
+  // ACT 1: Day 1
   goScene(0);
-  await narrate(
-    'THE RITUAL · Day 1',
-    'Every reflection creates an <em>episodic trace</em>. On Day 1, the system records. Nothing more. It hasn\'t earned the right to speak.',
-    6000
-  );
-  updateProgress(7);
+  if (dayState === 'day90') toggleDay();
+  await narrate('THE RITUAL · Day 1', 'Every reflection creates an <em>episodic trace</em>. On Day 1, the system records. Nothing more. It hasn\'t earned the right to speak.', 6000);
+  updateVidProgress(7);
+  await narrate('', 'A score. Seven dimensions. <em>No memory. No opinion. No standing.</em>', 5000);
+  updateVidProgress(13);
 
-  await narrate(
-    '',
-    'A score. Seven dimensions. <em>No memory. No opinion. No standing.</em>',
-    5000
-  );
-  updateProgress(13);
-
-  // ─── ACT 2: DAY 90 — CONFRONTATION (0:12–0:32) ───
+  // ACT 2: Day 90 confrontation
   toggleDay();
-  await narrate(
-    'THE RITUAL · Day 90',
-    'Ninety days later, the system has something to say.<br><br><strong>"You\'ve been avoiding connection for nine days."</strong>',
-    6000
-  );
-  updateProgress(20);
+  await narrate('THE RITUAL · Day 90', 'Ninety days later, the system has something to say.<br><br><strong>"You\'ve been avoiding connection for nine days."</strong>', 6000);
+  updateVidProgress(20);
+  await narrate('THE CONFRONTATION', '<em>"Last time, you told yourself it was fine. It wasn\'t."</em><br><br>That\'s not a summary. That\'s a <em>position</em> — specific enough to argue with.', 5500);
+  updateVidProgress(26);
 
-  await narrate(
-    'THE CONFRONTATION',
-    '<em>"Last time, you told yourself it was fine. It wasn\'t."</em><br><br>That\'s not a summary. That\'s a <em>position</em> — specific enough to argue with.',
-    5500
-  );
-  updateProgress(26);
+  $('rShow')?.click();
+  await narrate('THE EVIDENCE', 'She asks to see the receipts. Four MemCells across three months — the system shows its work.<br><br>This is what <em>standing</em> looks like. Earned, not assumed.', 6500);
+  updateVidProgress(33);
+  $('evPanel')?.scrollIntoView({behavior:'smooth',block:'center'});
+  await narrate('THE CORRECTION LOOP', 'Every confrontation is an invitation to correct. <em>The disagreement is the highest-signal data.</em><br><br>The argument IS the product.', 5500);
+  updateVidProgress(40);
 
-  // Click "Show me the evidence" — safer than typing path
-  const showBtn = $('responseShow');
-  if (showBtn) showBtn.click();
-  await narrate(
-    'THE EVIDENCE',
-    'She asks to see the receipts. Four MemCells across three months — the system shows its work.<br><br>This is what <em>standing</em> looks like. Earned, not assumed.',
-    6500
-  );
-  updateProgress(33);
-
-  // Auto-scroll evidence into view
-  const evidEl = $('evidenceExpand');
-  if (evidEl) evidEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-  await narrate(
-    'THE CORRECTION LOOP',
-    'Every confrontation is an invitation to correct. <em>The disagreement is the highest-signal data.</em><br><br>The argument IS the product.',
-    5500
-  );
-  updateProgress(40);
-
-  // ─── ACT 3: THE COUNCIL (0:32–0:54) ───
+  // ACT 3: Council
   goScene(1);
-  await narrate(
-    'THE COUNCIL · Archetypes with standing',
-    'EverMemOS doesn\'t just store data. It gives the archetypes <em>memory</em> — and standing.',
-    5000
-  );
-  updateProgress(46);
+  await narrate('THE COUNCIL · Archetypes with standing', 'EverMemOS doesn\'t just store data. It gives the archetypes <em>memory</em> — and standing.', 5000);
+  updateVidProgress(46);
+  await narrate('THE WARRIOR', '<em>"You told me I was too aggressive. Then you spent three weeks stuck."</em><br><br>That\'s not generic wisdom. That\'s a callback to January — specific, grounded, impossible to dismiss.', 6500);
+  updateVidProgress(53);
+  await narrate('THE SAGE', '<em>"You\'ve consulted me four times when clarity was above 80. What do you actually come to me for?"</em><br><br>Memory gave it the standing to ask the real question.', 6500);
+  updateVidProgress(60);
 
-  await narrate(
-    'THE WARRIOR',
-    '<em>"You told me I was too aggressive. Then you spent three weeks stuck."</em><br><br>That\'s not generic wisdom. That\'s a callback to January — specific, grounded, impossible to dismiss.',
-    6500
-  );
-  updateProgress(53);
-
-  await narrate(
-    'THE SAGE',
-    '<em>"You\'ve consulted me four times when clarity was above 80. What do you actually come to me for?"</em><br><br>Memory gave it the standing to ask the real question.',
-    6500
-  );
-  updateProgress(60);
-
-  // ─── ACT 4: THE ARC (0:54–1:22) ───
+  // ACT 4: Arc
   goScene(2);
-  await narrate(
-    'THE ARC · The disputable account',
-    'Three months of inner life — not as a story to read, but as an <em>account to argue with</em>.',
-    5500
-  );
-  updateProgress(67);
+  await narrate('THE ARC · The disputable account', 'Three months of inner life — not as a story to read, but as an <em>account to argue with</em>.', 5500);
+  updateVidProgress(67);
 
-  // Click "Wrong" on section 1 and auto-scroll
-  const wrongBtn = document.querySelector('#arcS1 .arc-markup-btn[data-type="wrong"]');
-  if (wrongBtn) {
-    const t = setTimeout(() => {
-      wrongBtn.click();
-      wrongBtn.closest('.arc-section').scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }, 1500);
-    videoTimeouts.push(t);
-  }
-  await narrate(
-    'DISPUTABLE',
-    'She marks January wrong:<br><br><em>"It wasn\'t avoidance. I genuinely didn\'t see the connection gap. That\'s different."</em>',
-    6500
-  );
-  updateProgress(74);
+  const wrongBtn = document.querySelector('#arcS1 .as-btn[data-type="wrong"]');
+  if (wrongBtn) { const t = setTimeout(() => { wrongBtn.click(); wrongBtn.closest('.arc-section')?.scrollIntoView({behavior:'smooth',block:'center'}); }, 1500); videoTimeouts.push(t); }
+  await narrate('DISPUTABLE', 'She marks January wrong:<br><br><em>"It wasn\'t avoidance. I genuinely didn\'t see the connection gap. That\'s different."</em>', 6500);
+  updateVidProgress(74);
 
-  // Click "Missing" on section 3 and auto-scroll
-  const missingBtn = document.querySelector('#arcS3 .arc-markup-btn[data-type="missing"]');
-  if (missingBtn) {
-    const t = setTimeout(() => {
-      missingBtn.click();
-      missingBtn.closest('.arc-section').scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }, 1000);
-    videoTimeouts.push(t);
-  }
-  await narrate(
-    'THE FLYWHEEL',
-    'That correction reshapes the next reconstruction. The system learns from the <em>argument about what the data means</em>.',
-    5500
-  );
-  updateProgress(81);
+  const missingBtn = document.querySelector('#arcS3 .as-btn[data-type="missing"]');
+  if (missingBtn) { const t = setTimeout(() => { missingBtn.click(); missingBtn.closest('.arc-section')?.scrollIntoView({behavior:'smooth',block:'center'}); }, 1000); videoTimeouts.push(t); }
+  await narrate('THE FLYWHEEL', 'That correction reshapes the next reconstruction. The system learns from the <em>argument about what the data means</em>.', 5500);
+  updateVidProgress(81);
 
-  // ─── ACT 5: CLOSE (1:22–1:30) ───
-  const archEl = $('archS');
-  if (archEl) archEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-  await narrate(
-    'ARCHITECTURE',
-    'Three data channels. 16th EventBus handler. Fire-and-forget.<br><em>Episodic → Semantic → Reconstructive.</em><br><br>Memory makes it <strong>harder to dismiss</strong>.',
-    5500
-  );
-  updateProgress(88);
-
-  // Show paintings one last time
-  const paintArea = document.querySelector('.paintings');
-  if (paintArea) paintArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-  await narrate(
-    '',
-    '<em>The correction loop IS the product.</em><br><br><strong>Memory for who you\'re becoming.</strong><br>Built with EverMemOS.',
-    5500
-  );
-  updateProgress(100);
-
-  // Clean up
+  // ACT 5: Close
+  $('archS')?.scrollIntoView({behavior:'smooth',block:'center'});
+  await narrate('ARCHITECTURE', 'Three data channels. 16th EventBus handler. Fire-and-forget.<br><em>Episodic → Semantic → Reconstructive.</em><br><br>Memory makes it <strong>harder to dismiss</strong>.', 5500);
+  updateVidProgress(88);
+  document.querySelector('.paintings')?.scrollIntoView({behavior:'smooth',block:'center'});
+  await narrate('', '<em>The correction loop IS the product.</em><br><br><strong>Memory for who you\'re becoming.</strong><br>Built with EverMemOS.', 5500);
+  updateVidProgress(100);
   stopVideo();
 }
 
@@ -1276,16 +957,78 @@ function stopVideo() {
   videoPlaying = false;
   videoTimeouts.forEach(t => clearTimeout(t));
   videoTimeouts = [];
-
-  $('videoBadge').classList.remove('on');
-  $('videoProgress').classList.remove('on');
-  $('narrationInner').classList.remove('on');
+  $('vidBadge').classList.remove('on');
+  $('vidProgress').classList.remove('on');
+  $('narrInner').classList.remove('on');
   $('keyHint').classList.remove('hidden');
-  document.querySelector('.scene-nav').style.opacity = '';
+  $('sidebar').classList.remove('hidden');
+  setTimeout(() => { $('vidFill').style.width = '0%'; }, 500);
+}
 
-  setTimeout(() => {
-    $('videoProgressFill').style.width = '0%';
-  }, 500);
+// ═══════════════════════════════════════
+// P MODE — Presenter Walk (inspired by EvenUp POC)
+// ═══════════════════════════════════════
+
+const walkSteps = [
+  { time:'0:00', label:'Maya opens the app', annotations:true,
+    say:'<strong>This is Maya.</strong> 34. Creative director. Recently promoted, recently divorced, first time doing structured inner work. Day 94.',
+    action:() => { goScene(0); if(dayState==='day90') toggleDay(); }},
+  { time:'0:30', label:'Day 1 — Just numbers', annotations:true,
+    say:'On Day 1, this is all Maya gets. A score. Seven dimensions. <strong>No memory. No opinion. No standing.</strong> The system hasn\'t earned the right to speak.',
+    action:() => { if(dayState==='day90') toggleDay(); }},
+  { time:'1:30', label:'Day 90 — The confrontation', annotations:true,
+    say:'Press M. 90 days later, the system has something to say. <strong>"You\'ve been avoiding connection for nine days."</strong> This is specific enough to argue with.',
+    action:() => { if(dayState==='day1') toggleDay(); }},
+  { time:'2:30', label:'She asks for evidence', annotations:false,
+    say:'Maya clicks "Show me the evidence." Four MemCells across three months. <strong>The system shows its work.</strong> This is what standing looks like.',
+    action:() => { $('rShow')?.click(); }},
+  { time:'3:00', label:'The correction loop', annotations:true,
+    say:'Every confrontation is an invitation to correct. <strong>The disagreement IS the highest-signal data.</strong> The argument is the product.',
+    action:() => {}},
+  { time:'3:30', label:'The Council — archetypes with memory', annotations:true,
+    say:'Maya asks: "How do I step into what\'s next without a map?" Three archetypes convene — but they have <strong>memory</strong> now.',
+    action:() => { goScene(1); }},
+  { time:'4:30', label:'The Warrior remembers January', annotations:false,
+    say:'"You told me I was too aggressive. Then you spent three weeks stuck." <strong>That\'s a callback to January</strong> — specific, grounded, impossible to dismiss.',
+    action:() => {}},
+  { time:'5:00', label:'The disputable arc', annotations:true,
+    say:'Three months of inner life. Not a story to read — <strong>an account to argue with.</strong> Every claim is disputable.',
+    action:() => { goScene(2); }},
+  { time:'5:30', label:'Maya marks January wrong', annotations:false,
+    say:'"It wasn\'t avoidance. I genuinely didn\'t see the connection gap." <strong>That correction reshapes the next reconstruction.</strong>',
+    action:() => { const b = document.querySelector('#arcS1 .as-btn[data-type="wrong"]'); if(b) b.click(); }},
+  { time:'6:00', label:'Architecture', annotations:false,
+    say:'Three data channels. 16th EventBus handler. Episodic → Semantic → Reconstructive. <strong>The correction loop IS the product.</strong>',
+    action:() => { $('archS')?.scrollIntoView({behavior:'smooth',block:'center'}); }},
+  { time:'6:30', label:'Close', annotations:false,
+    say:'<strong>Memory for who you\'re becoming.</strong> ★ PAUSE. Let them ask.',
+    action:() => {}}
+];
+
+function startWalk() {
+  walkActive = true; walkStep = -1;
+  $('walkBar').classList.add('active');
+  $('walkBar').classList.remove('hide');
+  // Build dots
+  let dots = '';
+  walkSteps.forEach(() => dots += '<div class="walk-dot"></div>');
+  $('walkDots').innerHTML = dots;
+}
+
+function walkTo(n) {
+  if (n < 0 || n >= walkSteps.length) return;
+  walkStep = n;
+  const step = walkSteps[n];
+  $('walkTime').textContent = step.time;
+  $('walkLabel').textContent = step.label;
+  $('walkSay').innerHTML = step.say;
+  if (step.annotations) document.body.classList.add('annotations-on');
+  else document.body.classList.remove('annotations-on');
+  // Update dots
+  const dots = $('walkDots').querySelectorAll('.walk-dot');
+  dots.forEach((d,i) => { d.className = 'walk-dot'; if(i<n) d.classList.add('done'); if(i===n) d.classList.add('cur'); });
+  // Execute action
+  if (step.action) step.action();
 }
 
 // ─── Init ───
@@ -1294,6 +1037,7 @@ genPainting('svg2', 270, 55, 179);
 genPainting('svg3', 175, 76, 316);
 drawTraj();
 setTimeout(() => animateCheck(), 200);
+document.body.dataset.state = 'day1';
 </script>
 </body>
 </html>

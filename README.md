@@ -249,7 +249,15 @@ npx ts-node scripts/smoke-test.ts        # Health check + store/search round-tri
 
 ### Demo
 
-**Interactive POC:** [liminal-space-io.github.io/liminal-evermemos/LIMINAL_EVERMEMOS_POC.html](https://liminal-space-io.github.io/liminal-evermemos/LIMINAL_EVERMEMOS_POC.html) — no auth, no setup. Arrow keys to navigate, M to toggle Day 1 / Day 90.
+**Interactive POC:** [liminal-space-io.github.io/liminal-evermemos/LIMINAL_EVERMEMOS_POC.html](https://liminal-space-io.github.io/liminal-evermemos/LIMINAL_EVERMEMOS_POC.html) — no auth, no setup.
+
+| Key | Action |
+|-----|--------|
+| ← → | Navigate scenes (The Check → The Council → The Arc) |
+| M | Toggle Day 1 / Day 90 (the core product thesis) |
+| V | 90-second auto-play video walkthrough |
+| P | Presenter walk mode (step-by-step narrated demo) |
+| A | Toggle design annotations |
 
 See `DEMO.md` for the full walkthrough guide.
 
@@ -271,7 +279,11 @@ See `DEMO.md` for the full walkthrough guide.
 
 ## Video
 
-Coming soon.
+**[90-second product walkthrough (MP4)](LIMINAL_EVERMEMOS_VIDEO.mp4)** — Day 1 → Day 90 → Confrontation → Council → Disputable Arc.
+
+Also available: [WebM format](LIMINAL_EVERMEMOS_VIDEO.webm)
+
+**Slide deck:** [Liminal_Space_EverMemOS_Demo.pptx](Liminal_Space_EverMemOS_Demo.pptx)
 
 ---
 
