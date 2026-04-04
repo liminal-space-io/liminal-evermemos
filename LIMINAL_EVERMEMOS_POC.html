@@ -452,8 +452,71 @@
     position:fixed; bottom:14px; left:50%; transform:translateX(-50%);
     font:400 9px/1 var(--mono); color:var(--silver); opacity:0.35;
     letter-spacing:0.04em; z-index:100;
+    transition:opacity 0.5s;
   }
   .key-hint kbd { padding:1px 5px; border:1px solid rgba(255,255,255,0.1); border-radius:3px; margin:0 2px; }
+  .key-hint.hidden { opacity:0; pointer-events:none; }
+
+  /* ═══════════════════════════════════════
+     VIDEO MODE — narration overlay
+     ═══════════════════════════════════════ */
+  .narration {
+    position:fixed; bottom:40px; left:50%; transform:translateX(-50%);
+    max-width:680px; width:90%; z-index:200;
+    pointer-events:none;
+  }
+  .narration-inner {
+    padding:18px 28px;
+    background:rgba(12,11,16,0.92);
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:10px;
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+    opacity:0; transform:translateY(8px);
+    transition:all 0.6s cubic-bezier(0.16,1,0.3,1);
+  }
+  .narration-inner.on { opacity:1; transform:none; }
+  .narration-text {
+    font:400 15px/1.65 var(--display);
+    color:var(--paper);
+    letter-spacing:-0.1px;
+  }
+  .narration-text em { color:var(--gold); font-style:italic; }
+  .narration-text strong { color:var(--violet); font-weight:500; }
+  .narration-label {
+    font:600 7px/1 var(--mono);
+    text-transform:uppercase;
+    letter-spacing:0.8px;
+    color:var(--violet);
+    opacity:0.6;
+    margin-bottom:8px;
+  }
+
+  /* Progress bar */
+  .video-progress {
+    position:fixed; top:0; left:0; right:0; height:2px; z-index:300;
+    background:rgba(255,255,255,0.03);
+    opacity:0; transition:opacity 0.5s;
+  }
+  .video-progress.on { opacity:1; }
+  .video-progress-fill {
+    height:100%; background:var(--violet); border-radius:0 1px 1px 0;
+    width:0%; transition:width 0.3s linear;
+  }
+
+  /* Video mode indicator */
+  .video-badge {
+    position:fixed; top:10px; right:20px; z-index:300;
+    font:600 7px/1 var(--mono); text-transform:uppercase; letter-spacing:0.6px;
+    color:var(--rose); opacity:0; transition:opacity 0.5s;
+    display:flex; align-items:center; gap:6px;
+  }
+  .video-badge.on { opacity:1; }
+  .video-badge-dot {
+    width:6px; height:6px; border-radius:50%; background:var(--rose);
+    animation:recPulse 1.5s ease-in-out infinite;
+  }
+  @keyframes recPulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
 </style>
 </head>
 <body>
@@ -465,7 +528,12 @@
   <div class="scene-dot" data-scene="2" title="The Arc"></div>
 </div>
 
-<div class="key-hint"><kbd>←</kbd> <kbd>→</kbd> scenes · <kbd>M</kbd> Day 1 / Day 90</div>
+<div class="key-hint" id="keyHint"><kbd>←</kbd> <kbd>→</kbd> scenes · <kbd>M</kbd> Day 1 / Day 90 · <kbd>V</kbd> auto-play video</div>
+
+<!-- Video mode overlay -->
+<div class="video-badge" id="videoBadge"><div class="video-badge-dot"></div>RECORDING</div>
+<div class="video-progress" id="videoProgress"><div class="video-progress-fill" id="videoProgressFill"></div></div>
+<div class="narration" id="narration"><div class="narration-inner" id="narrationInner"><div class="narration-label" id="narrationLabel"></div><div class="narration-text" id="narrationText"></div></div></div>
 
 <!-- ════════════════════════════════════════
      SCENE 1: THE CHECK
@@ -530,16 +598,16 @@
       </div>
 
       <!-- Correction input — shown after "No" is clicked -->
-      <div class="correction-input-wrap" id="correctionWrap" style="display:none;">
+      <div class="correction-input-wrap" id="correctionWrap">
         <input class="correction-input" id="correctionInput" type="text" placeholder="What's actually happening?" />
-        <div class="correction-text" id="correctionText" style="display:none;">
+        <div class="correction-text" id="correctionText">
           <strong>Your correction:</strong> <span id="correctionContent"></span>
           <div class="correction-stored">Correction stored as MemCell</div>
         </div>
       </div>
 
       <!-- Evidence expand — shown after "Show me" is clicked -->
-      <div class="evidence-expand" id="evidenceExpand" style="display:none;">
+      <div class="evidence-expand" id="evidenceExpand">
         <div class="evidence-expand-label">MemCell Evidence</div>
         <div class="evidence-expand-list">
           <div class="evidence-item">
@@ -789,13 +857,12 @@ document.querySelectorAll('.scene-dot').forEach(d => {
 });
 
 document.addEventListener('keydown', e => {
-  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') goScene(current + 1);
-  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') goScene(current - 1);
-
-document.addEventListener('keydown', e => {
+  if (videoPlaying && e.key === 'Escape') { stopVideo(); return; }
+  if (videoPlaying) return; // block manual nav during video
   if (e.key === 'ArrowRight' || e.key === 'ArrowDown') goScene(current + 1);
   if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') goScene(current - 1);
   if (e.key === 'm' || e.key === 'M') toggleDay();
+  if (e.key === 'v' || e.key === 'V') startVideo();
 });
 
 // ─── Day toggle — Day 1 vs Day 90 confrontation ───
@@ -922,23 +989,6 @@ function animateCheck() {
   document.querySelectorAll('.factor-delta').forEach(d => d.classList.remove('on'));
 }
 
-    setTimeout(() => { f.style.width = score + '%'; }, 150 + i * 60);
-  });
-  // Reset memory state for clean demo
-  memOn = false;
-  $('memToggle').classList.remove('on');
-  $('barMem').classList.remove('on');
-  $('barMem').classList.add('off');
-  $('barMem').textContent = 'Memory Off';
-  $('s0').classList.remove('mem-on');
-  $('noMem').style.display = '';
-  $('noMem').classList.add('on');
-  $('memLayer').style.display = 'none';
-  $('sDelta').classList.remove('on');
-  $('mCtx').classList.remove('on');
-  $('perc').classList.remove('on');
-  document.querySelectorAll('.factor-delta').forEach(d => d.classList.remove('on'));
-}
 
 // ─── Council animations ───
 function animateCouncil() {
@@ -1024,6 +1074,218 @@ document.querySelectorAll('.arc-markup-btn').forEach(btn => {
     }
   });
 });
+
+// ══════════════════════════════��════════
+// VIDEO MODE — auto-play with narration
+// ═══════════════════════════════════════
+
+let videoPlaying = false;
+let videoTimeouts = [];
+const TOTAL_VIDEO_MS = 90000; // 90 seconds
+
+function narrate(label, text, durationMs) {
+  const inner = $('narrationInner');
+  const lbl = $('narrationLabel');
+  const txt = $('narrationText');
+
+  // Fade out
+  inner.classList.remove('on');
+
+  return new Promise(resolve => {
+    const t1 = setTimeout(() => {
+      lbl.innerHTML = label;
+      txt.innerHTML = text;
+      inner.classList.add('on');
+    }, 400);
+    videoTimeouts.push(t1);
+
+    const t2 = setTimeout(() => {
+      inner.classList.remove('on');
+    }, durationMs - 500);
+    videoTimeouts.push(t2);
+
+    const t3 = setTimeout(resolve, durationMs);
+    videoTimeouts.push(t3);
+  });
+}
+
+function updateProgress(pct) {
+  $('videoProgressFill').style.width = pct + '%';
+}
+
+async function startVideo() {
+  if (videoPlaying) return;
+  videoPlaying = true;
+
+  // Show video UI, hide manual hints
+  $('videoBadge').classList.add('on');
+  $('videoProgress').classList.add('on');
+  $('keyHint').classList.add('hidden');
+  document.querySelector('.scene-nav').style.opacity = '0';
+  updateProgress(0);
+
+  // ─── ACT 1: COLD OPEN — paintings (0:00–0:10) ───
+  goScene(2); // Jump to Arc to show paintings
+  await narrate(
+    '',
+    '<em>Three months of inner transformation — rendered as visual evidence.</em>',
+    8000
+  );
+  updateProgress(9);
+
+  // ─── ACT 2: THE RITUAL — Day 1 vs Day 90 (0:08–0:30) ───
+  goScene(0);
+  await narrate(
+    'THE RITUAL · Day 1',
+    'Every reflection creates an <em>episodic trace</em>. On Day 1, the system records. Nothing more. It hasn\'t earned the right to speak.',
+    6000
+  );
+  updateProgress(16);
+
+  // Toggle to Day 90
+  toggleDay();
+  await narrate(
+    'THE RITUAL · Day 90',
+    'Ninety days later, the system has something to say.<br><br><strong>"You\'ve been avoiding connection for nine days."</strong>',
+    6000
+  );
+  updateProgress(24);
+
+  // Show the claim edge
+  await narrate(
+    'THE CONFRONTATION',
+    '<em>"Last time, you told yourself it was fine. It wasn\'t."</em><br><br>That\'s not a summary. That\'s a <em>position</em> — specific enough to argue with.',
+    6000
+  );
+  updateProgress(31);
+
+  // Click "No" to show correction
+  const noBtn = $('responseNo');
+  if (noBtn) {
+    noBtn.click();
+    // Type the correction
+    const input = $('correctionInput');
+    if (input) {
+      input.style.display = '';
+      const corrText = "I'm not avoiding it. I'm prioritizing differently this time.";
+      let ci = 0;
+      const typeInterval = setInterval(() => {
+        if (ci < corrText.length) {
+          input.value = corrText.substring(0, ci + 1);
+          ci++;
+        } else {
+          clearInterval(typeInterval);
+          // Simulate Enter
+          const enterEvent = new KeyboardEvent('keypress', { key: 'Enter' });
+          input.dispatchEvent(enterEvent);
+        }
+      }, 30);
+    }
+  }
+  await narrate(
+    'THE CORRECTION LOOP',
+    'She pushes back: <em>"I\'m not avoiding it. I\'m prioritizing differently."</em><br><br>That correction — that disagreement — is the <strong>highest-signal data</strong> in the entire system. The argument IS the product.',
+    8000
+  );
+  updateProgress(40);
+
+  // ─── ACT 3: THE COUNCIL (0:30–0:55) ───
+  goScene(1);
+  await narrate(
+    'THE COUNCIL · Archetypes with standing',
+    'EverMemOS doesn\'t just store data. It gives the archetypes <em>memory</em> — and standing.',
+    5000
+  );
+  updateProgress(47);
+
+  // Wait for council animations to cascade
+  await narrate(
+    'THE WARRIOR',
+    '<em>"You told me I was too aggressive. Then you spent three weeks stuck."</em><br><br>That\'s not generic wisdom. That\'s a callback to January — specific, grounded, impossible to dismiss.',
+    7000
+  );
+  updateProgress(55);
+
+  await narrate(
+    'THE SAGE',
+    '<em>"You\'ve consulted me four times when clarity was above 80. What do you actually come to me for?"</em><br><br>Memory didn\'t make the Sage smarter. Memory gave it the standing to ask the real question.',
+    7000
+  );
+  updateProgress(63);
+
+  // ─── ACT 4: THE ARC (0:55–1:20) ───
+  goScene(2);
+  await narrate(
+    'THE ARC · The disputable account',
+    'Arc Memory reconstructs three months of inner life — not as a story to read, but as an <em>account to argue with</em>.',
+    6000
+  );
+  updateProgress(70);
+
+  // Click "Wrong" on section 1
+  const wrongBtn = document.querySelector('#arcS1 .arc-markup-btn[data-type="wrong"]');
+  if (wrongBtn) {
+    const t = setTimeout(() => wrongBtn.click(), 1500);
+    videoTimeouts.push(t);
+  }
+  await narrate(
+    'DISPUTABLE',
+    'Each section is independently disputable. She marks January wrong:<br><br><em>"It wasn\'t avoidance. I genuinely didn\'t see the connection gap. That\'s different."</em>',
+    7000
+  );
+  updateProgress(78);
+
+  // Click "Missing" on section 3
+  const missingBtn = document.querySelector('#arcS3 .arc-markup-btn[data-type="missing"]');
+  if (missingBtn) {
+    const t = setTimeout(() => missingBtn.click(), 1000);
+    videoTimeouts.push(t);
+  }
+  await narrate(
+    'THE FLYWHEEL',
+    'That correction reshapes the next reconstruction. The system learns — not from the data, but from the <em>argument about what the data means</em>.',
+    6000
+  );
+  updateProgress(85);
+
+  // ─── ACT 5: CLOSE (1:20–1:30) ───
+  // Scroll to architecture section
+  const archEl = $('archS');
+  if (archEl) archEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+  await narrate(
+    'ARCHITECTURE',
+    'Three data channels. 16th EventBus handler. Fire-and-forget.<br><em>Episodic trace → Semantic consolidation → Reconstructive recollection.</em><br><br>Memory doesn\'t make the system smarter. It makes it <strong>harder to dismiss</strong>.',
+    7000
+  );
+  updateProgress(93);
+
+  await narrate(
+    '',
+    '<em>The correction loop IS the product.</em><br><br><strong>Memory for who you\'re becoming.</strong><br>Built with EverMemOS.',
+    6000
+  );
+  updateProgress(100);
+
+  // Clean up
+  stopVideo();
+}
+
+function stopVideo() {
+  videoPlaying = false;
+  videoTimeouts.forEach(t => clearTimeout(t));
+  videoTimeouts = [];
+
+  $('videoBadge').classList.remove('on');
+  $('videoProgress').classList.remove('on');
+  $('narrationInner').classList.remove('on');
+  $('keyHint').classList.remove('hidden');
+  document.querySelector('.scene-nav').style.opacity = '';
+
+  setTimeout(() => {
+    $('videoProgressFill').style.width = '0%';
+  }, 500);
+}
 
 // ─── Init ───
 genPainting('svg1', 348, 38, 42);
