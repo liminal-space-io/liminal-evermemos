@@ -109,18 +109,45 @@
     padding: 60px 48px 120px;
   }
 
-  /* ─── Annotations (A mode) ─── */
-  .annotation {
-    display:none; position:absolute; z-index:90;
-    max-width:260px; padding:14px 18px;
-    background:rgba(142,102,251,0.12); border:1px solid rgba(142,102,251,0.25);
-    border-radius:10px; backdrop-filter:blur(12px);
-    font: 400 12px/1.5 var(--body); color:rgba(255,255,255,0.85);
-    animation: annotPop 0.3s cubic-bezier(0.16,1,0.3,1);
+  /* ─── Annotations Panel (A mode) ─── */
+  .annot-panel {
+    position:fixed; top:0; right:0; bottom:0; width:320px; z-index:180;
+    background:rgba(9,8,13,0.97); border-left:1px solid rgba(142,102,251,0.15);
+    backdrop-filter:blur(20px);
+    padding:28px 24px 100px; overflow-y:auto;
+    transform:translateX(100%); transition:transform 0.4s cubic-bezier(0.16,1,0.3,1);
   }
-  .annotation .a-label { font:600 8px var(--body); text-transform:uppercase; letter-spacing:0.8px; color:var(--violet); margin-bottom:6px; }
-  @keyframes annotPop { from{opacity:0;transform:scale(0.95);} to{opacity:1;transform:scale(1);} }
-  body.annotations-on .annotation { display:block; }
+  body.annotations-on .annot-panel { transform:translateX(0); }
+  body.annotations-on .scene { right:320px; }
+
+  .annot-panel-title {
+    font:600 9px var(--body); text-transform:uppercase; letter-spacing:1.2px;
+    color:var(--violet); margin-bottom:20px; padding-bottom:12px;
+    border-bottom:1px solid rgba(142,102,251,0.15);
+  }
+
+  .annot-card {
+    padding:16px; margin-bottom:12px;
+    background:rgba(142,102,251,0.06); border:1px solid rgba(142,102,251,0.12);
+    border-radius:10px; animation: annotPop 0.3s cubic-bezier(0.16,1,0.3,1);
+  }
+  .annot-card .a-label {
+    font:600 8px var(--body); text-transform:uppercase; letter-spacing:0.8px;
+    color:var(--violet); margin-bottom:8px; display:flex; align-items:center; gap:6px;
+  }
+  .annot-card .a-label::before {
+    content:''; width:4px; height:4px; border-radius:50%; background:var(--violet);
+  }
+  .annot-card .a-body { font:400 12px/1.65 var(--body); color:rgba(255,255,255,0.8); }
+  .annot-card .a-body strong { color:var(--gold); font-weight:500; }
+  .annot-card .a-metric {
+    margin-top:8px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.04);
+    font:500 10px var(--body); color:var(--teal); letter-spacing:0.2px;
+  }
+
+  .annotation { display:none; } /* hide old inline annotations */
+
+  @keyframes annotPop { from{opacity:0;transform:scale(0.95) translateY(4px);} to{opacity:1;transform:scale(1) translateY(0);} }
 
   /* ─── Walk Bar (P mode) ─── */
   .walk-bar {
@@ -128,14 +155,15 @@
     background:rgba(9,8,13,0.95); border-top:1px solid var(--border);
     backdrop-filter:blur(20px);
     padding:16px 32px; display:flex; align-items:center; gap:24px;
-    transform:translateY(100%); transition:transform 0.35s cubic-bezier(0.16,1,0.3,1);
+    transform:translateY(100%); transition:transform 0.35s cubic-bezier(0.16,1,0.3,1), right 0.4s;
   }
+  body.annotations-on .walk-bar { right:320px; }
   .walk-bar.active { transform:translateY(0); }
   .walk-bar.hide { transform:translateY(100%); }
 
   .walk-time { font:600 11px var(--display); color:var(--violet); min-width:40px; }
   .walk-label { font:600 12px var(--body); color:var(--paper); min-width:140px; }
-  .walk-say { font:400 12px/1.5 var(--body); color:var(--silver); flex:1; }
+  .walk-say { font:400 12px/1.5 var(--body); color:var(--silver); flex:1; max-height:60px; overflow-y:auto; }
   .walk-say strong { color:var(--gold); font-weight:500; }
   .walk-dots { display:flex; gap:4px; margin-left:auto; }
   .walk-dot { width:5px; height:5px; border-radius:50%; background:rgba(255,255,255,0.1); }
@@ -721,6 +749,14 @@
   </div>
 </div>
 
+<!-- ═══════════════════════════════════════
+     ANNOTATION PANEL (A mode)
+     ═══════════════════════════════════════ -->
+<div class="annot-panel" id="annotPanel">
+  <div class="annot-panel-title" id="annotTitle">Annotations</div>
+  <div id="annotContent"></div>
+</div>
+
 <script>
 const $ = id => document.getElementById(id);
 let current = 0;
@@ -743,6 +779,7 @@ function goScene(n) {
   if (n === 0) animateCheck();
   if (n === 1) animateCouncil();
   if (n === 2) animateArc();
+  updateAnnotations();
 }
 
 document.querySelectorAll('.sb-link').forEach((l,i) => {
@@ -753,21 +790,22 @@ document.querySelectorAll('.sb-link').forEach((l,i) => {
 document.addEventListener('keydown', e => {
   if (videoPlaying && e.key === 'Escape') { stopVideo(); return; }
   if (videoPlaying) return;
+  // A key always toggles annotations — in any mode
+  if (e.key === 'a' || e.key === 'A') { document.body.classList.toggle('annotations-on'); updateAnnotations(); return; }
   if (walkActive) {
     if (e.key === 'ArrowRight') walkTo(walkStep + 1);
     else if (e.key === 'ArrowLeft' && walkStep > 0) walkTo(walkStep - 1);
     else if (e.key === 'h' || e.key === 'H') $('walkBar').classList.toggle('hide');
-    else if (e.key === 'a' || e.key === 'A') document.body.classList.toggle('annotations-on');
-    else if (e.key === 'p' || e.key === 'P') { walkActive = false; $('walkBar').classList.remove('active'); document.body.classList.remove('annotations-on'); }
-    else if (e.key === 'Escape') { walkActive = false; $('walkBar').classList.remove('active'); document.body.classList.remove('annotations-on'); }
+    else if (e.key === 'p' || e.key === 'P') { walkActive = false; $('walkBar').classList.remove('active'); }
+    else if (e.key === 'Escape') { walkActive = false; $('walkBar').classList.remove('active'); }
+    // M disabled in P mode — choreography controls the toggle
     return;
   }
   if (e.key === 'ArrowRight' || e.key === 'ArrowDown') goScene(current + 1);
   if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') goScene(current - 1);
   if (e.key === 'm' || e.key === 'M') toggleDay();
   if (e.key === 'v' || e.key === 'V') startVideo();
-  if (e.key === 'p' || e.key === 'P') startWalk();
-  if (e.key === 'a' || e.key === 'A') document.body.classList.toggle('annotations-on');
+  if (e.key === 'p' || e.key === 'P') { startWalk(); document.body.classList.add('annotations-on'); }
 });
 
 // ─── Day 1 / Day 90 toggle ───
@@ -793,6 +831,7 @@ function toggleDay() {
     $('corrInput').value = '';
     $('corrInput').style.display = '';
   }
+  updateAnnotations();
 }
 
 // ─── Response handlers ───
@@ -982,6 +1021,89 @@ function stopVideo() {
 }
 
 // ═══════════════════════════════════════
+// ANNOTATION PANEL CONTENT
+// ═══════════════════════════════════════
+
+const sceneAnnotations = {
+  // Scene 0 (The Check) - Day 1
+  'check-day1': [
+    { label:'What you\'re looking at', body:'A <strong>7-factor psychological state assessment</strong> — stability, vitality, agency, connection, expression, clarity, wholeness. Each scored 1-10. This is Maya\'s first check-in. The system records it and says nothing.' },
+    { label:'EverMemOS · Episodic Trace', body:'This check becomes a <strong>MemCell</strong> — the atomic unit of memory in EverMemOS. Stored via the 16th handler on a 15-handler EventBus. Fire-and-forget — zero impact on response time.', metric:'Channel: coherence · Method: EventBus handler' },
+    { label:'Why the system stays silent', body:'Days 1-3: no confrontation. The system hasn\'t accumulated enough data to earn <strong>standing</strong>. This restraint is intentional — a system honest about its ignorance is more credible when it later claims to see a pattern.', metric:'Target: Day 1→3 retention >40%' },
+  ],
+  // Scene 0 (The Check) - Day 90
+  'check-day90': [
+    { label:'The confrontation', body:'90 days and 23 MemCells later, the system holds a position: <strong>"You\'ve been avoiding connection for nine days."</strong> Not a summary. A claim — specific enough to argue with. This is the atomic unit of value.' },
+    { label:'Evidence trail', body:'Every claim cites specific MemCells by date. Jan 14: agency 82, connection 47. Today: agency 85, connection 44. <strong>The system never asserts without receipts</strong> the user can verify.', metric:'Target: ≥3 MemCell citations per claim' },
+    { label:'The correction flywheel', body:'Maya can: <strong>Agree</strong> (confirmation MemCell) · <strong>Disagree</strong> (correction MemCell — highest-signal data) · <strong>Show me</strong> (evidence view). Her response feeds back into future claims. The more she argues, the more precise the system becomes.', metric:'Target: 20-40% correction rate · >80% return-after-correction' },
+    { label:'Three tone registers', body:'<strong>Direct:</strong> Clear pattern, strong evidence. <strong>Reframing:</strong> Self-narrative contradicts data. <strong>Pointed:</strong> Uses Maya\'s own prior words against her. The system calibrates — Maya doesn\'t choose the tone.' },
+  ],
+  // Scene 1 (The Council)
+  'council': [
+    { label:'What you\'re looking at', body:'Maya asked a question. Three Jungian archetypes — Warrior, Sage, Sovereign — deliberate. Each has a <strong>distinct confrontation style</strong> grounded in personality psychology. 12 archetypes total in the production system.' },
+    { label:'EverMemOS · Semantic Consolidation', body:'Before speaking, the system retrieves relevant MemCells via <strong>hybrid search</strong> — EverMemOS\'s second phase. 3 MemCells across 8 weeks are injected into each archetype\'s prompt. This is what turns generic wisdom into personal confrontation.', metric:'Channel: council · Method: per-route fire-and-forget' },
+    { label:'The Warrior\'s callback', body:'"You told me I was too aggressive." That\'s grounded in a <strong>specific MemCell from Jan 20</strong>. Without memory, the Warrior gives generic advice. With memory, it holds you accountable to what you said and did.' },
+    { label:'The Sage\'s question', body:'"You consult me when clarity is above 80. What do you come to me for?" The Sage uses <strong>pattern detection across sessions</strong> — Maya seeks the Sage not for clarity, but for permission to trust herself.' },
+    { label:'The Sovereign', body:'A new archetype that appeared because the system detected <strong>integration-phase indicators</strong>. The Sovereign doesn\'t confront with words — it confronts by synthesizing the Warrior and Sage into something Maya hasn\'t earned yet.' },
+  ],
+  // Scene 2 (The Arc)
+  'arc': [
+    { label:'What you\'re looking at', body:'<strong>Three months of inner life</strong> reconstructed from 23 MemCells. Three sections (January, February, March), each independently disputable. The paintings are generated from coherence data — visual evidence of state change, not decoration.' },
+    { label:'EverMemOS · Reconstructive Recollection', body:'This uses <strong>agentic retrieval</strong> (retrieve_method: \'agentic\') — LLM-guided multi-round retrieval that reconstructs a transformation narrative from accumulated episodic traces. This is EverMemOS\'s third and most powerful phase.', metric:'Channel: arc · Method: agentic retrieval' },
+    { label:'Disputable, not narrative', body:'Each section has <strong>Accurate / Wrong / Missing something</strong> buttons. Maya marks January "Wrong" — her correction is stored as a MemCell tagged self-narrative:correction with a retrieval boost. The next reconstruction incorporates her correction.' },
+    { label:'Why corrections are the product', body:'The system learns not from the data, but from <strong>the argument about what the data means</strong>. Maya\'s "it wasn\'t avoidance, I didn\'t see the gap" differentiates a pattern the system collapsed. Next time, the system holds both readings.', metric:'Target: Arc accuracy >70%, trending up over time' },
+    { label:'Architecture', body:'<strong>66 source files · 6 API routes · 125 database migrations · 3 data channels</strong> into EverMemOS. Episodic trace → semantic consolidation → reconstructive recollection. The app works identically with or without EverMemOS — graceful degradation via isEnabled() gate + 10s timeout.' },
+    { label:'The calibration problem', body:'When to confront vs. shut up — the #1 engineering challenge. v1 defaults: <strong>≥4 MemCells, ≥14 days of data, ≥2 factors with >15-point delta.</strong> Conservative. Tuned by monitoring correction rate. Too high = system is wrong. Too low = system is unchallenging.', metric:'Deployed at theliminalspace.io · Built with EverMemOS' },
+  ]
+};
+
+// P-step-specific annotation overrides — when walkActive, these replace scene annotations
+const walkAnnotations = {
+  0: 'check-day1',  // problem framing — show day 1 annotations
+  1: 'check-day1',  // meet maya
+  2: 'check-day90', // day 90 — the confrontation
+  3: 'check-day90', // evidence
+  4: 'check-day90', // flywheel
+  5: 'council',     // council intro
+  6: 'council',     // warrior callback
+  7: 'arc',         // disputable arc
+  8: 'arc',         // maya corrects january
+  9: 'arc',         // architecture
+  10: 'arc',        // calibration problem
+  11: 'arc',        // close
+};
+
+function updateAnnotations() {
+  const panel = $('annotContent');
+  if (!panel) return;
+
+  // Determine which annotation set to show
+  let key;
+  if (walkActive && walkStep >= 0) {
+    key = walkAnnotations[walkStep] || 'check-day1';
+  } else {
+    if (current === 0) key = dayState === 'day90' ? 'check-day90' : 'check-day1';
+    else if (current === 1) key = 'council';
+    else key = 'arc';
+  }
+
+  const annots = sceneAnnotations[key] || [];
+  const title = $('annotTitle');
+  const titles = { 'check-day1':'The Check · Day 1', 'check-day90':'The Check · Day 90', 'council':'The Council', 'arc':'The Arc' };
+  if (title) title.textContent = titles[key] || 'Annotations';
+
+  let html = '';
+  annots.forEach(a => {
+    html += '<div class="annot-card">';
+    html += '<div class="a-label">' + a.label + '</div>';
+    html += '<div class="a-body">' + a.body + '</div>';
+    if (a.metric) html += '<div class="a-metric">' + a.metric + '</div>';
+    html += '</div>';
+  });
+  panel.innerHTML = html;
+}
+
+// ═══════════════════════════════════════
 // P MODE — Presenter Walk (inspired by EvenUp POC)
 // ═══════════════════════════════════════
 
@@ -1041,8 +1163,8 @@ function walkTo(n) {
   $('walkTime').textContent = step.time;
   $('walkLabel').textContent = step.label;
   $('walkSay').innerHTML = step.say;
-  if (step.annotations) document.body.classList.add('annotations-on');
-  else document.body.classList.remove('annotations-on');
+  // Update annotations panel to match current walk step
+  updateAnnotations();
   // Update dots
   const dots = $('walkDots').querySelectorAll('.walk-dot');
   dots.forEach((d,i) => { d.className = 'walk-dot'; if(i<n) d.classList.add('done'); if(i===n) d.classList.add('cur'); });
