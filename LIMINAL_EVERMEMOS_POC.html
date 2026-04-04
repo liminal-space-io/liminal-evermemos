@@ -6,6 +6,11 @@
 <title>Liminal Space × EverMemOS</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
+  /* Preload font fallbacks for headless/offline rendering */
+  @font-face { font-family: 'Cormorant Garamond'; font-style: normal; font-weight: 300; src: local('Cormorant Garamond Light'), local('Georgia'); }
+  @font-face { font-family: 'Inter'; font-style: normal; font-weight: 400; src: local('Inter'), local('-apple-system'), local('Helvetica Neue'); }
+</style>
+<style>
   /*
    * CREATIVE DIRECTION v2
    * ─────────────────────
@@ -301,7 +306,7 @@
   }
 
   .arc-section-claim {
-    font: 400 16px/1.65 var(--display);
+    font: 400 20px/1.65 var(--display);
     font-style: italic;
     color: var(--paper);
     opacity: 0.8;
@@ -1124,146 +1129,142 @@ async function startVideo() {
   document.querySelector('.scene-nav').style.opacity = '0';
   updateProgress(0);
 
-  // ─── ACT 1: COLD OPEN — paintings (0:00–0:10) ───
-  goScene(2); // Jump to Arc to show paintings
-  await narrate(
-    '',
-    '<em>Three months of inner transformation — rendered as visual evidence.</em>',
-    8000
-  );
-  updateProgress(9);
-
-  // ─── ACT 2: THE RITUAL — Day 1 vs Day 90 (0:08–0:30) ───
+  // ─── ACT 1: THE RITUAL — Day 1 (0:00–0:12) ───
   goScene(0);
   await narrate(
     'THE RITUAL · Day 1',
     'Every reflection creates an <em>episodic trace</em>. On Day 1, the system records. Nothing more. It hasn\'t earned the right to speak.',
     6000
   );
-  updateProgress(16);
+  updateProgress(7);
 
-  // Toggle to Day 90
+  await narrate(
+    '',
+    'A score. Seven dimensions. <em>No memory. No opinion. No standing.</em>',
+    5000
+  );
+  updateProgress(13);
+
+  // ─── ACT 2: DAY 90 — CONFRONTATION (0:12–0:32) ───
   toggleDay();
   await narrate(
     'THE RITUAL · Day 90',
     'Ninety days later, the system has something to say.<br><br><strong>"You\'ve been avoiding connection for nine days."</strong>',
     6000
   );
-  updateProgress(24);
+  updateProgress(20);
 
-  // Show the claim edge
   await narrate(
     'THE CONFRONTATION',
     '<em>"Last time, you told yourself it was fine. It wasn\'t."</em><br><br>That\'s not a summary. That\'s a <em>position</em> — specific enough to argue with.',
-    6000
+    5500
   );
-  updateProgress(31);
+  updateProgress(26);
 
-  // Click "No" to show correction
-  const noBtn = $('responseNo');
-  if (noBtn) {
-    noBtn.click();
-    // Type the correction
-    const input = $('correctionInput');
-    if (input) {
-      input.style.display = '';
-      const corrText = "I'm not avoiding it. I'm prioritizing differently this time.";
-      let ci = 0;
-      const typeInterval = setInterval(() => {
-        if (ci < corrText.length) {
-          input.value = corrText.substring(0, ci + 1);
-          ci++;
-        } else {
-          clearInterval(typeInterval);
-          // Simulate Enter
-          const enterEvent = new KeyboardEvent('keypress', { key: 'Enter' });
-          input.dispatchEvent(enterEvent);
-        }
-      }, 30);
-    }
-  }
+  // Click "Show me the evidence" — safer than typing path
+  const showBtn = $('responseShow');
+  if (showBtn) showBtn.click();
+  await narrate(
+    'THE EVIDENCE',
+    'She asks to see the receipts. Four MemCells across three months — the system shows its work.<br><br>This is what <em>standing</em> looks like. Earned, not assumed.',
+    6500
+  );
+  updateProgress(33);
+
+  // Auto-scroll evidence into view
+  const evidEl = $('evidenceExpand');
+  if (evidEl) evidEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
   await narrate(
     'THE CORRECTION LOOP',
-    'She pushes back: <em>"I\'m not avoiding it. I\'m prioritizing differently."</em><br><br>That correction — that disagreement — is the <strong>highest-signal data</strong> in the entire system. The argument IS the product.',
-    8000
+    'Every confrontation is an invitation to correct. <em>The disagreement is the highest-signal data.</em><br><br>The argument IS the product.',
+    5500
   );
   updateProgress(40);
 
-  // ─── ACT 3: THE COUNCIL (0:30–0:55) ───
+  // ─── ACT 3: THE COUNCIL (0:32–0:54) ───
   goScene(1);
   await narrate(
     'THE COUNCIL · Archetypes with standing',
     'EverMemOS doesn\'t just store data. It gives the archetypes <em>memory</em> — and standing.',
     5000
   );
-  updateProgress(47);
+  updateProgress(46);
 
-  // Wait for council animations to cascade
   await narrate(
     'THE WARRIOR',
     '<em>"You told me I was too aggressive. Then you spent three weeks stuck."</em><br><br>That\'s not generic wisdom. That\'s a callback to January — specific, grounded, impossible to dismiss.',
-    7000
+    6500
   );
-  updateProgress(55);
+  updateProgress(53);
 
   await narrate(
     'THE SAGE',
-    '<em>"You\'ve consulted me four times when clarity was above 80. What do you actually come to me for?"</em><br><br>Memory didn\'t make the Sage smarter. Memory gave it the standing to ask the real question.',
-    7000
+    '<em>"You\'ve consulted me four times when clarity was above 80. What do you actually come to me for?"</em><br><br>Memory gave it the standing to ask the real question.',
+    6500
   );
-  updateProgress(63);
+  updateProgress(60);
 
-  // ─── ACT 4: THE ARC (0:55–1:20) ───
+  // ─── ACT 4: THE ARC (0:54–1:22) ───
   goScene(2);
   await narrate(
     'THE ARC · The disputable account',
-    'Arc Memory reconstructs three months of inner life — not as a story to read, but as an <em>account to argue with</em>.',
-    6000
+    'Three months of inner life — not as a story to read, but as an <em>account to argue with</em>.',
+    5500
   );
-  updateProgress(70);
+  updateProgress(67);
 
-  // Click "Wrong" on section 1
+  // Click "Wrong" on section 1 and auto-scroll
   const wrongBtn = document.querySelector('#arcS1 .arc-markup-btn[data-type="wrong"]');
   if (wrongBtn) {
-    const t = setTimeout(() => wrongBtn.click(), 1500);
+    const t = setTimeout(() => {
+      wrongBtn.click();
+      wrongBtn.closest('.arc-section').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 1500);
     videoTimeouts.push(t);
   }
   await narrate(
     'DISPUTABLE',
-    'Each section is independently disputable. She marks January wrong:<br><br><em>"It wasn\'t avoidance. I genuinely didn\'t see the connection gap. That\'s different."</em>',
-    7000
+    'She marks January wrong:<br><br><em>"It wasn\'t avoidance. I genuinely didn\'t see the connection gap. That\'s different."</em>',
+    6500
   );
-  updateProgress(78);
+  updateProgress(74);
 
-  // Click "Missing" on section 3
+  // Click "Missing" on section 3 and auto-scroll
   const missingBtn = document.querySelector('#arcS3 .arc-markup-btn[data-type="missing"]');
   if (missingBtn) {
-    const t = setTimeout(() => missingBtn.click(), 1000);
+    const t = setTimeout(() => {
+      missingBtn.click();
+      missingBtn.closest('.arc-section').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 1000);
     videoTimeouts.push(t);
   }
   await narrate(
     'THE FLYWHEEL',
-    'That correction reshapes the next reconstruction. The system learns — not from the data, but from the <em>argument about what the data means</em>.',
-    6000
+    'That correction reshapes the next reconstruction. The system learns from the <em>argument about what the data means</em>.',
+    5500
   );
-  updateProgress(85);
+  updateProgress(81);
 
-  // ─── ACT 5: CLOSE (1:20–1:30) ───
-  // Scroll to architecture section
+  // ─── ACT 5: CLOSE (1:22–1:30) ───
   const archEl = $('archS');
   if (archEl) archEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
   await narrate(
     'ARCHITECTURE',
-    'Three data channels. 16th EventBus handler. Fire-and-forget.<br><em>Episodic trace → Semantic consolidation → Reconstructive recollection.</em><br><br>Memory doesn\'t make the system smarter. It makes it <strong>harder to dismiss</strong>.',
-    7000
+    'Three data channels. 16th EventBus handler. Fire-and-forget.<br><em>Episodic → Semantic → Reconstructive.</em><br><br>Memory makes it <strong>harder to dismiss</strong>.',
+    5500
   );
-  updateProgress(93);
+  updateProgress(88);
+
+  // Show paintings one last time
+  const paintArea = document.querySelector('.paintings');
+  if (paintArea) paintArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
   await narrate(
     '',
     '<em>The correction loop IS the product.</em><br><br><strong>Memory for who you\'re becoming.</strong><br>Built with EverMemOS.',
-    6000
+    5500
   );
   updateProgress(100);
 

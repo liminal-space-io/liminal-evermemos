@@ -41,15 +41,15 @@ async function main() {
   console.log('▶️   Starting auto-play (press V)…');
   await page.keyboard.press('v');
 
-  // The video mode runs ~90 seconds. Wait 95s to include the fade-out.
-  const TOTAL_WAIT = 97_000;
+  // The video mode runs ~90 seconds. Wait 93s to include the fade-out.
+  const TOTAL_WAIT = 93_000;
   const start = Date.now();
 
   // Progress logging
   const interval = setInterval(() => {
     const elapsed = Math.floor((Date.now() - start) / 1000);
-    const pct = Math.min(100, Math.floor((elapsed / 95) * 100));
-    process.stdout.write(`\r⏱   Recording… ${elapsed}s / 95s (${pct}%)`);
+    const pct = Math.min(100, Math.floor((elapsed / 90) * 100));
+    process.stdout.write(`\r⏱   Recording… ${elapsed}s / 90s (${pct}%)`);
   }, 2000);
 
   await page.waitForTimeout(TOTAL_WAIT);
